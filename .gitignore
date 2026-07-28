@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Claude Code 로컬 설정 — 세션마다 쌓이는 도구 권한 목록이라 공유 대상이 아님
+.claude/
+
+# 프리뷰 QA 산출물
+.playwright-mcp/
+*.png

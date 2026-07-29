@@ -673,6 +673,43 @@ body{
   color:var(--ods-foreground-inverse);display:grid;place-items:center;margin-bottom:20px}
 .cfm-sheet .cd-t{color:var(--ods-foreground);margin-bottom:8px}
 .cfm-sheet .cd-d{color:var(--ods-foreground-weak)}
+/* 비교견적 크로스셀 바텀시트 (Figma 124:52772) */
+.cross-sheet .cross-body{padding:8px 20px 12px;text-align:center}
+.cross-sheet .cs-t{color:var(--ods-foreground);margin-bottom:8px}
+.cross-sheet .cs-d{color:var(--ods-foreground-weak);margin-bottom:16px}
+.cross-sheet .cs-card{border:1px solid var(--ods-border);border-radius:12px;padding:14px 16px;text-align:left;
+  background:var(--ods-background-brand-weak)}
+.cross-sheet .cs-card-h{display:flex;align-items:center;gap:4px;color:var(--ods-foreground-brand);margin-bottom:8px}
+.cross-sheet .cs-card-b{display:flex;align-items:center;justify-content:space-between}
+.cross-sheet .cross-foot{display:flex;gap:8px}
+.cross-sheet .cross-foot .ods-btn:first-child{flex:0 0 96px}
+.cross-sheet .cross-foot .ods-btn:last-child{flex:1}
+
+/* ═══ 상담 내역 · 업체 매칭 리스트 (Figma 124:51989) ═══════════════════════════ */
+.mlist{background:var(--ods-background);min-height:100%}
+.ml-tabs{display:flex;border-bottom:1px solid var(--ods-border)}
+.ml-tab{flex:1;padding:10px 0 12px;background:none;border:0;cursor:pointer;font-family:inherit;
+  color:var(--ods-foreground-weak);position:relative}
+.ml-tab.on{color:var(--ods-foreground)}
+.ml-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ods-foreground)}
+.ml-chips{display:flex;gap:8px;padding:12px 16px 4px;overflow-x:auto;scrollbar-width:none}
+.ml-chips::-webkit-scrollbar{display:none}
+.ml-chips>*{flex:0 0 auto}
+.ml-period{display:inline-flex;align-items:center;gap:2px;margin:8px 16px 0;padding:0;
+  background:none;border:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
+.ml-period .ml-caret{display:inline-grid;place-items:center;color:var(--ods-foreground-weak);transform:rotate(90deg)}
+.ml-cards{padding:8px 0 90px}
+.ml-card{display:flex;align-items:flex-start;gap:12px;padding:16px;border-bottom:1px solid var(--ods-background-weak)}
+.ml-card .ml-ic{flex:0 0 auto}
+.ml-card .ml-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ml-card .ml-nm{color:var(--ods-foreground)}
+.ml-card .ml-stat{color:var(--ods-foreground)}
+.ml-card .ml-sub{color:var(--ods-foreground-weak)}
+.ml-card .ml-time{flex:0 0 auto;color:var(--ods-foreground-weak)}
+/* 하단 스낵바 (ODS Snackbar) */
+.ml-snack{position:sticky;bottom:16px;margin:0 16px;padding:14px 16px;border-radius:8px;
+  background:var(--ods-background-inverse);color:var(--ods-foreground-inverse);
+  box-shadow:0 6px 20px -6px rgba(0,0,0,.35)}
 .load-box{display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:16px}
 .load-usp{display:flex;align-items:center;gap:4px;padding-bottom:8px;color:var(--ods-foreground)}
 .load-chips{display:flex;gap:4px;align-items:flex-start;flex-wrap:wrap}
@@ -1296,9 +1333,9 @@ const isReserve = () => { const d=dday(); return d==null || d>45; };
 
 /* ══════════════ 상태 ══════════════ */
 const LABELS = {entry:'진입',select:'서비스 선택',loading:'항목 조립',form:'정보 입력',
-  branch:'견적서 확인'};
-/* 02 서비스 선택 ~ 05 견적서 확인. 파트너 보기·파트너홈·신청 완료 퍼널은 삭제됨. */
-const PHASE1 = ['entry','select','loading','form','branch'];
+  branch:'견적서 확인',list:'상담 내역'};
+/* 02 서비스 선택 ~ 06 상담 내역. 견적서 확인 → 상담 신청 완료 → 상담 내역(매칭 리스트). */
+const PHASE1 = ['entry','select','loading','form','branch','list'];
 const flowKeys = () => [...PHASE1];
 const afterForm = () => 'branch';
 const S = {mode:'chat', screen:'entry', picked:new Set(['full']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0};
@@ -2279,9 +2316,30 @@ function cfmDoneSheet(){
       <div class="bs-foot">${boxButton({label:'신청 내역 보러가기', size:'large', variant:'outlined', id:'cdGo', full:true})}</div>
     </div>`;
 }
+/* 비교견적 크로스셀 바텀시트 (Figma 124:52772) */
+function crossSheet(){
+  const names = pickedList().map(label).join(', ');
+  return `<div class="bs-overlay"></div>
+    <div class="bsheet cross-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-body cross-body">
+        <div class="cs-t t-heading20 w-bold"><span class="c-fg-brand">${names}</span><br>비교 견적을 받으시겠어요?</div>
+        <p class="cs-d t-body14L20">최대 5개 파트너로부터 견적을 받을 수 있어요.</p>
+        <div class="cs-card">
+          <div class="cs-card-h t-detail13L18 w-semibold">${ic('IconCheckSeal',16)} 이사 파트너로부터 견적이 도착했어요!</div>
+          <div class="cs-card-b"><span class="t-body14L18 c-fg-weak">받은 견적</span><b class="t-body16L20 w-bold c-fg-brand">550,000원 부터~</b></div>
+        </div>
+      </div>
+      <div class="bs-foot cross-foot">
+        ${boxButton({label:'닫기', size:'large', variant:'outlined', id:'csClose'})}
+        ${boxButton({label:'네, 받아볼래요', size:'large', variant:'brand-solid', id:'csGo'})}
+      </div>
+    </div>`;
+}
 
 VIEW.branch = ()=>{
   const list = pickedList();
+  const sheet = S.sheet==='cfmDone' ? cfmDoneSheet() : S.sheet==='cross' ? crossSheet() : '';
   screen.innerHTML = `
     ${topNav({title:'총 예상 견적', backId:'bk'})}
     <div class="cfm">
@@ -2293,17 +2351,52 @@ VIEW.branch = ()=>{
       <hr class="ods-divider">
       <div class="cfm-cards">${list.map(cfmCard).join('')}</div>
     </div>
-    ${actionDock({pattern:'single',
-      children: boxButton({label:`<span style="display:inline-flex;align-items:center;gap:6px">${ic('IconPhone',18)}맞춤 상담 신청</span>`, size:'large', variant:'brand-solid', id:'apply', full:true})})}
-    ${S.sheet==='cfmDone'?cfmDoneSheet():''}`;
-  screen.classList.toggle('has-sheet', S.sheet==='cfmDone');
+    ${actionDock({pattern:'dual-primary',
+      children: boxButton({label:'비교 견적 받기', size:'large', variant:'outlined', id:'cmp', full:true})
+        + boxButton({label:`<span style="display:inline-flex;align-items:center;gap:6px">${ic('IconPhone',18)}맞춤 상담 신청</span>`, size:'large', variant:'brand-solid', id:'apply', full:true})})}
+    ${sheet}`;
+  screen.classList.toggle('has-sheet', !!S.sheet);
   $('#bk').onclick = ()=>go('form');
   screen.querySelectorAll('[data-editk]').forEach(b=> b.onclick=()=>go('form'));
-  const apply=$('#apply'); if(apply) apply.onclick=()=>{ S.sheet='cfmDone'; setStage('applied'); render(); };
-  if(S.sheet==='cfmDone'){
+  const cmp=$('#cmp'); if(cmp) cmp.onclick=()=>{ S.sheet='cross'; render(); };            // 서브: 비교견적 → 크로스셀
+  const apply=$('#apply'); if(apply) apply.onclick=()=>{ S.sheet='cfmDone'; setStage('applied'); render(); }; // 메인: 아웃바운드 상담
+  if(S.sheet){
     screen.querySelector('.bs-overlay').onclick = ()=>{ S.sheet=null; render(); };
-    const cd=$('#cdGo'); if(cd) cd.onclick=()=>{ S.sheet=null; go('entry'); };
+    const cd=$('#cdGo'); if(cd) cd.onclick=()=>{ S.sheet=null; go('list'); };              // 완료 → 상담 내역
+    const csClose=$('#csClose'); if(csClose) csClose.onclick=()=>{ S.sheet=null; render(); };
+    const csGo=$('#csGo'); if(csGo) csGo.onclick=()=>{ S.sheet=null; setStage('applied'); go('list'); }; // 비교견적 → 상담 내역
   }
+};
+
+/* ══════════ 상담 내역 · 업체 매칭 리스트 (Figma 124:51989) ══════════
+   상담 신청/비교견적 완료 후 종착 화면. 서비스별 매칭 상태 카드 + 하단 스낵바. */
+const ML_TABS = ['신청 내역','받은 문서','채팅'];
+const ML_CHIPS = ['전체','전체시공','이사','이사청소','인터넷','렌탈'];
+VIEW.list = ()=>{
+  const list = pickedList();
+  screen.innerHTML = `
+    ${topNav({title:'상담 내역', backId:'bk'})}
+    <div class="mlist">
+      <div class="ml-tabs">${ML_TABS.map((t,i)=>`<button class="ml-tab${i?'':' on'}"><span class="t-body16L28 ${i?'w-medium':'w-bold'}">${t}</span></button>`).join('')}</div>
+      <div class="ml-chips">${ML_CHIPS.map((c,i)=>chip({label:c, size:'sm', variant:i?'normal':'outlined', pressed:i===0})).join('')}</div>
+      <button class="ml-period t-detail13L18 w-medium">6개월 이내 <span class="ml-caret">${ic('IconChevronRight',14)}</span></button>
+      <div class="ml-cards">
+        ${list.map(k=>{
+          const isProd = k==='net'||k==='rent';
+          return `<div class="ml-card">
+            <span class="ml-ic">${asset(PRICE_ART[k],28)}</span>
+            <div class="ml-body">
+              <b class="ml-nm t-body16L20 w-semibold">${label(k)}</b>
+              <span class="ml-stat t-detail13L18">${isProd?'상담원 매칭중':'업체 매칭 중'}</span>
+              ${isProd?'':`<span class="ml-sub t-detail13L18">딱 맞는 업체를 찾고 있어요</span>`}
+            </div>
+            <span class="ml-time t-detail11L14">방금</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="ml-snack t-detail13L18">신청 완료 · 매칭이 완료되면 알림으로 알려드릴게요.</div>`;
+  $('#bk').onclick = ()=>go('entry');
 };
 
 /* ══════════════ 케이스 시나리오 ══════════════ */

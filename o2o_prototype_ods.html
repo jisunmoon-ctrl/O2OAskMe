@@ -19,13 +19,15 @@
 
 /* ── [1] harness 전용 (ODS 대상 아님) ───────────────────────── */
 :root{
-  --hz-navy:#0C2A55;
-  --hz-navy-2:#0A2246;
-  --hz-grid:rgba(255,255,255,.075);
-  --hz-grid-strong:rgba(255,255,255,.14);
-  --hz-chalk:#DFEAFB;
-  --hz-chalk-dim:#8DACD8;
-  --hz-mint:#79E6C0;
+  /* harness = 라이트 그레이 솔리드 캔버스 + 블랙 디바이스 목업 (ODS 대상 아님) */
+  --hz-canvas:#E9EAEC;        /* 프리뷰 바깥 솔리드 그레이 배경 */
+  --hz-bezel:#0B0B0C;         /* 디바이스 블랙 베젤 */
+  --hz-chalk:#2E2F33;         /* 패널 기본 텍스트 (dark) */
+  --hz-chalk-dim:#70757B;     /* 패널 보조 텍스트 (medium gray) */
+  --hz-mint:#0E9F6E;          /* 패널 accent (light 배경에서 읽히는 dark green) */
+  --hz-line:rgba(0,0,0,.14);  /* 패널 구분선/보더 */
+  --hz-hover:rgba(0,0,0,.05); /* 패널 hover 배경 */
+  --hz-accent-weak:rgba(14,159,110,.12); /* accent tint */
   --hz-mono:"IBM Plex Mono","SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
 }
 
@@ -112,12 +114,7 @@ html,body{height:100%}
 body{
   font-family:var(--ods-font);
   color:var(--hz-chalk);
-  background:
-    linear-gradient(var(--hz-grid) 1px,transparent 1px) 0 0/28px 28px,
-    linear-gradient(90deg,var(--hz-grid) 1px,transparent 1px) 0 0/28px 28px,
-    linear-gradient(var(--hz-grid-strong) 1px,transparent 1px) 0 0/140px 140px,
-    linear-gradient(90deg,var(--hz-grid-strong) 1px,transparent 1px) 0 0/140px 140px,
-    radial-gradient(1100px 700px at 62% 12%, #123566 0%, var(--hz-navy) 45%, var(--hz-navy-2) 100%);
+  background:var(--hz-canvas);
   -webkit-font-smoothing:antialiased;
   letter-spacing:-.3px;
   padding:26px 22px 60px;
@@ -137,12 +134,12 @@ body{
   display:flex;gap:9px;align-items:baseline;transition:.14s;
 }
 #caseMenu button i{font-style:normal;font-family:var(--hz-mono);font-size:9.5px;opacity:.6;flex:0 0 22px}
-#caseMenu button:hover{background:rgba(255,255,255,.07);color:var(--hz-chalk)}
-#caseMenu button[aria-current="true"]{background:rgba(121,230,192,.14);color:#fff;font-weight:700}
+#caseMenu button:hover{background:var(--hz-hover);color:var(--hz-chalk)}
+#caseMenu button[aria-current="true"]{background:var(--hz-accent-weak);color:var(--hz-chalk);font-weight:700}
 #caseMenu button[aria-current="true"] i{color:var(--hz-mint);opacity:1}
 
 #rail{position:relative}
-#rail::before{content:"";position:absolute;left:5px;top:8px;bottom:12px;width:1px;background:rgba(255,255,255,.18)}
+#rail::before{content:"";position:absolute;left:5px;top:8px;bottom:12px;width:1px;background:var(--hz-line)}
 #rail li{position:relative}
 #rail li button{
   width:100%;text-align:left;background:none;border:0;cursor:pointer;font-family:inherit;
@@ -150,41 +147,44 @@ body{
   margin-bottom:9px;transition:.14s;
 }
 #rail li button::before{content:"";position:absolute;left:0;top:9px;width:11px;height:11px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.35);background:var(--hz-navy)}
+  border:1px solid rgba(0,0,0,.28);background:var(--hz-canvas)}
 #rail li button .n{font-family:var(--hz-mono);font-size:10px;opacity:.55;margin-right:7px}
-#rail li button:hover{background:rgba(255,255,255,.07);color:var(--hz-chalk)}
-#rail li.done button{color:rgba(223,234,251,.6)}
+#rail li button:hover{background:var(--hz-hover);color:var(--hz-chalk)}
+#rail li.done button{color:rgba(46,47,51,.45)}
 #rail li.done button::before{background:var(--hz-chalk-dim);border-color:var(--hz-chalk-dim)}
-#rail li.now button{color:#fff;font-weight:700}
-#rail li.now button::before{background:var(--hz-mint);border-color:var(--hz-mint);box-shadow:0 0 0 4px rgba(121,230,192,.2)}
+#rail li.now button{color:var(--hz-chalk);font-weight:700}
+#rail li.now button::before{background:var(--hz-mint);border-color:var(--hz-mint);box-shadow:0 0 0 4px rgba(14,159,110,.2)}
 #rail li.split{padding:2px 0 12px 24px;list-style:none}
 #rail li.split::before{display:none}
 #rail li.split span{font-family:var(--hz-mono);font-size:9px;letter-spacing:.14em;color:var(--hz-chalk-dim);
-  border-top:1px dashed rgba(255,255,255,.25);display:block;padding-top:11px}
+  border-top:1px dashed var(--hz-line);display:block;padding-top:11px}
 #rail li.p2{opacity:.78}
 .modesw{margin:2px 0 0 24px;display:flex;flex-direction:column;gap:2px;
-  border-top:1px dashed rgba(255,255,255,.2);padding-top:12px}
+  border-top:1px dashed var(--hz-line);padding-top:12px}
 .modesw button{
   text-align:left;background:none;border:0;cursor:pointer;font-family:inherit;
   font-size:11.5px;letter-spacing:-.02em;color:var(--hz-chalk-dim);padding:6px 8px;border-radius:6px;transition:.14s;
   display:flex;gap:8px;align-items:baseline;
 }
 .modesw button i{font-style:normal;font-family:var(--hz-mono);font-size:9.5px;opacity:.6}
-.modesw button:hover{background:rgba(255,255,255,.07);color:var(--hz-chalk)}
-.modesw button[aria-pressed="true"]{background:rgba(121,230,192,.14);color:#fff;font-weight:700}
+.modesw button:hover{background:var(--hz-hover);color:var(--hz-chalk)}
+.modesw button[aria-pressed="true"]{background:var(--hz-accent-weak);color:var(--hz-chalk);font-weight:700}
 .modesw button[aria-pressed="true"] i{color:var(--hz-mint);opacity:1}
 
 .phone{
   width:392px;height:800px;background:var(--ods-background);border-radius:38px;
-  box-shadow:0 0 0 9px #0B1B33, 0 0 0 10px rgba(255,255,255,.14), 0 40px 80px -20px rgba(0,0,0,.55);
+  box-shadow:0 0 0 10px var(--hz-bezel), 0 0 0 11px rgba(0,0,0,.28), 0 26px 60px -22px rgba(0,0,0,.35);
   overflow:hidden;position:relative;display:flex;flex-direction:column;color:var(--ods-foreground);
 }
-/* statusbar = OS chrome. ODS 규칙 대상 아님 */
-.statusbar{height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;font-family:var(--hz-mono);font-size:11.5px;letter-spacing:.02em;
-  color:var(--ods-foreground);background:var(--ods-background);position:relative;z-index:5}
-.statusbar .sig{display:flex;gap:3px;align-items:flex-end}
-.statusbar .sig i{display:block;width:3px;background:var(--ods-foreground);border-radius:1px}
+/* statusbar = OS chrome (Apple iOS 시스템 상태바). ODS 규칙 대상 아님 —
+   시스템 폰트(SF)·OS 시스템 글리프(셀룰러/와이파이/배터리)를 사용한다. */
+.statusbar{height:50px;flex:0 0 50px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px 0 27px;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro",system-ui,sans-serif;
+  color:#000;background:var(--ods-background);position:relative;z-index:5}
+.statusbar .sb-time{font-size:15px;font-weight:600;letter-spacing:.3px;line-height:1;font-variant-numeric:tabular-nums}
+.statusbar .sb-icons{display:flex;align-items:center;gap:7px}
+.statusbar .sb-icons svg{display:block;flex:0 0 auto}
 .screen{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;scrollbar-width:thin}
 .screen::-webkit-scrollbar{width:0}
 
@@ -415,15 +415,45 @@ body{
 /* ═══ O2O 홈 (Figma 37:10085) ═══════════════════════════ */
 /* 홈은 회색 배경 위에 흰 카드가 올라가는 구조 */
 .o2o-home{background:var(--ods-background-weak);min-height:100%}
+/* Search Top Navigation (GNB) — Figma 112:27089.
+   서비스 공통 chrome 이라 원칙상 프리뷰 제외(가이드 §2)이나 명시 요청으로 구현.
+   chrome 이므로 ODS 아이콘 규칙(§5) 비대상 — bell/cart/magnifier 는 ODS 아웃라인 아이콘 재사용,
+   hamburger/bookmark 는 stroke 글리프(대응 ODS path 미보유). */
+.search-nav{display:flex;align-items:center;gap:14px;height:44px;padding:0 16px;background:var(--ods-background)}
+.search-nav .sn-icon{flex:0 0 auto;width:24px;height:24px;display:grid;place-items:center;
+  background:none;border:0;cursor:pointer;color:var(--ods-foreground);padding:0}
+.search-nav .sn-search{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:36px;
+  padding:0 12px;border-radius:100px;background:var(--ods-background-weak)}
+.search-nav .sn-search .sn-ic{flex:0 0 auto;display:grid;place-items:center;color:var(--ods-foreground-weak)}
+.search-nav .sn-search .sn-ph{flex:1;min-width:0;color:var(--ods-foreground-weak);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* 주소 행 — 페이지 전용(글로벌 GNB 아님) */
-.addrbar{display:flex;align-items:center;gap:8px;padding:15px 16px;background:var(--ods-background)}
+/* 주소 행 — Figma 112:27090: gap12 · py12(h50) · label(아이콘+텍스트) gap4 · 텍스트 body14L20 regular */
+.addrbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--ods-background)}
+.addrbar .ab-label{flex:1;min-width:0;display:flex;align-items:center;gap:4px;color:var(--ods-foreground)}
 .addrbar .a-txt{flex:1;min-width:0;color:var(--ods-foreground);
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* Offering — 그라디언트 white → #F0F1F2 (75%) */
+/* Offering — 배경 그라디언트 (Figma 112:26801: #E5EDF2 → #F5F5F5, 거의 수직)
+   하단 스톱은 backgroundWeak 토큰과 동일. 상단 #E5EDF2 는 대응 토큰이 없는
+   [토큰 예외] 장식용 그라디언트 색이라 Figma 실측값을 그대로 둔다. */
 .offering{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px;
-  background:linear-gradient(180deg, var(--ods-background) 0%, #F0F1F2 75%);
-  box-shadow:2px 2px 10px 0 rgba(194,200,204,.2)}
+  position:relative;overflow:hidden;
+  /* 하단은 background-weak 로 끝나 아래 메뉴 블록과 같은 색으로 이어진다.
+     그림자를 두면 같은 색 위에 경계선이 생겨 분리돼 보이므로 제거한다. */
+  background:linear-gradient(180.3deg, #E5EDF2 1%, var(--ods-background-weak) 99%)}
+/* 배경 위를 천천히 떠다니는 브랜드 블루 글로우(장식)
+   [토큰 예외] glow stop 은 genuineBlue.350(brand)·light 계열 기반 rgba */
+.offering::before{content:'';position:absolute;inset:-30%;z-index:0;pointer-events:none;filter:blur(8px);
+  background:
+    radial-gradient(50% 42% at 28% 18%, rgba(0,161,255,.12), transparent 70%),
+    radial-gradient(46% 38% at 78% 8%, rgba(122,196,255,.16), transparent 72%);
+  animation:of-drift 9s ease-in-out infinite alternate}
+.offering > *{position:relative;z-index:1}
+@keyframes of-drift{
+  0%  {transform:translate3d(-4%,-2%,0) scale(1)}
+  100%{transform:translate3d(5%,3%,0) scale(1.08)}
+}
 .offering .of-row{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
 .offering .of-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;color:var(--ods-foreground)}
 
@@ -459,7 +489,25 @@ body{
 }
 .offering .of-title > span:nth-child(1){animation:of-rise-1 var(--kv-dur) var(--kv-ease)}
 .offering .of-title > span:nth-child(2){animation:of-rise-2 var(--kv-dur) var(--kv-ease)}
-.offering .pillinput{animation:of-rise-3 var(--kv-dur) var(--kv-ease)}
+
+/* ── 인풋 스트로크 그라디언트 애니메이션 (Figma 112:27939, 1.5px stroke) ──
+   기법: padding-box(흰 배경) + border-box(conic 그라디언트)로 보더에만 그라디언트를 칠하고
+   @property 로 각도를 등록해 스무스하게 회전시킨다.
+   [토큰 예외] 장식용 그라디언트라 ODS 단일 토큰이 없어
+   genuineBlue.100(#DDF3FF) ↔ genuineBlue.350(brand/#00A1FF) 스톱으로 근사(Figma #adf 는 그 사이).
+   @property 미지원 브라우저는 --pill-ang:0deg 로 정적 그라디언트 보더로 폴백된다. */
+@property --pill-ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+.offering .pillinput{
+  --pill-ang:0deg;
+  border:1.5px solid transparent;
+  background:
+    linear-gradient(var(--ods-background),var(--ods-background)) padding-box,
+    conic-gradient(from var(--pill-ang),
+      var(--ods-palette-genuineblue-100), var(--ods-foreground-brand),
+      var(--ods-palette-genuineblue-100), var(--ods-foreground-brand),
+      var(--ods-palette-genuineblue-100)) border-box;
+  animation:of-rise-3 var(--kv-dur) var(--kv-ease), pill-spin 4s linear infinite}
+@keyframes pill-spin{to{--pill-ang:360deg}}
 
 /* pill input — Figma input 컴포넌트
    r100 · border .5px border · pl16.5 pr8.5 py12.5 · ext.o2o.shadow.card(2 2 20 #C2C8CC33)
@@ -497,7 +545,9 @@ body{
   background:var(--ods-background-inverse);color:var(--ods-foreground-inverse)}
 
 /* Menu 영역 */
-.menu-wrap{display:flex;flex-direction:column;gap:6px;padding:12px 16px 16px}
+/* 메뉴 블록 배경 = 오퍼링 그라디언트 끝 색(background-weak) — 경계 없이 자연스럽게 연결 */
+.menu-wrap{display:flex;flex-direction:column;gap:6px;padding:12px 16px 16px;background:var(--ods-background-weak)}
+.menu-h{display:block;color:var(--ods-foreground);padding:6px 0 2px}
 /* Grid/Extention/SM — 2-up 카드 */
 .ext-grid{display:flex;gap:6px;align-items:stretch}
 .ext-card{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:8px;
@@ -528,7 +578,8 @@ body{
   display:grid;place-items:center;color:var(--ods-foreground-weak)}
 .part-more .pm-l{color:var(--ods-foreground)}
 /* 이사 계획 중이라면 5-up — 아이템별 쉐도우·강조 배경 없음(섹션 카드에만 쉐도우) */
-.compact-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+/* 이사 준비 중이라면 5-up — Figma 112:26851: gap10, 프레임 폭 균등 분포(edge-to-edge) */
+.compact-row{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:8px}
 .compact-item{display:flex;flex-direction:column;align-items:center;justify-content:center;
   border-radius:12px;background:none;border:0;cursor:pointer;font-family:inherit;overflow:hidden}
 .compact-item .ci-img{width:56px;height:56px;padding:4px;display:flex;align-items:center;
@@ -555,23 +606,73 @@ body{
 /* 선택 상태 — border 1.5px borderStrong + Checkbox checked */
 .pick[aria-pressed="true"]{border-color:var(--ods-border-strong);border-width:1.5px;padding:15.5px}
 
-/* 서비스 선택 — 인라인 옵션 */
-/* 화면 배경이 backgroundWeak 이므로 카드에 붙는 인라인 옵션은 흰 배경을 유지한다 */
+/* 서비스 선택 — 부분시공 시공 범위 타일(Figma 131:58576)
+   화면 배경이 backgroundWeak 이므로 카드에 붙는 인라인 옵션은 흰 배경을 유지한다 */
 .svcopt{border:1.5px solid var(--ods-border-strong);border-top:0;border-radius:0 0 12px 12px;
-  padding:14px 15px 15px;margin:-6px 0 0;background:var(--ods-background)}
-.so-h{margin-bottom:11px;display:flex;align-items:center;gap:7px;color:var(--ods-foreground)}
-.so-opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
-.so-sum{width:100%;display:flex;align-items:center;gap:10px;border:1.5px solid var(--ods-border-strong);border-top:0;
-  border-radius:0 0 12px 12px;padding:12px 15px;margin:-6px 0 0;
-  background:var(--ods-background);cursor:pointer;font-family:inherit;text-align:left}
-.so-sum span{flex:1;min-width:0;color:var(--ods-foreground)}
-.pick[aria-pressed="true"]:has(+ .svcopt),.pick[aria-pressed="true"]:has(+ .so-sum){border-bottom-left-radius:0;border-bottom-right-radius:0}
+  padding:4px 12px 12px;margin:-6px 0 0;background:var(--ods-background)}
+.svc-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+/* CategoryTile — h77 · r8 · asset 44 + label(detail12L16). 선택 시 backgroundWeak */
+.svc-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  height:77px;padding:4px;border:0;border-radius:8px;background:none;cursor:pointer;
+  font-family:inherit;color:var(--ods-foreground);overflow:hidden;transition:.15s}
+.svc-tile.on{background:var(--ods-background-weak)}
+.pick[aria-pressed="true"]:has(+ .svcopt){border-bottom-left-radius:0;border-bottom-right-radius:0}
 /* Sticky Action — 투명→backgroundWeak 그라디언트 위 solid BoxButton */
 .sticky-action{position:sticky;bottom:0;z-index:6;padding:32px 16px 16px;margin-top:auto;
   background:linear-gradient(180deg, rgba(245,245,245,0) 0%, var(--ods-background-weak) 100%)}
 
 /* ═══ 입력폼 로딩 (Figma 56:19496) ══════════════════════ */
 .load-screen{background:var(--ods-background-weak);min-height:100%}
+
+/* ═══ 상단 floatingProgress 바 (Figma 178:23717/23769/23928) ═══════════
+   폼 챗봇 상단 고정 — 입력중 progress(n/총) / 견적후 confirm(총 예상 견적+상담신청) */
+.fbar{margin:4px 16px 0;padding:8px 12px;background:var(--ods-background);border-radius:4px;
+  box-shadow:2px 2px 10px 0 rgba(194,200,204,.2);display:flex;align-items:center;gap:8px}
+.fbar .fb-t{flex:1;min-width:0;display:flex;align-items:center;gap:7px;color:var(--ods-foreground);overflow:hidden}
+.fbar .fb-lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fbar .fb-ring{flex:0 0 auto;width:20px;height:20px;display:grid;place-items:center}
+/* arc 를 재렌더마다 empty(--c) → 현재(--off) 로 채워 1/n 단계 진행을 표현 */
+.fbar .fb-arc{animation:fb-fill .5s cubic-bezier(.65,0,.35,1) both}
+@keyframes fb-fill{from{stroke-dashoffset:var(--c)}to{stroke-dashoffset:var(--off)}}
+.fbar .fb-doc{flex:0 0 auto;display:grid;place-items:center;color:var(--ods-foreground-weak)}
+.fbar .fb-spin{flex:0 0 auto;display:grid;place-items:center}
+.fbar .fb-count{flex:0 0 auto;color:var(--ods-foreground-weak)}
+/* 채팅 안 인라인 견적 price 버블 (Figma type=price) */
+.chat-price{align-self:flex-start;max-width:300px;width:300px;background:var(--ods-background);
+  border-radius:12px;padding:12px;box-shadow:2px 2px 10px 0 rgba(194,200,204,.2);animation:pop .26s ease both}
+.chat-price .cp-lb{color:var(--ods-foreground)}
+.chat-price .cp-val{color:var(--ods-foreground-brand)}
+.chat-price .cp-sub{color:var(--ods-foreground);margin:2px 0 12px}
+.chat-price .cp-card{display:flex;gap:10px;padding-bottom:12px}
+.chat-price .cp-card .cp-rows{flex:1;min-width:0}
+.chat-price .cp-row{display:flex;gap:8px;padding-bottom:4px}
+.chat-price .cp-row .cp-k{width:48px;flex:0 0 auto;color:var(--ods-foreground-weak)}
+.chat-price .cp-row .cp-v{flex:1;min-width:0;color:var(--ods-foreground-weak)}
+.chat-price .cp-done{display:flex;align-items:center;gap:4px;color:var(--ods-foreground);margin-bottom:8px}
+
+/* ═══ 견적서 확인(CFM) — Figma 178:23974 Flow1-1 ═══════════════════════════ */
+.cfm{background:var(--ods-background);min-height:100%}
+.cfm-head{padding:16px}
+.cfm-head .cfm-total{margin:2px 0 8px}
+.cfm-head .cfm-sub{color:var(--ods-foreground)}
+.cfm-cards{padding:4px 16px 24px}
+.cfm-card{display:flex;gap:10px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--ods-background-weak)}
+.cfm-card:last-child{border-bottom:0}
+.cfm-card .cfm-ic{flex:0 0 auto}
+.cfm-card .cfm-body{flex:1;min-width:0}
+.cfm-card .cfm-th{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:9px}
+.cfm-card .cfm-th b{color:var(--ods-foreground)}
+.cfm-card .cfm-edit{flex:0 0 auto;width:24px;height:24px;background:none;border:0;cursor:pointer;
+  display:grid;place-items:center;color:var(--ods-foreground-weak)}
+.cfm-card .cfm-row{display:flex;gap:8px;padding-bottom:4px}
+.cfm-card .cfm-row .cfm-k{flex:0 0 auto;width:72px;color:var(--ods-foreground-weak)}
+.cfm-card .cfm-row .cfm-v{flex:1;min-width:0;color:var(--ods-foreground)}
+/* 상담 신청 완료 바텀시트 (Figma 137:114484) */
+.cfm-sheet .cfm-done{padding:24px 24px 12px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.cfm-sheet .cd-check{width:60px;height:60px;border-radius:50%;background:var(--ods-background-brand);
+  color:var(--ods-foreground-inverse);display:grid;place-items:center;margin-bottom:20px}
+.cfm-sheet .cd-t{color:var(--ods-foreground);margin-bottom:8px}
+.cfm-sheet .cd-d{color:var(--ods-foreground-weak)}
 .load-box{display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:16px}
 .load-usp{display:flex;align-items:center;gap:4px;padding-bottom:8px;color:var(--ods-foreground)}
 .load-chips{display:flex;gap:4px;align-items:flex-start;flex-wrap:wrap}
@@ -643,6 +744,36 @@ body{
 .bs-item .bs-txt b{color:var(--ods-foreground)}
 .bs-item .bs-txt span{color:var(--ods-foreground-weak)}
 .bsheet .bs-foot{padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+
+/* ═══ 하단 액션 모달 — 직접입력/갤러리/캘린더 (Figma 미정의 동작) ═══════════════ */
+.fm-sheet .fm-h{display:flex;align-items:center;gap:6px;padding:8px 16px 14px;color:var(--ods-foreground)}
+.fm-sheet .fm-body{padding:0 16px 8px}
+.fm-input{width:100%;height:48px;padding:0 14px;border:1.5px solid var(--ods-border);border-radius:12px;
+  background:var(--ods-background);color:var(--ods-foreground);font-family:inherit;outline:none;letter-spacing:-.3px}
+.fm-input:focus{border-color:var(--ods-border-strong)}
+.fm-input::placeholder{color:var(--ods-foreground-weak)}
+.fm-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.fm-tile{position:relative;aspect-ratio:1;border:0;border-radius:8px;overflow:hidden;cursor:pointer;padding:0;background:none}
+.fm-tile .fg-ph{display:block;width:100%;height:100%;
+  background:linear-gradient(135deg,var(--ods-palette-gray-200),var(--ods-background-weak))}
+.fm-tile.on{outline:2px solid var(--ods-border-brand);outline-offset:-2px}
+.fm-tile .fg-chk{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;
+  background:var(--ods-background-brand);color:var(--ods-foreground-inverse);display:grid;place-items:center}
+.fm-cal .fc-wk{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;
+  color:var(--ods-foreground-weak);font-size:12px;padding-bottom:8px}
+.fm-cal .fc-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.fm-cal .fc-day{aspect-ratio:1;border:0;background:none;border-radius:50%;cursor:pointer;
+  color:var(--ods-foreground);font-family:inherit;font-size:15px}
+.fm-cal .fc-day:hover{background:var(--ods-background-weak)}
+.fm-cal .fc-day.on{background:var(--ods-background-brand);color:var(--ods-foreground-inverse)}
+/* 리스트 셀렉 (포장종류 등) — 하단 액션 리스트 */
+.q-list{width:100%;display:flex;flex-direction:column;gap:8px}
+.q-li{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;width:100%;
+  padding:14px 16px;border:1px solid var(--ods-border);border-radius:12px;background:var(--ods-background);
+  cursor:pointer;font-family:inherit}
+.q-li:hover{border-color:var(--ods-border-strong)}
+.q-li .ql-t{color:var(--ods-foreground)}
+.q-li .ql-s{color:var(--ods-foreground-weak)}
 /* ODS RadioGroup.Indicator — 20px · r9999 · checked 시 backgroundInverse */
 .ods-radio{width:20px;height:20px;border-radius:9999px;border:1px solid var(--ods-border);
   background:var(--ods-background);display:grid;place-items:center;flex:0 0 auto;margin-top:2px}
@@ -849,8 +980,15 @@ body{
 
   <div class="phone">
     <div class="statusbar">
-      <span>9:41</span>
-      <span class="sig" aria-hidden="true"><i style="height:5px"></i><i style="height:7px"></i><i style="height:9px"></i><i style="height:11px"></i></span>
+      <span class="sb-time">9:41</span>
+      <span class="sb-icons" aria-hidden="true">
+        <!-- Cellular signal (4 bars) -->
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+        <!-- Wi-Fi -->
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 11.7 1.6 4.5a9.7 9.7 0 0 1 13.8 0z"/></svg>
+        <!-- Battery -->
+        <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.7" y="0.8" width="21" height="11.4" rx="3" stroke="currentColor" stroke-opacity="0.35"/><rect x="2.2" y="2.3" width="18" height="8.4" rx="1.8" fill="currentColor"/><path d="M23 4.4c1 .5 1 3.7 0 4.2z" fill="currentColor" fill-opacity="0.4"/></svg>
+      </span>
     </div>
     <div class="screen" id="screen"></div>
   </div>
@@ -892,6 +1030,7 @@ const ODS_ICON = {
  "IconInfoCircle": "<path d=\"M240 209c8.836 0 16 7.164 16 16v81c0 8.836-7.164 16-16 16s-16-7.163-16-16v-81c0-8.837 7.163-16 16-16M240 157c9.941 0 18 8.059 18 18s-8.059 18-18 18-18-8.059-18-18 8.059-18 18-18\"></path><path fill-rule=\"evenodd\" d=\"M240 47c106.591 0 193 86.409 193 193s-86.409 193-193 193S47 346.591 47 240 133.409 47 240 47m0 32c-88.918 0-161 72.082-161 161s72.082 161 161 161 161-72.082 161-161S328.918 79 240 79\" clip-rule=\"evenodd\"></path>",
  "IconPencil": "<path fill-rule=\"evenodd\" d=\"M305.546 74.05c25.774-25.775 67.563-25.775 93.338 0l7.071 7.07c25.774 25.776 25.775 67.564 0 93.339L164.579 415.834a26 26 0 0 1-18.259 7.614l-63.94.312c-14.23.069-25.827-11.303-26.121-25.448l-.005-.675.302-63.951a26 26 0 0 1 7.615-18.262zM88.544 336.305l-.263 55.426 55.415-.268 194.146-194.146-55.154-55.154zM376.257 96.677c-13.278-13.278-34.805-13.278-48.083 0l-22.86 22.859 55.155 55.154 22.859-22.858c13.278-13.278 13.278-34.806 0-48.084z\" clip-rule=\"evenodd\"></path>",
  "IconCheckCircle": "<path d=\"M308.687 184.687c6.248-6.249 16.378-6.249 22.626 0s6.249 16.378 0 22.626l-98.555 98.556a16 16 0 0 1-22.627 0l-61.444-61.444c-6.249-6.249-6.249-16.379 0-22.627 6.248-6.249 16.378-6.249 22.626 0l50.131 50.131z\"></path><path fill-rule=\"evenodd\" d=\"M238 36c112.666 0 204 91.334 204 204s-91.334 204-204 204S34 352.666 34 240 125.334 36 238 36m0 32c-94.993 0-172 77.007-172 172s77.007 172 172 172 172-77.007 172-172S332.993 68 238 68\" clip-rule=\"evenodd\"></path>",
+ "IconPhone": "<path d=\"M132 216c28.8 56.6 75.2 102.8 131.8 131.8l44-44c5.4-5.4 13.4-7.2 20.4-4.8 22.4 7.4 46.6 11.4 71.4 11.4 11 0 20 9 20 20v70c0 11-9 20-20 20-187.8 0-340-152.2-340-340 0-11 9-20 20-20h70c11 0 20 9 20 20 0 25 4 49 11.4 71.4 2.2 7 .6 14.8-5 20.4l-44 44z\"></path>",
  "IconBell": "<path d=\"M271.644 396.501c5.806-6.661 15.912-7.355 22.574-1.549 6.661 5.806 7.354 15.913 1.548 22.574-12.319 14.133-32.097 22.473-55.766 22.473s-43.447-8.34-55.766-22.473c-5.806-6.661-5.112-16.768 1.549-22.574 6.662-5.806 16.768-5.112 22.574 1.549 5.09 5.839 15.313 11.498 31.643 11.498 16.331 0 26.554-5.658 31.644-11.498\"></path><path fill-rule=\"evenodd\" d=\"M240 55c60.66 0 103.478 6.831 129.201 35.28 12.878 14.243 20.172 32.486 24.352 54.096C397.71 165.869 399 191.862 399 222.65V339h4c8.837 0 16 7.163 16 16s-7.163 16-16 16H77c-8.837 0-16-7.163-16-16s7.163-16 16-16h4V222.65c0-30.788 1.29-56.781 5.447-78.274 4.18-21.61 11.474-39.853 24.352-54.096C136.522 61.831 179.34 55 240 55m0 32c-61.562 0-90.245 7.908-105.466 24.742-7.594 8.399-13.133 20.433-16.669 38.711-3.558 18.395-4.865 41.901-4.865 72.197V339h254V222.65c0-30.296-1.307-53.802-4.865-72.197-3.536-18.278-9.075-30.312-16.669-38.711C330.245 94.908 301.562 87 240 87\" clip-rule=\"evenodd\"></path>",
  "IconClock": "<path d=\"M239 128c8.837 0 16 7.163 16 16v82.38c0 4.568 2.229 8.85 5.972 11.47l57.204 40.043c7.239 5.067 8.999 15.044 3.931 22.283-5.067 7.239-15.044 8.999-22.283 3.931l-57.203-40.042A46 46 0 0 1 223 226.38V144c0-8.837 7.163-16 16-16\"></path><path fill-rule=\"evenodd\" d=\"M240 40c110.457 0 200 89.543 200 200s-89.543 200-200 200S40 350.457 40 240 129.543 40 240 40m0 32c-92.784 0-168 75.216-168 168s75.216 168 168 168 168-75.216 168-168S332.784 72 240 72\" clip-rule=\"evenodd\"></path>",
  "IconCalendar": "<path fill-rule=\"evenodd\" d=\"M303.5 43c8.837 0 16 7.163 16 16v15h13.521c25.095 0 46.839 5.864 62.071 21.361C410.267 110.801 416 132.783 416 158.256v173.488l-.004 1.192c-.177 24.966-5.967 46.504-20.904 61.703C379.86 410.136 358.116 416 333.021 416H151.979c-25.095 0-46.839-5.864-62.07-21.361-14.938-15.199-20.728-36.737-20.905-61.703L69 331.744V158.256c0-25.473 5.734-47.455 20.908-62.895C105.14 79.863 126.884 74 151.98 74H165.5V59c0-8.837 7.163-16 16-16s16 7.163 16 16v15h90V59c0-8.837 7.163-16 16-16M101 331.744l.015 1.973c.292 20.112 5.062 31.722 11.715 38.491 6.805 6.923 18.538 11.783 39.199 11.791h181.219c20.613-.02 32.325-4.876 39.122-11.791 6.867-6.987 11.73-19.133 11.73-40.464V196H101zm50.979-225.743-.05-.001c-20.661.008-32.394 4.869-39.199 11.792-6.867 6.987-11.73 19.133-11.73 40.464V164h283v-5.744c0-21.331-4.863-33.477-11.73-40.464-6.797-6.915-18.509-11.771-39.122-11.791L319.5 106v15l-.005.413C319.276 130.059 312.198 137 303.5 137s-15.776-6.941-15.995-15.587L287.5 121v-15h-90v15l-.005.413C197.276 130.059 190.198 137 181.5 137s-15.776-6.941-15.995-15.587L165.5 121v-15h-13.438z\" clip-rule=\"evenodd\"></path>",
@@ -924,7 +1063,8 @@ const ODS_ASSET = {
   cleaningTool: 'AssetCleaningToolLargeGenuineBlueView1/image_240.png',
   movingBox:    'AssetMovingBoxLargeGenuineBlueView1/image_240.png',
   wifiRouter:   'AssetWiFiRouterLargeDarkBlueView1/image_240.png',
-  waterPurifier:'AssetWaterPurifierLargeGenuineBlueView1/image_240.png'
+  waterPurifier:'AssetWaterPurifierLargeGenuineBlueView1/image_240.png',
+  photoBasin:   'AssetPhotoWashBasinLarge/image_240.png'   /* 욕실 — Figma 75:28628 */
 };
 const asset = (key, size, cls='') =>
   `<img src="${ODS_ASSET_BASE}/${ODS_ASSET[key]}" alt="" class="${cls}" width="${size}" height="${size}"
@@ -1032,8 +1172,28 @@ const ADDR_BOOK = [
 /* 홈 Offering 인풋 플레이스홀더 — 순서대로 롤링된다.
    마지막 복제 항목은 렌더 시점에 붙이므로 여기엔 원본만 둔다. */
 const PH_ROLL = [
-  '도배, 주방 시공 견적 상담 받고 싶어',   /* Figma 64:20194 */
-  '인터넷, 렌탈 상품 추천 상담 받기'
+  '벽지 도배와 보관이사 견적이 궁금해요',   /* Figma 112:27940 */
+  '도배, 주방 시공 견적 상담 받고 싶어'
+];
+
+/* 서비스 선택 화면(Figma 112:28225·137:113713) list 문면.
+   전역 SERVICES.name/sub 은 chip·progress 등에서 짧게 쓰이므로,
+   선택 화면 전용 title/desc 는 여기서 별도로 관리한다. 설치수리(fix)는 이 화면에 없다. */
+const SELECT_LIST = [
+  {k:'full',  title:'집 전체 시공 상담',            desc:'설계부터 시공까지 스타일/예산에 맞춘 종합 상담'},
+  {k:'part',  title:'부분 시공 상담',               desc:'주방, 욕실, 도배·장판 등 원하는 부분만 시공'},
+  {k:'move',  title:'이사',                        desc:'용달부터 반포장·포장·보관이사'},
+  {k:'clean', title:'이사청소',                    desc:'입주청소부터 인테리어 이후 청소'},
+  {k:'net',   title:'인터넷 설치',                  desc:'신규 가입, 최대 혜택 요금 상담'},
+  {k:'rent',  title:'정수기,공기청정기, 가전 렌탈', desc:'가전 월 정기 구독 최대 혜택으로 상담 받기'}
+];
+/* 부분시공 선택 시 카드 안에 펼쳐지는 시공 범위 타일(Figma 131:58576) */
+const PART_TILES = [
+  {label:'주방', art:'photoKitchen'},
+  {label:'도배', art:'photoWall'},
+  {label:'마루', art:'photoFloor'},
+  {label:'장판', art:'photoVinyl'},
+  {label:'욕실', art:'photoBasin'}
 ];
 
 /* 홈 Section_Part "오늘의집이 직접하는 부분 시공" */
@@ -1135,19 +1295,18 @@ const dday = () => DDAY[(S.ans['dday']||[])[0]] ?? undefined;
 const isReserve = () => { const d=dday(); return d==null || d>45; };
 
 /* ══════════════ 상태 ══════════════ */
-const LABELS = {entry:'진입',select:'서비스 선택',loading:'항목 조립',form:'최소 정보 입력',
-  branch:'견적서 확인',partners:'파트너 보기',phome:'파트너홈',done:'신청 완료',match:'파트너 확정',more:'추가 정보 입력',final:'견적 확정'};
-/* Phase 1 = 신청까지 · Phase 2 = 상담 파트너 확정 이후 */
-const PHASE1 = ['entry','select','loading','form','branch','partners','phome','done'];
-const PHASE2 = ['match','more','final'];
-const flowKeys = () => [...PHASE1, ...PHASE2];
+const LABELS = {entry:'진입',select:'서비스 선택',loading:'항목 조립',form:'정보 입력',
+  branch:'견적서 확인'};
+/* 02 서비스 선택 ~ 05 견적서 확인. 파트너 보기·파트너홈·신청 완료 퍼널은 삭제됨. */
+const PHASE1 = ['entry','select','loading','form','branch'];
+const flowKeys = () => [...PHASE1];
 const afterForm = () => 'branch';
 const S = {mode:'chat', screen:'entry', picked:new Set(['full']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
 /* 신청 진행 단계 — 재진입 시 상단 고정 진입점의 상태가 된다 */
-const RANK = {none:0, draft:1, applied:2, matched:3, quoted:4};
+const RANK = {none:0, draft:1, applied:2};
 const setStage = s => { if(RANK[s] > RANK[S.stage]) S.stage = s; };
 
 /* ── 문항 순서 — 견적에 가장 유효한 항목부터 ──────────
@@ -1226,10 +1385,7 @@ const pickedList = () => [...S.picked];
 /* ══════════════ 렌더 ══════════════ */
 function go(next){
   S.sheet = null;                       /* 화면을 옮기면 열린 시트는 닫는다 */
-  if(next==='done') setStage('applied');
-  else if(next==='match') setStage('matched');
-  else if(next==='final') setStage('quoted');
-  else if(hasDraft()) setStage('draft');
+  if(hasDraft()) setStage('draft');
   S.screen=next; render(); screen.scrollTop=0;
 }
 function render(){ syncAuto(); renderRail(); renderCases(); renderMode();
@@ -1238,9 +1394,8 @@ function render(){ syncAuto(); renderRail(); renderCases(); renderMode();
 function renderRail(){
   const keys = flowKeys(), i = keys.indexOf(S.screen);
   $('#rail').innerHTML = keys.map((k,n)=>{
-    const cls = [n<i?'done':(n===i?'now':''), PHASE2.includes(k)?'p2':''].join(' ');
-    const div = k==='match' ? `<li class="split"><span>파트너 확정 이후</span></li>` : '';
-    return div + `<li class="${cls}"><button data-step="${k}"><span class="n">${String(n+1).padStart(2,'0')}</span>${LABELS[k]}</button></li>`;
+    const cls = n<i?'done':(n===i?'now':'');
+    return `<li class="${cls}"><button data-step="${k}"><span class="n">${String(n+1).padStart(2,'0')}</span>${LABELS[k]}</button></li>`;
   }).join('');
   $('#rail').querySelectorAll('[data-step]').forEach(b=> b.onclick=()=>go(b.dataset.step));
 }
@@ -1277,22 +1432,10 @@ function progress(){
       sub:`${svc} · ${n}/${q1.length} 입력함`, cta:'이어서 작성', ctaVariant:'solid', to:'form', clear:true};
   }
   if(S.stage==='applied'){
-    const wait = isReserve() && (S.picked.has('move')||S.picked.has('clean'));
-    return wait
-      ? {tone:'wait', dot:'예약 접수', badge:'brand-weak', title:'입주 45일 전에 자동으로 신청돼요',
-         sub:`${svc} · 지금은 기다리시면 돼요`, cta:'내역 보기', ctaVariant:'normal', to:'done'}
-      : {tone:'wait', dot:'매칭 중', badge:'brand-weak', title:'업체를 찾고 있어요',
-         sub:`${svc} · 영업일 1~2일 안에 견적이 도착해요`, cta:'내역 보기', ctaVariant:'normal', to:'done'};
+    return {tone:'wait', dot:'상담 신청됨', badge:'brand-weak', title:'상담 신청이 접수됐어요',
+      sub:`${svc} · 희망 시간대에 전문 상담원이 연락드려요`, cta:'견적서 보기', ctaVariant:'normal', to:'branch'};
   }
-  if(S.stage==='matched'){
-    const left = queue(2).filter(f=>!(S.ans[keyOf(f)]||[]).length || isUnknown(f)).length;
-    return {tone:'act', dot:'추가 정보 필요', badge:'attention', title:'업체 3곳이 상담을 수락했어요',
-      sub: left?`${left}가지만 더 채우면 견적 범위가 좁아져요`:'추가 정보를 다 채웠어요',
-      cta: left?'입력하기':'견적 보기', ctaVariant:'solid', to: left?'more':'final'};
-  }
-  const e = S.picked.has('move') ? estimate(2) : null;
-  return {tone:'quoted', dot:'견적 도착', badge:'primary', title: e?`예상 ${e.lo}~${e.hi}만원`:'확정 견적이 도착했어요',
-    sub:`${svc} · 확인하고 계약까지 진행할 수 있어요`, cta:'견적 보기', ctaVariant:'brand-solid', to:'final'};
+  return null;
 }
 function progressBar(){
   const p = progress(); if(!p) return '';
@@ -1320,9 +1463,25 @@ const VIEW = {};
 VIEW.entry = ()=>{
   screen.innerHTML = `
     <div class="o2o-home">
+      <div class="search-nav" role="navigation" aria-label="글로벌 내비게이션">
+        <button class="sn-icon" aria-label="메뉴">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3.5 7h17M3.5 12h17M3.5 17h17"/></svg>
+        </button>
+        <div class="sn-search">
+          <span class="sn-ic">${ic('IconMagnifyingGlass',18)}</span>
+          <span class="sn-ph t-body14L20 w-regular">오늘의집 통합검색</span>
+        </div>
+        <button class="sn-icon" aria-label="알림">${ic('IconBell',24)}</button>
+        <button class="sn-icon" aria-label="북마크">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M6.5 3.75h11a1 1 0 0 1 1 1V20l-6.5-4.6L5.5 20V4.75a1 1 0 0 1 1-1z"/></svg>
+        </button>
+        <button class="sn-icon" aria-label="장바구니">${ic('IconCart',24)}</button>
+      </div>
       <div class="addrbar">
-        ${ic('IconLocationPinDot',18)}
-        <span class="a-txt t-body15L24 w-medium">서울특별시 송파구 올림픽로 135 (잠실...</span>
+        <div class="ab-label">
+          ${ic('IconLocationPinDot',18)}
+          <span class="a-txt t-body14L20 w-regular">서울특별시 송파구 올림픽로 135 (잠실새내로 245번길 12)</span>
+        </div>
         ${textButton({label:'주소변경', size:14, variant:'primary'})}
       </div>
       <hr class="ods-divider">
@@ -1330,8 +1489,7 @@ VIEW.entry = ()=>{
       <section class="offering" id="hook" role="button" tabindex="0">
         <div class="of-row">
           <div class="of-title">
-            <span class="t-detail13L18 w-medium">알아보기 귀찮은 인테리어·이사·이사청소·인터넷</span>
-            <span class="t-heading20 w-semibold">한번에 무료 상담 받기</span>
+            <span class="t-body16L20 w-bold">종합 서비스 견적 한번에 받기</span>
           </div>
         </div>
         <button class="pillinput" data-size="home" aria-label="${PH_ROLL[0]}">
@@ -1346,10 +1504,11 @@ VIEW.entry = ()=>{
       </section>
 
       <div class="menu-wrap">
+        <b class="menu-h t-body16L20 w-semibold">필요한 서비스 상담 받기</b>
         <div class="ext-grid">
           <button class="ext-card" data-svc="full">
             <div class="ec-h">
-              <b class="t-body15L24 w-semibold">집 전체 시공업체 찾기</b>
+              <b class="t-body15L24 w-semibold">집 전체 시공</b>
               <span class="chev">${ic('IconChevronRight',12)}</span>
             </div>
             <span class="ec-d t-detail12L16">오늘의집이 하자, A/S 보장</span>
@@ -1357,7 +1516,7 @@ VIEW.entry = ()=>{
           </button>
           <button class="ext-card" data-svc="part">
             <div class="ec-h">
-              <b class="t-body15L24 w-semibold">부분 시공업체 찾기</b>
+              <b class="t-body15L24 w-semibold">부분 시공</b>
               <span class="chev">${ic('IconChevronRight',12)}</span>
             </div>
             <span class="ec-d t-detail12L16">원하는 시공 분야 견적 받기</span>
@@ -1384,7 +1543,7 @@ VIEW.entry = ()=>{
         </section>
 
         <section class="sec-card">
-          <b class="sc-t t-body15L24 w-semibold">이사 계획 중이라면</b>
+          <b class="sc-t t-body15L24 w-semibold">이사 준비 중이라면</b>
           <div class="compact-row">
             ${HOME_COMPACT.map(c=>`
               <button class="compact-item" data-svc="${c.k}">
@@ -1402,56 +1561,47 @@ VIEW.entry = ()=>{
   bindProgress();
 };
 
-const PART_AREAS = ['도배·장판','바닥·마루','주방','욕실','창호·샷시','조명·전기','확장·철거'];
-
 VIEW.select = ()=>{
   const n = S.picked.size;
   const partOn = S.picked.has('part');
   const area = S.ans['part.area']||[];
-  const needArea = partOn && !area.length;
   screen.innerHTML = `
     <div class="sel-screen">
-    ${topNav({title:'한번에 무료 상담 받기', backId:'bk'})}
+    ${topNav({title:'견적 한번에 받기', backId:'bk'})}
     <hr class="ods-divider">
     <div class="sel-title">
-      <span class="t-heading20 w-semibold">필요한 서비스를 선택하세요</span>
+      <span class="t-body16L20 w-semibold">어떤 서비스가 필요한가요?</span>
     </div>
     <div class="picks">
-      ${Object.entries(SERVICES).map(([k,v])=>`
+      ${SELECT_LIST.map(({k,title,desc})=>`
         <button class="pick" data-k="${k}" aria-pressed="${S.picked.has(k)}">
           <span class="pk-t">
-            <b class="t-heading18 w-semibold">${v.name}</b>
-            <span class="d t-body15L24">${v.sub}</span>
+            <b class="t-body16L20 w-semibold">${title}</b>
+            <span class="d t-body14L18">${desc}</span>
           </span>
           ${cbxIndicator(S.picked.has(k))}
         </button>
-        ${k==='part'&&partOn?(
-          S.openPart||!area.length ? `
+        ${k==='part'&&partOn?`
           <div class="svcopt">
-            <div class="so-h t-detail13L18 w-bold">어디를 손보고 싶으세요? ${sqBadge('중복 선택','base2_outline','20')}</div>
-            <div class="so-opts">
-              ${PART_AREAS.map(o=>selChip(o, area.includes(o), `data-area="${o}"`, 'sm')).join('')}
+            <div class="svc-tiles">
+              ${PART_TILES.map(t=>`
+                <button class="svc-tile${area.includes(t.label)?' on':''}" data-area="${t.label}" aria-pressed="${area.includes(t.label)}">
+                  ${asset(t.art,44)}
+                  <span class="t-detail12L16 w-medium">${t.label}</span>
+                </button>`).join('')}
             </div>
-            ${boxButton({label: area.length?`${area.length}개 선택하기`:'선택하기', size:'medium', variant:'solid',
-              id:'areaOk', full:true, disabled:!area.length})}
-          </div>` : `
-          <button class="so-sum" id="areaEdit">
-            <span class="t-detail13L18 w-semibold">${area.join(' · ')}</span>
-            <span class="ods-textbtn" data-size="14" data-variant="primary">수정</span>
-          </button>`
-        ):''}`).join('')}
+          </div>`:''}`).join('')}
     </div>
-    <div class="sticky-action">
-      ${needArea?`<p class="dock-hint t-detail13L18" style="text-align:center;color:var(--ods-foreground-weak);margin:0 0 9px">부분시공의 <b style="color:var(--ods-foreground);font-weight:600">시공 범위</b>를 골라주세요</p>`:''}
-      ${boxButton({label:n?`${n}개 한번에 상담 받기`:'한번에 상담 받기', size:'large', variant:'solid',
-        id:'next', full:true, disabled:!(n&&!needArea)})}
-    </div>
+    ${n?`<div class="sticky-action">
+      ${boxButton({label:`<span style="display:inline-flex;align-items:center;gap:6px">${n}개 선택 완료 ${ic('IconCheck',20)}</span>`,
+        size:'large', variant:'solid', id:'next', full:true})}
+    </div>`:''}
     </div>`;
   $('#bk').onclick = ()=>go('entry');
   screen.querySelectorAll('.pick').forEach(b=> b.onclick=()=>{
     const k=b.dataset.k;
-    if(S.picked.has(k)){ S.picked.delete(k); if(k==='part'){ delete S.ans['part.area']; S.openPart=false; } }
-    else { S.picked.add(k); if(k==='part') S.openPart=true; }
+    if(S.picked.has(k)){ S.picked.delete(k); if(k==='part') delete S.ans['part.area']; }
+    else S.picked.add(k);
     render();
   });
   screen.querySelectorAll('[data-area]').forEach(b=> b.onclick=()=>{
@@ -1459,9 +1609,12 @@ VIEW.select = ()=>{
     S.ans['part.area'] = arr.includes(o)?arr.filter(x=>x!==o):[...arr,o];
     render();
   });
-  const ok=$('#areaOk'); if(ok) ok.onclick=()=>{ S.openPart=false; render(); };
-  const ed=$('#areaEdit'); if(ed) ed.onclick=()=>{ S.openPart=true; render(); };
-  $('#next').onclick = ()=>{ S.log=[]; S.qi=0; S.step=0; go('loading'); };
+  const nx=$('#next'); if(nx) nx.onclick = ()=>{
+    /* 새 폼 챗봇 플로우 상태 초기화 (문항 답변·크로스셀·견적/제안/연락처 플래그) */
+    S.log=[]; S.qi=0; S.step=0; S.ans={}; S.dismiss={};
+    S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null;
+    go('loading');
+  };
 };
 
 /* 입력폼 로딩 — Figma 56:19496
@@ -1469,7 +1622,7 @@ VIEW.select = ()=>{
 VIEW.loading = ()=>{
   screen.innerHTML = `
     <div class="load-screen">
-      ${topNav({title:'한번에 무료 상담 받기', backId:'bk'})}
+      ${topNav({title:'견적 한번에 받기', backId:'bk'})}
       <div class="load-box">
         <div class="load-usp">
           ${spinner(14)}
@@ -1485,7 +1638,334 @@ VIEW.loading = ()=>{
   setTimeout(()=>{ if(S.screen==='loading') go('form'); }, 1600);
 };
 
-VIEW.form = ()=> S.mode==='chat' ? chatView() : stepView();
+/* ════════════ 신청폼 챗봇 플로우 (Figma 178:23973 · 정책 매트릭스) ════════════
+   서비스 선택 → 상단 floatingProgress(n/총) → 서비스별 필수 문항(정책 B) → 크로스셀
+   → 견적 생성중(inline) → 총 예상 견적 price 버블 → 맞춤 상담 제안 → 연락처 → 완료.
+   문항은 flag(S.ans/플래그) 기반으로 "첫 미해결 스텝"을 현재 스텝으로 계산한다. */
+/* 정책 B 세부 옵션. multi=다중, list=title+subtitle 리스트, cal=캘린더 피커, '직접 입력'=텍스트 모달 */
+const AREA_C = ['10평 이하','10평대','20평대','30평대','40평대','60평대 이상'];        // 시공 평수
+const AREA_M = ['10평 이하','10평대','20평대','30평대','40평대','50평대','60평 이상']; // 이사·청소 평수
+const REGION = ['서울 송파구','서울 강남구','경기 성남시','인천 연수구','직접 입력'];   // 시/도>구/군 (간소화)
+const TIME4  = ['아침 (9시 이전)','오전 (9-12시)','오후 (12-18시)','저녁 (18시 이후)'];
+const TIME_OPTS = [...TIME4, '직접 입력'];
+const QMX = {
+  full:[
+    {id:'size',   q:'시공할 집은 몇 평인가요?', opts:AREA_C},
+    {id:'caddr',  q:'시공 주소를 알려주세요.', opts:REGION},
+    {id:'fbudget',q:'시공 예산은 어느 정도로 생각하세요?', opts:['500만원 이하','1000만원대','2000만원대','상담 후 결정','직접 입력']},
+    {id:'scope',  q:'어떤 시공을 희망하세요? (여러 개 선택)', multi:true, opts:['도배','마루·장판','주방','욕실','도어·문틀','창호·샷시','발코니 확장','시스템에어컨']},
+    {id:'space',  q:'시공하실 공간 상황은 어떤가요?', opts:['현재 공실','시공 시 공실 예정','시공 시 짐 (일부) 있을 예정']},
+    {id:'cdate',  q:'시공 희망 일정을 알려주세요.', opts:['한달 내','2-3개월 내','3개월 이후','상담 후 결정']},
+  ],
+  part:[
+    {id:'size',   q:'시공할 집은 몇 평인가요?', opts:AREA_C},
+    {id:'caddr',  q:'시공 주소를 알려주세요.', opts:REGION},
+    {id:'pbudget',q:'시공 예산은 어느 정도로 생각하세요?', opts:['100만원 미만','100만원대','200만원대','300만원대','400만원대','상담 후 결정','직접 입력']},
+    {id:'scope',  q:'어떤 시공을 희망하세요? (여러 개 선택)', multi:true, opts:['도배','마루·장판','주방','욕실','도어·문틀','창호·샷시','발코니 확장','시스템에어컨']},
+    {id:'space',  q:'시공하실 공간 상황은 어떤가요?', opts:['현재 공실','시공 시 공실 예정','시공 시 짐 (일부) 있을 예정']},
+    {id:'cdate',  q:'시공 희망 일정을 알려주세요.', opts:['한달 내','2-3개월 내','3개월 이후','상담 후 결정']},
+  ],
+  move:[
+    {id:'size',  q:'이사할 집은 몇 평인가요?', opts:AREA_M},
+    {id:'mdate', q:'이사 예정일을 선택해주세요.', cal:true},
+    {id:'mtime', q:'이사 선호 시간대를 알려주세요.', opts:TIME_OPTS},
+    {id:'mfrom', q:'출발지(현재 집) 주소를 알려주세요.', opts:REGION},
+    {id:'mto',   q:'도착지 주소를 알려주세요.', prefill:'caddr', opts:['(시공 주소와 동일)','서울 강남구','경기 성남시','직접 입력']},
+    {id:'mtype', q:'이사 유형을 골라주세요.', opts:['가정 이사','사무실 이사','원룸 이사']},
+    {id:'mpack', q:'포장 종류를 선택해주세요.', list:[
+      {t:'포장이사',   s:'포장부터 정리까지 모두 맡겨요'},
+      {t:'반포장이사', s:'깨지기 쉬운 짐만 포장해요'},
+      {t:'일반이사',   s:'운반만, 포장은 직접 해요'}]},
+    {id:'mcargo', q:'이사할 짐 정보를 알려주세요.', gallery:true, opts:['사진·영상 첨부','건너뛰기']},
+  ],
+  clean:[
+    {id:'size',  q:'청소할 집은 몇 평인가요?', opts:AREA_M},
+    {id:'clday', q:'청소 희망일을 선택해주세요.', cal:true, opts:['이사/시공 다음날']},
+    {id:'cltime',q:'청소 선호 시간대를 알려주세요.', opts:TIME_OPTS},
+    {id:'rooms', q:'방은 몇 개인가요?', opts:['원룸','1.5룸','2룸','3룸','4룸','5룸 이상']},
+    {id:'veranda',q:'베란다는 몇 개인가요?', opts:['없음','1','2','3개 이상']},
+    {id:'toilet',q:'화장실은 몇 개인가요?', opts:['없음','1','2','3개 이상']},
+  ],
+  net:[
+    {id:'isp', q:'선호하는 통신사가 있나요?', opts:['KT','SKT','LG U+','상관 없음']},
+    {id:'tv',  q:'TV 결합도 하시겠어요?',     opts:['결합','미결합']},
+  ],
+  rent:[
+    {id:'ritem', q:'어떤 품목을 렌탈하시겠어요? (여러 개 선택)', multi:true, opts:['정수기','공기청정기','비데','매트리스']},
+  ],
+};
+const FSVC_ORDER = ['full','part','move','clean','net','rent'];
+const PRICE_ART = {full:'houseDrill',part:'houseDrill',move:'truck',clean:'cleaningTool',net:'wifiRouter',rent:'waterPurifier'};
+/* 정책 C — 총 예상 견적 최소가(만원). 인터넷·렌탈은 월구독이라 합산 제외. */
+const AREA_MAN = {'10평 이하':500,'10평대':1000,'20평대':2000,'30평대':3000,'40평대':4000,'60평대 이상':6000};
+function estMin(){
+  let s=0; const a = AREA_MAN[(S.ans.size||[])[0]] ?? 2000;
+  if(S.picked.has('full')) s += a;
+  if(S.picked.has('part')) s += Math.max(100, ((S.ans.scope||[]).length||1)*100);
+  if(S.picked.has('move')) s += 90;
+  if(S.picked.has('clean')) s += 20;
+  return s || 2000;
+}
+const estText = ()=> `${estMin().toLocaleString('ko-KR')}만원부터 ~`;
+
+/* 원형 progress 링 (Figma 178:23716) — 필수 항목 n개 중 done개 완료 → done/n 만큼 arc 채움.
+   재렌더마다 0→현재값으로 fill 애니메이션(1/n씩 분할 채워지는 동작). */
+function progressRing(done,total){
+  const r=8, C=2*Math.PI*r, frac = total ? Math.min(done/total,1) : 0;
+  const off = (C*(1-frac));
+  return `<span class="fb-ring" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 20 20">
+      <circle cx="10" cy="10" r="${r}" fill="var(--ods-background-weak)" stroke="var(--ods-border)" stroke-width="2"/>
+      <circle class="fb-arc" cx="10" cy="10" r="${r}" fill="none" stroke="var(--ods-foreground)" stroke-width="2"
+        stroke-linecap="round" transform="rotate(-90 10 10)"
+        style="--c:${C.toFixed(2)};--off:${off.toFixed(2)};stroke-dasharray:${C.toFixed(2)}"/>
+    </svg></span>`;
+}
+/* 상단 floatingProgress 바 — loading(견적 생성중) / progress(입력중) / confirm(견적후) */
+function floatingBar(st){
+  /* floatingProgress/loading (Figma 178:23688) — 좌측 ODS Spinner(137:59039) */
+  if(st.mode==='loading') return `<div class="fbar">
+    <div class="fb-t"><span class="fb-spin">${spinner(20)}</span>
+    <span class="fb-lb t-body14L18 w-medium">${st.label}</span></div></div>`;
+  if(st.mode==='progress') return `<div class="fbar">
+    <div class="fb-t">${progressRing(st.done,st.total)}
+    <span class="fb-lb t-body14L18 w-medium">${st.label}</span></div>
+    <span class="fb-count t-body14L18">${st.done}/${st.total}</span></div>`;
+  return `<div class="fbar">
+    <div class="fb-t"><span class="fb-doc">${ic('IconTextDocument',16)}</span>
+    <span class="fb-lb t-body14L18 w-medium">총 예상 견적 <b class="w-semibold">${st.value}</b></span></div>
+    ${boxButton({label:st.action, size:'small', variant:'normal', id:'fbGo', disabled:!!st.disabled})}</div>`;
+}
+/* 인라인 견적 price 버블 (Figma type=price) */
+function chatPrice(){
+  const rows = {
+    full:[['예상',`${(AREA_MAN[(S.ans.size||[])[0]]||2000).toLocaleString('ko-KR')}만원대`],['범위',(S.ans.scope||['도배','장판']).join(', ')+' 포함, 상담 후 결정'],['평수',(S.ans.size||['20평대'])[0]]],
+    part:[['예상','200만원대'],['범위',(S.ans.scope||['도배']).join(', ')],['평수',(S.ans.size||['20평대'])[0]]],
+    move:[['종류',(S.ans.mpack||['포장이사'])[0]],['평수',(S.ans.size||['20평대'])[0]]],
+    clean:[['방',(S.ans.rooms||['3룸'])[0]],['평수',(S.ans.size||['20평대'])[0]]],
+    net:[['결합',(S.ans.tv||['결합'])[0]],['금액','상담 후 확정']],
+    rent:[['품목',(S.ans.ritem||['정수기']).join(', ')],['금액','상담 후 확정']],
+  };
+  const cards = FSVC_ORDER.filter(k=>S.picked.has(k)).map(k=>`
+    <div class="cp-card"><span class="ec-img">${asset(PRICE_ART[k],36)}</span>
+      <div class="cp-rows"><div class="t-body16L20 w-semibold" style="padding-bottom:9px">${label(k)}</div>
+      ${rows[k].map(([kk,vv])=>`<div class="cp-row"><span class="cp-k t-body14L18">${kk}</span><span class="cp-v t-body14L18">${vv}</span></div>`).join('')}</div>
+    </div>`).join('');
+  return `<div class="chat-price">
+    <div class="cp-done t-detail13L18 w-medium">${ic('IconCheckCircle',16)} 종합 예상 견적 계산 완료</div>
+    <div class="cp-lb t-detail13L18 w-medium">총 예상 견적</div>
+    <div class="cp-val t-heading24 w-semibold">${estText()}</div>
+    <div class="cp-sub t-detail13L18">예상 시작가예요. 정확한 금액은 상담에서 확정돼요.<br>인터넷·렌탈은 월 구독이라 상담 후 확정으로 안내돼요.</div>
+    <hr class="ods-divider">
+    <div style="padding-top:12px">${cards}</div>
+  </div>`;
+}
+
+/* 현재 진행 스텝 목록 — 선택 서비스 문항 + 크로스셀 + 견적/제안/연락처/완료 */
+function formSteps(){
+  const steps=[]; let crossDone=false;
+  FSVC_ORDER.filter(k=>S.picked.has(k)).forEach(k=>{
+    (QMX[k]||[]).forEach(q=> steps.push({kind:'q', svc:k, ...q}));
+    if((k==='full'||k==='part') && !crossDone){
+      crossDone=true;
+      if((S.ans.space||[])[0]==='시공 시 짐 (일부) 있을 예정' && !S.picked.has('move') && !(S.dismiss||{}).move)
+        steps.push({kind:'cross', svc:'move', q:'짐이 있으시군요. 보관이사도 함께 상담 받아보시겠어요?'});
+      if(!S.picked.has('clean') && !(S.dismiss||{}).clean)
+        steps.push({kind:'cross', svc:'clean', q:'시공 후 인테리어 청소도 함께 상담 받아보시겠어요?'});
+    }
+  });
+  steps.push({kind:'gen'},{kind:'offer'},{kind:'contact'},{kind:'time'},{kind:'done'});
+  return steps;
+}
+/* 첫 미해결 스텝 */
+function curStep(steps){
+  for(const s of steps){
+    if(s.kind==='q'    && !(S.ans[s.id]||[]).length) return s;
+    if(s.kind==='cross') return s;                 // 미해결일 때만 생성됨
+    if(s.kind==='gen'    && !S.genDone)    return s;
+    if(s.kind==='offer'  && !S.offerDone)  return s;
+    if(s.kind==='contact'&& !S.contactDone)return s;
+    if(s.kind==='time'   && !S.timeDone)   return s;
+    if(s.kind==='done') return s;
+  }
+  return null;
+}
+
+VIEW.form = ()=>{
+  const steps = formSteps();
+  const cur = curStep(steps);
+  const qSteps = steps.filter(s=>s.kind==='q');
+  const qDone = qSteps.filter(s=>(S.ans[s.id]||[]).length).length;
+  const isGen = cur && cur.kind==='gen';   // 견적 생성중 → floatingProgress/loading
+  const bar = S.genDone
+    ? floatingBar({mode:'confirm', value:estText(), action:S.ffin?'상담예약중':'상담신청', disabled:S.ffin})
+    : isGen
+    ? floatingBar({mode:'loading', label:'총 예상 견적 계산 중...'})
+    : floatingBar({mode:'progress', label:'필수 정보 입력', done:Math.min(qDone,qSteps.length), total:qSteps.length});
+
+  screen.innerHTML = `<div class="chat-screen">
+    ${topNav({title:'견적 한번에 받기', backId:'bk'})}
+    ${bar}
+    <div class="chat" id="chat"></div>
+    <div class="chatdock"><div class="quick" id="quick"></div></div>
+    ${S.modal?formModal():''}
+  </div>`;
+  screen.classList.toggle('has-sheet', !!S.modal);
+  $('#bk').onclick = ()=> go('select');
+  const fb=$('#fbGo'); if(fb) fb.onclick = ()=>{ if(!S.ffin) go('branch'); };
+
+  const chat=$('#chat');
+  chat.innerHTML = `<div class="bub bot t-body16L20"><b class="w-bold">${pickedList().map(label).join(', ')}</b><br>한번에 상담을 도와드릴게요.</div>`;
+  (S.log||[]).forEach(m=>{
+    if(m.kind==='price'){ chat.insertAdjacentHTML('beforeend', chatPrice()); return; }
+    if(m.kind==='done'){ chat.insertAdjacentHTML('beforeend', `<div class="bub note t-body16L20">${ic('IconCheckCircle',18)}<span><b class="w-bold">상담 신청 완료</b><br>${m.text}</span></div>`); return; }
+    chat.insertAdjacentHTML('beforeend', `<div class="bub ${m.who} t-body16L20">${m.text}</div>`);
+  });
+
+  const quick=$('#quick');
+  const rec = (bot,me)=>{ S.log=S.log||[]; S.log.push({who:'bot',text:bot}); if(me!=null) S.log.push({who:'me',text:me}); };
+
+  if(!cur){ setTimeout(()=>screen.scrollTop=screen.scrollHeight,10); return; }
+
+  const say = (html)=> chat.insertAdjacentHTML('beforeend', `<div class="bub bot t-body16L20">${html}</div>`);
+
+  if(cur.kind==='q'){
+    const pre = cur.prefill && (S.ans[cur.prefill]||[]).length ? (S.ans[cur.prefill][0]) : null;
+    say(cur.q);
+    const sel = S.ans[cur.id]||[];
+
+    if(cur.list){                       /* 리스트 셀렉 (title+subtitle) */
+      quick.innerHTML = `<div class="q-list">${cur.list.map(it=>`
+        <button class="q-li" data-l="${it.t}"><span class="ql-t t-body16L20 w-semibold">${it.t}</span>
+          <span class="ql-s t-detail13L18">${it.s}</span></button>`).join('')}</div>`;
+      quick.querySelectorAll('[data-l]').forEach(b=> b.onclick=()=>{ S.ans[cur.id]=[b.dataset.l]; rec(cur.q, b.dataset.l); render(); });
+
+    } else if(cur.cal){                 /* 캘린더 피커 → 하단 모달 */
+      quick.innerHTML = (cur.opts||[]).map(o=>selChip(o,false,`data-o="${o}"`)).join('')
+        + chip({label:'날짜 직접 선택', size:'md', variant:'outlined', attrs:'id="calOpen"'});
+      quick.querySelectorAll('[data-o]').forEach(b=> b.onclick=()=>{ S.ans[cur.id]=[b.dataset.o]; rec(cur.q, b.dataset.o); render(); });
+      $('#calOpen').onclick=()=>{ S.modal={type:'cal', id:cur.id, q:cur.q, title:cur.q.replace(/을.*$|를.*$/,''), day:null}; render(); };
+
+    } else if(cur.gallery){             /* 갤러리 피커 → 하단 모달 */
+      quick.innerHTML = chip({label:'사진·영상 첨부', size:'md', variant:'outlined', attrs:'id="galOpen"'})
+                      + chip({label:'건너뛰기', size:'md', variant:'normal', attrs:'id="galSkip"'});
+      $('#galOpen').onclick=()=>{ S.modal={type:'gallery', id:cur.id, q:cur.q, picked:new Set()}; render(); };
+      $('#galSkip').onclick=()=>{ S.ans[cur.id]=['건너뛰기']; rec(cur.q,'건너뛰기'); render(); };
+
+    } else {                            /* 기본 chip. '직접 입력' → 텍스트 모달 */
+      quick.innerHTML = optsOf(cur).map(o=>selChip(o, sel.includes(o), `data-o="${o}"`)).join('')
+        + (cur.multi?boxButton({label:'고른 걸로 할게요', size:'small', variant:'solid', id:'mok', disabled:!sel.length}):'');
+      quick.querySelectorAll('[data-o]').forEach(b=> b.onclick=()=>{
+        const o=b.dataset.o;
+        if(o==='직접 입력'){ S.modal={type:'text', id:cur.id, q:cur.q, num:false}; render(); return; }
+        if(cur.multi){ const arr=S.ans[cur.id]||[]; S.ans[cur.id]=arr.includes(o)?arr.filter(x=>x!==o):[...arr,o]; render(); }
+        else { let v=o; if(o==='(시공 주소와 동일)'&&pre) v=pre; S.ans[cur.id]=[v]; rec(cur.q, v); render(); }
+      });
+      if(cur.multi){ const ok=$('#mok'); if(ok) ok.onclick=()=>{ const arr=S.ans[cur.id]||[]; if(!arr.length)return; rec(cur.q, arr.join(', ')); render(); }; }
+    }
+
+  } else if(cur.kind==='cross'){
+    say(cur.q);
+    quick.innerHTML = chip({label:'네, 함께 볼게요', size:'md', variant:'outlined', attrs:'id="cy"'})
+                    + chip({label:'필요 없어요', size:'md', variant:'normal', attrs:'id="cn"'});
+    $('#cy').onclick=()=>{ S.picked.add(cur.svc); rec(cur.q,'네, 함께 볼게요'); render(); };
+    $('#cn').onclick=()=>{ S.dismiss=S.dismiss||{}; S.dismiss[cur.svc]=true; rec(cur.q,'필요 없어요'); render(); };
+
+  } else if(cur.kind==='gen'){
+    chat.insertAdjacentHTML('beforeend', `<div class="bub bot t-body16L20" style="display:flex;align-items:center;gap:8px">${spinner(16)}<span>예상 견적 만드는 중...</span></div>`);
+    quick.innerHTML='';
+    if(!S.genFired){ S.genFired=true; setTimeout(()=>{ if(S.screen==='form'){ S.genDone=true; S.log=S.log||[]; S.log.push({kind:'price'}); render(); } }, 2500); }
+
+  } else if(cur.kind==='offer'){
+    say('견적을 토대로 딱 맞는 파트너와 맞춤 상담을 받아보세요.<br><span class="t-detail12L16 c-fg-weak">오늘의집 담당 상담원이 원하는 시간대에만 연락드려 안심하세요.</span>');
+    quick.innerHTML = chip({label:'네, 받아볼래요', size:'md', variant:'outlined', attrs:'id="oy"'})
+                    + chip({label:'다음에 할게요', size:'md', variant:'normal', attrs:'id="on"'});
+    $('#oy').onclick=()=>{ S.offerDone=true; rec('맞춤 상담을 받아보세요.','네, 받아볼래요'); render(); };
+    $('#on').onclick=()=>{ S.offerDone=S.contactDone=S.timeDone=true; S.ffin=true; setStage('applied'); rec('맞춤 상담을 받아보세요.','다음에 할게요'); render(); };
+
+  } else if(cur.kind==='contact'){
+    say('010-9104-1024 번호로 연락 받으시겠어요?');
+    quick.innerHTML = chip({label:'이 번호로 받기', size:'md', variant:'outlined', attrs:'id="c1"'})
+                    + chip({label:'다른 번호로 받기', size:'md', variant:'normal', attrs:'id="c2"'});
+    $('#c1').onclick=()=>{ S.contactDone=true; rec('연락 받을 번호를 확인해주세요.','010-9104-1024로 받기'); render(); };
+    $('#c2').onclick=()=>{ S.contactDone=true; rec('연락 받을 번호를 확인해주세요.','010-8888-8888로 받기'); render(); };
+
+  } else if(cur.kind==='time'){
+    say('마지막으로 통화 희망 시간대를 알려주세요.');
+    quick.innerHTML = TIME4.map(o=>selChip(o,false,`data-t="${o}"`)).join('');
+    quick.querySelectorAll('[data-t]').forEach(b=> b.onclick=()=>{
+      S.ans.ctime=[b.dataset.t]; S.timeDone=true; S.ffin=true; setStage('applied');
+      rec('통화 희망 시간대를 알려주세요.', b.dataset.t); render();
+    });
+
+  } else if(cur.kind==='done'){
+    const t=(S.ans.ctime||['희망'])[0];
+    S.log=S.log||[]; if(!S.log.some(m=>m.kind==='done')) S.log.push({kind:'done', text:`${t} 시간대에 오늘의집 전문 상담원이 연락을 드릴게요. 모르는 번호로 연락이 갈 수 있으니 확인해주세요.`});
+    quick.innerHTML = boxButton({label:'견적서 확인하기', size:'medium', variant:'solid', id:'toCfm', full:true});
+    $('#toCfm').onclick=()=>go('branch');
+    render();
+    return;
+  }
+
+  /* ── 하단 액션 모달 핸들러 (직접입력 text / 갤러리 / 캘린더) ── */
+  if(S.modal){
+    const m=S.modal;
+    const ov=screen.querySelector('.bs-overlay'); if(ov) ov.onclick=()=>{ S.modal=null; render(); };
+    if(m.type==='text'){
+      const inp=$('#fmInput'); if(inp) setTimeout(()=>inp.focus(),30);
+      const submit=()=>{ const v=(inp.value||'').trim(); if(!v)return; S.ans[m.id]=[v]; S.modal=null; rec(m.q, v); render(); };
+      const ok=$('#fmOk'); if(ok) ok.onclick=submit;
+      if(inp) inp.onkeydown=e=>{ if(e.key==='Enter') submit(); };
+    } else if(m.type==='gallery'){
+      screen.querySelectorAll('[data-g]').forEach(b=> b.onclick=()=>{
+        const i=+b.dataset.g; if(m.picked.has(i)) m.picked.delete(i); else if(m.picked.size<5) m.picked.add(i); render();
+      });
+      const ok=$('#fmGalOk'); if(ok) ok.onclick=()=>{ const n=m.picked.size; if(!n)return; S.ans[m.id]=[`사진·영상 ${n}개 첨부`]; S.modal=null; rec(m.q, `사진·영상 ${n}개 첨부`); render(); };
+    } else if(m.type==='cal'){
+      screen.querySelectorAll('[data-d]').forEach(b=> b.onclick=()=>{ m.day=+b.dataset.d; render(); });
+      const ok=$('#fmCalOk'); if(ok) ok.onclick=()=>{ const v=`2026.08.${String(m.day).padStart(2,'0')}`; S.ans[m.id]=[v]; S.modal=null; rec(m.q, v); render(); };
+    }
+  }
+  setTimeout(()=>{ if(!S.modal) screen.scrollTop=screen.scrollHeight; },10);
+};
+
+/* 하단 액션 모달 (Figma 미정의 동작 → 바텀시트로 구현): 직접입력 text / 갤러리 피커 / 캘린더 피커 */
+function formModal(){
+  const m=S.modal; if(!m) return '';
+  if(m.type==='text') return `<div class="bs-overlay"></div>
+    <div class="bsheet fm-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="fm-h t-body16L20 w-bold">직접 입력</div>
+      <div class="fm-body"><input class="fm-input t-body16L20" id="fmInput" placeholder="직접 입력해주세요" ${m.num?'inputmode="numeric"':''} autocomplete="off"></div>
+      <div class="bs-foot">${boxButton({label:'확인', size:'large', variant:'brand-solid', id:'fmOk', full:true})}</div>
+    </div>`;
+  if(m.type==='gallery'){ const c=m.picked.size;
+    return `<div class="bs-overlay"></div>
+    <div class="bsheet fm-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="fm-h t-body16L20 w-bold">사진·영상 첨부 <span class="c-fg-weak t-body14L18 w-regular">${c}/5</span></div>
+      <div class="fm-body"><div class="fm-gal">${Array.from({length:9},(_,i)=>
+        `<button class="fm-tile${m.picked.has(i)?' on':''}" data-g="${i}"><span class="fg-ph"></span>${m.picked.has(i)?`<span class="fg-chk">${ic('IconCheck',12)}</span>`:''}</button>`).join('')}</div></div>
+      <div class="bs-foot">${boxButton({label:c?`${c}개 첨부하기`:'사진·영상을 선택해주세요', size:'large', variant:'brand-solid', id:'fmGalOk', full:true, disabled:!c})}</div>
+    </div>`; }
+  if(m.type==='cal'){
+    const Y=2026, M=8, firstDay=new Date(Y,M-1,1).getDay(), days=new Date(Y,M,0).getDate();
+    const cells=[]; for(let i=0;i<firstDay;i++) cells.push(0); for(let d=1;d<=days;d++) cells.push(d);
+    return `<div class="bs-overlay"></div>
+    <div class="bsheet fm-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="fm-h t-body16L20 w-bold">날짜 선택 <span class="c-fg-weak t-body14L18 w-regular">${Y}년 ${M}월</span></div>
+      <div class="fm-body"><div class="fm-cal">
+        <div class="fc-wk">${['일','월','화','수','목','금','토'].map(w=>`<span>${w}</span>`).join('')}</div>
+        <div class="fc-days">${cells.map(d=>d?`<button class="fc-day${m.day===d?' on':''}" data-d="${d}">${d}</button>`:`<span></span>`).join('')}</div>
+      </div></div>
+      <div class="bs-foot">${boxButton({label:m.day?`${M}월 ${m.day}일 선택`:'날짜를 선택해주세요', size:'large', variant:'brand-solid', id:'fmCalOk', full:true, disabled:!m.day})}</div>
+    </div>`;
+  }
+  return '';
+}
+
+const _legacyForm = ()=> S.mode==='chat' ? chatView() : stepView();
 
 /* ── A안 대화형 ─────────────────────────── */
 function chatView(){
@@ -1504,7 +1984,7 @@ function chatView(){
 
   screen.innerHTML = `
     <div class="chat-screen">
-      ${topNav({title:'한번에 무료 상담 받기', backId:'bk'})}
+      ${topNav({title:'견적 한번에 받기', backId:'bk'})}
       ${bundleProgress(done?qTotal:qDone, qTotal)}
       <div class="chat" id="chat"></div>
       <div class="chatdock">
@@ -1757,353 +2237,73 @@ function serviceSheet(k, idx, total){
     </footer>
   </section>`;
 }
+/* ══════════ 견적서 확인(CFM) → 아웃바운드 상담 (Figma 178:23974 Flow1-1 · 정책 CFM) ══════════
+   총 예상 견적 + 서비스별 견적 카드(수정) + [비교 견적 받기 / 맞춤 상담 신청] → 상담 신청 완료 바텀시트. */
+function svcMin(k){
+  const a = AREA_MAN[(S.ans.size||[])[0]] ?? 2000;
+  return k==='full' ? a
+    : k==='part'  ? Math.max(100, ((S.ans.scope||[]).length||1)*100)
+    : k==='move'  ? 90
+    : k==='clean' ? 20 : null;
+}
+function cfmRows(k){
+  const size=(S.ans.size||['30평대'])[0];
+  const scope=(S.ans.scope||['도배','장판']).join(', ')+' 포함, 상담 후 결정';
+  if(k==='full'||k==='part') return [['예상 견적',`${svcMin(k).toLocaleString('ko-KR')}만원부터`],['시공 범위',scope],['평수',size]];
+  if(k==='move')  return [['예상 견적',`${svcMin(k)}만원부터`],['이사 유형',(S.ans.mpack||['포장이사'])[0]],['평수',size]];
+  if(k==='clean') return [['예상 견적',`${svcMin(k)}만원부터`],['방 개수',(S.ans.rooms||['3룸'])[0]],['평수',size]];
+  if(k==='net')   return [['월예상가','23,500원부터'],['결합여부',(S.ans.tv||['TV 결합'])[0]],['평수',size]];
+  if(k==='rent')  return [['월예상가','25,900원부터'],['품목',(S.ans.ritem||['정수기']).join(', ')],['평수',size]];
+  return [];
+}
+function cfmCard(k){
+  return `<div class="cfm-card">
+    <span class="cfm-ic">${asset(PRICE_ART[k],36)}</span>
+    <div class="cfm-body">
+      <div class="cfm-th"><b class="t-body16L20 w-semibold">${label(k)}</b>
+        <button class="cfm-edit" data-editk="${k}" aria-label="수정">${ic('IconPencil',20)}</button></div>
+      ${cfmRows(k).map(([kk,vv])=>`<div class="cfm-row"><span class="cfm-k t-body14L18">${kk}</span><span class="cfm-v t-body14L18">${vv}</span></div>`).join('')}
+    </div>
+  </div>`;
+}
+/* 상담 신청 완료 바텀시트 (Figma 137:114484) */
+function cfmDoneSheet(){
+  return `<div class="bs-overlay"></div>
+    <div class="bsheet cfm-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-body cfm-done">
+        <div class="cd-check">${ic('IconCheck',28)}</div>
+        <div class="cd-t t-heading20 w-bold">상담 신청 완료!</div>
+        <p class="cd-d t-body14L20">희망 시간대에 오늘의집 전문 상담원이 연락을 드릴게요.<br>모르는 번호로 연락이 갈 수 있으니 확인해주세요.</p>
+      </div>
+      <div class="bs-foot">${boxButton({label:'신청 내역 보러가기', size:'large', variant:'outlined', id:'cdGo', full:true})}</div>
+    </div>`;
+}
+
 VIEW.branch = ()=>{
-  const list = pickedList(), n = list.length;
-  if(S.gen){
-    screen.innerHTML = `
-      ${topNav({title:'견적서'})}
-      <div class="assembling">
-        ${spinner(44)}
-        <h2 class="t-heading20 w-bold">견적서를<br>만들고 있어요</h2>
-        <p class="t-detail13L18">${n}개 서비스 · 견적서 ${n}건</p>
-        <div class="asm-list">
-          ${list.map((k,i)=>`<div class="asm t-body14L20" style="animation-delay:${180+i*220}ms">
-            <span class="dotx">${ic('IconCheck',12)}</span>${SERVICES[k].name} 견적서</div>`).join('')}
-        </div>
-      </div>`;
-    setTimeout(()=>{ if(S.screen==='branch'){ S.gen=false; render(); } }, 700+n*260);
-    return;
-  }
+  const list = pickedList();
   screen.innerHTML = `
-    ${topNav({title:'견적서', backId:'bk'})}
-    <div class="h-lead">
-      <h2 class="t-heading24 w-bold">${n>1?`견적서 ${n}건이<br>만들어졌어요`:'견적서가<br>만들어졌어요'}</h2>
-      <p class="t-body14L20">${n>1?'서비스마다 업체가 달라서 견적서도 따로 만들어져요.':'적어주신 내용을 그대로 씁니다.'}</p></div>
-    ${n>1?`<div class="deck-nav"><span id="deckNum" class="t-detail11L14">1 / ${n}</span>
-      <div class="deck-dots" id="deckDots">${list.map((k,i)=>`<button data-i="${i}" class="${i?'':'on'}" aria-label="${SERVICES[k].name}"></button>`).join('')}</div></div>`:''}
-    <div class="deck ${n>1?'':'single'}" id="deck">${list.map((k,i)=>serviceSheet(k,i+1,n)).join('')}</div>
-    <div style="height:20px"></div>
-    ${actionDock({
-      pattern:'dual-primary',
-      hint:'신청은 계약이 아니에요 · 견적을 받는 데까지만 진행돼요',
-      children: boxButton({label:'여러 업체에<br>견적 받기', size:'extra-large', variant:'brand-solid', attrs:'data-r="quote"', full:true, multiline:true})
-        + boxButton({label:'조건 맞는<br>업체 보기', size:'extra-large', variant:'outlined', attrs:'data-r="browse"', full:true, multiline:true})
-    })}`;
+    ${topNav({title:'총 예상 견적', backId:'bk'})}
+    <div class="cfm">
+      <div class="cfm-head">
+        <div class="t-detail13L18 w-medium c-fg">총 예상 견적</div>
+        <div class="cfm-total t-heading24 w-semibold c-fg-brand">${estText()}</div>
+        <p class="cfm-sub t-detail13L18">자세한 확정 견적은 파트너와 상담 후 확정되요.<br>이 내용으로 맞춤 상담을 받아보세요.</p>
+      </div>
+      <hr class="ods-divider">
+      <div class="cfm-cards">${list.map(cfmCard).join('')}</div>
+    </div>
+    ${actionDock({pattern:'single',
+      children: boxButton({label:`<span style="display:inline-flex;align-items:center;gap:6px">${ic('IconPhone',18)}맞춤 상담 신청</span>`, size:'large', variant:'brand-solid', id:'apply', full:true})})}
+    ${S.sheet==='cfmDone'?cfmDoneSheet():''}`;
+  screen.classList.toggle('has-sheet', S.sheet==='cfmDone');
   $('#bk').onclick = ()=>go('form');
-  screen.querySelectorAll('[data-edit]').forEach(b=> b.onclick=()=>go('form'));
-  if(n>1){
-    const deck=$('#deck'), dots=$('#deckDots'), num=$('#deckNum');
-    const idx = ()=>{
-      const w = deck.firstElementChild.offsetWidth + 10;
-      return Math.max(0, Math.min(n-1, Math.round(deck.scrollLeft / w)));
-    };
-    const sync = ()=>{
-      const i = idx();
-      num.textContent = `${i+1} / ${n}`;
-      dots.querySelectorAll('button').forEach((d,k)=>d.className = k===i?'on':'');
-    };
-    deck.onscroll = sync;
-    dots.querySelectorAll('button').forEach(d=> d.onclick=()=>{
-      const w = deck.firstElementChild.offsetWidth + 10;
-      deck.scrollTo({left:+d.dataset.i*w, behavior:'smooth'});
-    });
+  screen.querySelectorAll('[data-editk]').forEach(b=> b.onclick=()=>go('form'));
+  const apply=$('#apply'); if(apply) apply.onclick=()=>{ S.sheet='cfmDone'; setStage('applied'); render(); };
+  if(S.sheet==='cfmDone'){
+    screen.querySelector('.bs-overlay').onclick = ()=>{ S.sheet=null; render(); };
+    const cd=$('#cdGo'); if(cd) cd.onclick=()=>{ S.sheet=null; go('entry'); };
   }
-  screen.querySelectorAll('[data-r]').forEach(b=> b.onclick=()=>{
-    S.route=b.dataset.r; go(S.route==='quote'?'done':'partners');
-  });
-};
-
-/* ── 파트너 · 상품 추천 ─────────────────────
-   시공·이사 계열은 파트너 카드 → 파트너홈, 인터넷·렌탈은 상품 선택 → 상담 신청 */
-const PRODUCT_SVC = new Set(['net','rent']);
-const RECS = {
-  full:[
-    {n:'하람디자인',   r:4.9, c:128, tags:['송파구 41건','30평대 전문','2개월 내 착공'], why:'요청 조건과 같은 <b>30평대 전체 리모델링</b> 사례가 12건'},
-    {n:'더집 인테리어', r:4.9, c:204, tags:['송파구 38건','설계 총괄','상담 1일 내'],   why:'같은 단지 시공 이력이 있어 <b>구조 파악이 빠름</b>'},
-    {n:'스튜디오 온',  r:4.8, c:96,  tags:['강동·송파','자재 직거래','2개월 내 가능'], why:'예산 범위 안에서 <b>자재 구성 제안</b>에 강점'},
-    {n:'채움시공',     r:4.8, c:152, tags:['송파구 27건','공실 시공 다수','일정 유연'], why:'<b>공실 시공</b> 경험이 많아 일정 조율이 쉬움'},
-    {n:'노아디자인랩', r:4.7, c:61,  tags:['송파구 14건','30평대 전문','응답 98%'],    why:'최근 3개월 <b>상담 응답률 98%</b>'}
-  ],
-  part:[
-    {n:'단정도배',     r:4.9, c:311, tags:['도배·장판 전문','당일 시공','송파 전역'],  why:'고르신 <b>도배·장판</b> 단일 시공 건수 1위'},
-    {n:'주방공작소',   r:4.8, c:142, tags:['주방 전문','싱크대 교체','2주 내'],        why:'<b>주방</b> 부분 시공만 전담하는 팀'},
-    {n:'욕실이야기',   r:4.8, c:187, tags:['욕실 전문','3일 시공','A/S 2년'],          why:'거주 중 <b>욕실 시공</b> 사례 다수'},
-    {n:'마루장인',     r:4.7, c:98,  tags:['바닥·마루','강마루 전문','송파구'],         why:'<b>바닥·마루</b> 시공 후 하자율 최저'},
-    {n:'빛담조명',     r:4.7, c:74,  tags:['조명·전기','당일 가능','소규모 전문'],      why:'<b>조명·전기</b> 소규모 작업 전담'}
-  ],
-  move:[
-    {n:'한솔이사',     r:4.9, c:421, tags:['가정이사','수도권 전역','파손보상'],       why:'<b>30평대 가정이사</b> 월 평균 40건'},
-    {n:'미소이사',     r:4.8, c:268, tags:['포장이사','여성 팀장','정리수납'],          why:'포장·정리까지 <b>한 팀이 진행</b>'},
-    {n:'다온익스프레스',r:4.8, c:193, tags:['보관이사','창고 직영','장거리'],           why:'<b>보관이사</b> 자체 창고 보유'},
-    {n:'우리집이사',   r:4.7, c:355, tags:['가정이사','사다리차 보유','손없는날'],      why:'사다리차 직영이라 <b>추가비 없음</b>'},
-    {n:'굿무빙',       r:4.7, c:129, tags:['소형이사','원룸 전문','당일 예약'],         why:'소형 이사 <b>당일 배차</b> 가능'}
-  ],
-  clean:[
-    {n:'클린하우스',   r:4.9, c:512, tags:['입주청소','친환경 약품','4인 팀'],          why:'<b>30평대 입주청소</b> 표준 4시간'},
-    {n:'싹싹클린',     r:4.8, c:287, tags:['이사청소','당일 가능','재청소 보장'],       why:'이사 당일 <b>오전 작업</b> 전담'},
-    {n:'맑은집',       r:4.8, c:164, tags:['입주청소','새집증후군','베이크아웃'],       why:'신축 <b>베이크아웃</b> 병행 가능'},
-    {n:'홈케어원',     r:4.7, c:203, tags:['이사청소','정리수납 겸업','주말 가능'],     why:'청소 후 <b>정리수납</b>까지 연결'},
-    {n:'퍼스트클린',   r:4.7, c:88,  tags:['입주청소','소형 특화','합리 단가'],         why:'소형 평수 <b>단가가 낮음</b>'}
-  ],
-  fix:[
-    {n:'에어원 설치',  r:4.9, c:246, tags:['에어컨 이전','당일 설치','배관 보유'],      why:'<b>에어컨 이전설치</b> 전문'},
-    {n:'가구닥터',     r:4.8, c:132, tags:['가구 조립','붙박이','당일'],               why:'가구 조립·해체 <b>동시 진행</b>'},
-    {n:'전기공작소',   r:4.8, c:95,  tags:['조명·전기','증설','안전점검'],             why:'조명 교체와 <b>증설 동시</b> 가능'},
-    {n:'홈어플라이언스',r:4.7, c:178, tags:['가전 설치','벽걸이 TV','앵글'],            why:'대형 가전 <b>벽 고정</b> 전문'},
-    {n:'손길서비스',   r:4.7, c:64,  tags:['생활수리','소규모','빠른 방문'],           why:'자잘한 수리 <b>묶음 처리</b>'}
-  ],
-  net:[
-    {n:'인터넷 500M + 지니TV', brand:'KT',        price:'월 39,600원', tags:['3년 약정','현금 30만','설치비 면제'], why:'요청하신 <b>인터넷+TV</b> 조합 중 혜택 최대'},
-    {n:'기가라이트 + B tv',    brand:'SK브로드밴드', price:'월 36,300원', tags:['3년 약정','현금 25만','1주 내 설치'], why:'같은 조합에서 <b>월 요금이 가장 낮음</b>'},
-    {n:'광기가 500M + U+tv',   brand:'LG U+',      price:'월 38,500원', tags:['3년 약정','현금 28만','AI 셋톱'],    why:'입주일에 <b>설치 예약 가능</b>'},
-    {n:'인터넷 100M 슬림',     brand:'KT',        price:'월 22,000원', tags:['TV 미포함','2년 약정','간편 설치'],   why:'인터넷만 쓰실 때 <b>최저가</b>'},
-    {n:'기가 1G + B tv 프리미엄', brand:'SK브로드밴드', price:'월 49,500원', tags:['1G 속도','프리미엄 채널','현금 35만'], why:'재택·스트리밍이 많다면 <b>속도 여유</b>'}
-  ],
-  rent:[
-    {n:'아이콘 정수기',      brand:'코웨이',   price:'월 25,900원', tags:['6년 약정','4개월 방문관리','설치 무료'], why:'<b>정수기</b> 렌탈 중 관리 주기가 가장 짧음'},
-    {n:'퓨리케어 오브제',    brand:'LG',      price:'월 33,900원', tags:['6년 약정','직수형','컬러 선택'],        why:'인테리어와 맞출 <b>컬러 선택</b> 가능'},
-    {n:'올클린 공기청정기',  brand:'SK매직',   price:'월 19,900원', tags:['3년 약정','필터 무상','소형'],          why:'신축 입주 시 <b>초기 관리</b>에 적합'},
-    {n:'비렉스 매트리스',    brand:'코웨이',   price:'월 45,900원', tags:['6년 약정','매트리스 케어','교체형'],     why:'이사와 함께 <b>침구 교체</b>할 때'},
-    {n:'이과수 정수기',      brand:'청호나이스', price:'월 27,900원', tags:['5년 약정','얼음정수','자가관리형'],     why:'자가관리로 <b>월 요금 절감</b> 가능'}
-  ]
-};
-const recSvcs = () => pickedList().filter(k=>RECS[k]);
-const chosenRec = () => S.pick ? RECS[S.pick.svc][S.pick.i] : null;
-const tagChips = tags => tags.map(t=>`<span class="ods-sqbadge" data-size="24" data-variant="neutral300">${t}</span>`).join('');
-const starLine = (r,c) => `${ic('IconStar',12)} ${r} · 리뷰 ${c}`;
-
-VIEW.partners = ()=>{
-  const svcs = recSvcs();
-  if(!svcs.length) return go('branch');
-  if(!svcs.includes(S.rtab)) S.rtab = svcs[0];
-  const k = S.rtab, list = RECS[k], isProd = PRODUCT_SVC.has(k);
-  const selIdx = (S.prod&&S.prod[k]!==undefined) ? S.prod[k] : null;
-
-  screen.innerHTML = `
-    ${topNav({title:'조건에 맞는 파트너', backId:'bk'})}
-    ${svcs.length>1?`<div class="ods-tablist" data-scrollable role="tablist" style="padding-bottom:12px">${svcs.map(x=>
-      chip({label:SERVICES[x].name, size:'sm', variant:x===k?'solid':'normal', attrs:`data-tab="${x}"`})).join('')}</div>`:''}
-    <div class="filterbar">
-      <div class="top"><b class="t-detail13L18 w-bold">${isProd?'가입 가능한 상품 중':'서비스 가능 업체 중'}</b><span class="t-detail11L14 w-bold">TOP 5</span></div>
-      <div class="fchips">
-        ${(isProd?['지역 · 설치 가능','일정 · 입주일 설치','조건 · 고른 상품 유형']
-                 :['지역 · '+g('addr'),'규모 · '+g('size'),'일정 · 희망일 가능']).map(t=>
-          `<span class="fchip t-detail11L14">${ic('IconCheck',12)}${t}</span>`).join('')}
-      </div>
-    </div>
-    <div class="plist">
-      ${list.map((p,i)=> isProd ? `
-        <button class="prod ods-surface" data-p="${i}" aria-pressed="${selIdx===i}">
-          <div class="pr-h">
-            ${sqBadge(p.brand,'primary','20')}
-            <span class="pr-n t-body15L24 w-bold">${p.n}</span>
-            ${cbxIndicator(selIdx===i)}
-          </div>
-          <div class="pr-price t-heading17 w-bold">${p.price}</div>
-          <div class="tags">${tagChips(p.tags)}</div>
-          <div class="why2 t-detail12L16">${p.why}</div>
-        </button>` : `
-        <button class="pcard ods-surface" data-p="${i}">
-          <div class="ph">
-            <span class="ods-avatar t-detail13L18 w-bold" style="width:38px;height:38px">${p.n.slice(0,1)}</span>
-            <span class="nm"><b class="t-body15L24 w-bold">${p.n}</b><span class="t-detail11L14">${starLine(p.r,p.c)}</span></span>
-            ${sqBadge(`적합 ${i+1}위`,'neutral300','20')}
-          </div>
-          <div class="tags">${tagChips(p.tags)}</div>
-          <div class="why2 t-detail12L16">${p.why}</div>
-        </button>`).join('')}
-    </div>
-    ${actionDock({
-      pattern:'single',
-      hint: isProd
-        ? (selIdx===null?'상품을 고르면 상담을 신청할 수 있어요':`<b>${list[selIdx].brand} ${list[selIdx].n}</b> 선택함`)
-        : '카드를 누르면 파트너홈으로 이동해요',
-      children: boxButton({label:isProd?'이 상품으로 상담받기':'파트너 둘러보기', size:'extra-large',
-        variant:'brand-solid', id:'act', full:true, disabled:isProd&&selIdx===null})
-    })}`;
-
-  $('#bk').onclick = ()=>go('branch');
-  screen.querySelectorAll('[data-tab]').forEach(b=> b.onclick=()=>{ S.rtab=b.dataset.tab; render(); screen.scrollTop=0; });
-  screen.querySelectorAll('[data-p]').forEach(b=> b.onclick=()=>{
-    const i=+b.dataset.p;
-    if(isProd){ S.prod=S.prod||{}; S.prod[k] = S.prod[k]===i?undefined:i; render(); }
-    else { S.pick={svc:k,i}; go('phome'); }
-  });
-  $('#act').onclick = ()=>{
-    if(isProd){ S.pick={svc:k,i:selIdx}; go('done'); }
-    else { S.pick={svc:k,i:0}; go('phome'); }
-  };
-};
-
-/* ── 파트너홈 ─────────────────────────── */
-VIEW.phome = ()=>{
-  const p = chosenRec(); if(!p) return go('partners');
-  const k = S.pick.svc;
-  screen.innerHTML = `
-    ${topNav({title:`${SERVICES[k].name} 파트너`, backId:'bk'})}
-    <div class="ph-head">
-      <span class="ods-avatar t-heading24 w-bold">${p.n.slice(0,1)}</span>
-      <h2 class="t-heading24 w-bold">${p.n}</h2>
-      <p class="t-detail13L18">${starLine(p.r,p.c)}개 · ${g('addr')} 활동</p>
-      <div class="tags">${tagChips(p.tags)}</div>
-    </div>
-    <div class="ph-stat ods-surface">
-      <div><b class="t-heading17 w-bold">${p.c}</b><span class="t-detail11L14">누적 리뷰</span></div>
-      <div><b class="t-heading17 w-bold">${p.r}</b><span class="t-detail11L14">평균 별점</span></div>
-      <div><b class="t-heading17 w-bold">1일</b><span class="t-detail11L14">평균 응답</span></div>
-    </div>
-    <h4 class="sec-t t-body16L20 w-bold">시공 사례</h4>
-    <div class="ph-grid">${[0,1,2,3].map(()=>`<div class="ph-th ods-thumb"></div>`).join('')}</div>
-    <h4 class="sec-t t-body16L20 w-bold">리뷰</h4>
-    <div class="ph-rev">
-      <div class="rv ods-surface"><b class="t-detail12L16 w-bold">${ic('IconStar',12)} 5.0</b><p class="t-detail13L18">상담부터 마무리까지 일정이 밀리지 않았어요. 사진으로 진행 상황을 계속 보내주셔서 편했습니다.</p></div>
-      <div class="rv ods-surface"><b class="t-detail12L16 w-bold">${ic('IconStar',12)} 4.8</b><p class="t-detail13L18">예산 안에서 우선순위를 같이 정해주셔서 과하게 쓰지 않았어요.</p></div>
-    </div>
-    <div style="height:20px"></div>
-    ${actionDock({pattern:'dual-primary',
-      children: boxButton({label:'다른 파트너 보기', size:'extra-large', variant:'outlined', id:'more', full:true})
-        + boxButton({label:'견적 요청하기', size:'extra-large', variant:'brand-solid', id:'req', full:true})})}`;
-  $('#bk').onclick = ()=>go('partners');
-  $('#more').onclick = ()=>go('partners');
-  $('#req').onclick = ()=>go('done');
-};
-
-/* ── 완료 ─────────────────────────────── */
-VIEW.done = ()=>{
-  const p = S.route==='browse' ? chosenRec() : null;
-  const one = !!p, prod = one && PRODUCT_SVC.has(S.pick.svc);
-  screen.innerHTML = `
-    <div class="done">
-      <div class="seal">${ic('IconCheckSeal',32)}</div>
-      <h2 class="t-heading20 w-bold">${one?(prod?`${p.n}으로<br>상담 신청했어요`:`${p.n}에<br>견적을 요청했어요`):`최대 5곳이<br>견적을 보내드릴게요`}</h2>
-      <p class="t-detail13L18">${one?(prod?`${p.brand} · ${p.price}`:'업체가 확인하면 알려드릴게요.'):'리뷰·포트폴리오가 좋은 업체만 골랐어요.'}</p>
-      <div class="expect ods-surface">
-        <div class="er"><span class="k t-detail11L14">누가</span><span class="v t-detail12L16">${one?`<b>${p.n}</b> 1곳`:`<b>업체 최대 5곳</b>. 그 이상은 연락하지 않아요.`}</span></div>
-        <div class="er"><span class="k t-detail11L14">언제</span><span class="v t-detail12L16"><b>영업일 1~2일</b> 안에 도착해요</span></div>
-        <div class="er"><span class="k t-detail11L14">어떻게</span><span class="v t-detail12L16">앱 알림·메시지로 먼저, <b>원할 때만 통화</b></span></div>
-      </div>
-      ${(S.picked.has('move')||S.picked.has('clean'))?`<div style="margin-top:14px;text-align:left">${cautionBox({
-        title: isReserve()?'이사·청소는 예약 접수했어요':'이사·청소는 바로 접수됐어요',
-        desc: isReserve()
-          ? '<b>입주 45일 전</b>에 자동으로 신청하고 알려드릴게요.'
-          : `입주까지 <b>${dday()}일</b> 남아 바로 매칭에 들어갔어요.`,
-        tone: isReserve()?'brand':'brand'})}</div>`:''}
-      ${(S.ans['move.from']||[])[0]==='아직 안 정했어요'?`<div style="margin-top:10px;text-align:left">${cautionBox({
-        title:'출발지는 상담에서 확인할게요',
-        desc:'<b>거리를 몰라 견적이 범위로만 나와요.</b> 업체가 상담에서 먼저 물어봅니다.',
-        tone:'attention'})}</div>`:''}
-      <p class="optout t-detail12L16">${textButton({label:'언제든 연락 그만 받기', size:14, variant:'neutral-500'})}</p>
-      <div class="statlist ods-surface">
-        <div class="st-cap t-detail11L14">접수된 견적서 ${pickedList().length}건</div>
-        ${pickedList().map(k=>{
-          const wait = (k==='move'||k==='clean') && isReserve();
-          return `<div class="st-row">
-            <span class="st-ic">${svcIcon(k,16)}</span>
-            <span class="st-t"><b class="t-detail13L18 w-bold">${SERVICES[k].name}</b><span class="t-detail11L14">${LEAD[k].who}</span></span>
-            ${sqBadge(wait?'예약 접수':'매칭 중', wait?'neutral300':'brand-weak','20')}
-          </div>`;
-        }).join('')}
-        <p class="st-note t-detail11L14">건마다 따로 진행되고, 하나만 취소할 수 있어요.</p>
-      </div>
-      <div style="margin-top:26px;display:flex;flex-direction:column;gap:8px">
-        ${boxButton({label:'신청 내역 보기', size:'extra-large', variant:'brand-solid', id:'hub', full:true})}
-        ${textButton({label:'시공생활탭으로 나가기', size:14, variant:'neutral-500', id:'again'})}
-      </div>
-    </div>`;
-  $('#hub').onclick = ()=>go('match');
-  $('#again').onclick = ()=>go('entry');
-};
-
-/* ══════════════ PHASE 2 — 상담 파트너 확정 이후 ══════════════ */
-VIEW.match = ()=>{
-  const q2 = queue(2);
-  screen.innerHTML = `
-    ${topNav({title:'신청 내역', backId:'bk'})}
-    <div class="h-lead"><h2 class="t-heading24 w-bold">업체 3곳이<br>상담을 수락했어요</h2>
-      <p class="t-body14L20">신청할 때 안 여쭤본 것들을 지금 채우면 견적이 좁아져요.</p></div>
-    <div class="plist" style="padding-bottom:20px">
-      ${(RECS[recSvcs().find(k=>!PRODUCT_SVC.has(k))||'full']||[]).slice(0,3).map(p=>`
-        <div class="pcard ods-surface" style="cursor:default">
-          <div class="ph" style="margin-bottom:0">
-            <span class="ods-avatar t-detail13L18 w-bold" style="width:38px;height:38px">${p.n.slice(0,1)}</span>
-            <span class="nm"><b class="t-body15L24 w-bold">${p.n}</b><span class="t-detail11L14">${starLine(p.r,p.c)}</span></span>
-            ${sqBadge('수락','brand-weak','20')}
-          </div>
-        </div>`).join('')}
-    </div>
-    <div class="ask ods-surface">
-      <div class="ask-h t-detail13L18 w-bold">업체가 견적을 확정하려면 ${q2.length}가지가 더 필요해요</div>
-      <ul>${q2.map(f=>`<li>${sqBadge((f.svc?label(f.svc)+' · ':'')+f.label,'neutral300','24')}</li>`).join('')}</ul>
-      <p class="t-detail12L16">지금 채우면 업체가 <b>전화로 다시 묻지 않아요.</b></p>
-    </div>
-    ${actionDock({pattern:'single',
-      children: boxButton({label:'추가 정보 입력하고 견적 좁히기', size:'extra-large', variant:'brand-solid', id:'go2', full:true}),
-      sub: textButton({label:'나중에 할게요', size:14, variant:'neutral-500', id:'later'})})}`;
-  $('#bk').onclick = ()=>go('done');
-  $('#go2').onclick = ()=>{ go('more'); };
-  $('#later').onclick = ()=>go('entry');
-};
-
-VIEW.more = ()=>{
-  const q2 = queue(2);
-  const filled = q2.filter(f=>(S.ans[keyOf(f)]||[]).length && !isUnknown(f)).length;
-  const pct = q2.length ? Math.round(filled/q2.length*100) : 100;
-  const groups = {};
-  q2.forEach(f=>{ const k=f.svc||'공통'; (groups[k]=groups[k]||[]).push(f); });
-  screen.innerHTML = `
-    ${topNav({title:'추가 정보', backId:'bk'})}
-    <div class="prog"><div class="bar"><i style="width:${pct}%"></i></div>
-      <div class="meta t-detail11L14"><span>${filled} / ${q2.length} 항목</span><span>채울수록 범위가 좁아져요</span></div></div>
-    <div class="form">
-      ${Object.entries(groups).map(([k,fs])=>`
-        <div class="fsec">
-          <div class="fsec-h"><b class="t-body16L20 w-bold">${k==='공통'?'사진·도면':label(k)}</b>${sqBadge('조율 가능','neutral300','20')}</div>
-          ${fs.map(f=>fieldHTML({...f, optional:true})).join('')}
-        </div>`).join('')}
-    </div>
-    ${actionDock({pattern:'single',
-      hint: filled===q2.length?'<b>다 채웠어요</b>':`${q2.length-filled}개 남음 · 멈춰도 저장돼요`,
-      children: boxButton({label:filled?'입력 마치고 견적 보기':'건너뛰고 견적 보기', size:'extra-large',
-        variant:'brand-solid', id:'fin2', full:true})})}`;
-  $('#bk').onclick = ()=>go('match');
-  screen.querySelectorAll('[data-f]').forEach(b=> b.onclick=()=>{
-    const {f:key,o,multi}=b.dataset;
-    if(multi==='1'){ const arr=S.ans[key]||[]; S.ans[key]=arr.includes(o)?arr.filter(x=>x!==o):[...arr,o]; }
-    else S.ans[key]=[o];
-    render();
-  });
-  $('#fin2').onclick = ()=>go('final');
-};
-
-VIEW.final = ()=>{
-  const hasMove = S.picked.has('move');
-  const e1 = hasMove ? estimate(1) : null;
-  const e2 = hasMove ? estimate(2) : null;
-  const narrowed = hasMove && (e1.hi-e1.lo) > (e2.hi-e2.lo);
-  screen.innerHTML = `
-    ${topNav({title:'견적 확정', backId:'bk'})}
-    ${hasMove?`
-    <div class="h-lead"><h2 class="t-heading24 w-bold">${narrowed?'범위가 좁아졌어요':'아직 범위가 넓어요'}</h2>
-      <p class="t-body14L20">${narrowed?'채워주신 정보로 다시 계산했어요.':'비어 있는 값이 있어 넉넉하게 잡았어요.'}</p></div>
-    <div class="estcard">
-      <div class="cap t-detail11L14 w-semibold">확정 견적 범위</div>
-      <div class="range"><b class="t-heading32 w-bold">${e2.lo}만</b><span class="t-heading20">~</span><b class="t-heading32 w-bold">${e2.hi}만원</b></div>
-      <div class="rbar"><i style="width:${narrowed?'34%':'76%'};margin-left:${narrowed?'30%':'8%'}"></i></div>
-      <div class="rwhy">${e2.why.map(w=>`<span class="t-detail11L14">${w}</span>`).join('')}</div>
-      ${narrowed?`<div class="rdelta t-detail11L14">${e1.lo}~${e1.hi} → ${e2.lo}~${e2.hi}만원 · <b>폭 ${Math.round((1-(e2.hi-e2.lo)/(e1.hi-e1.lo))*100)}% 감소</b></div>`:''}
-      ${e2.unknown.length?`<div class="runknown t-detail11L14">비어 있는 값 — ${e2.unknown.join(' · ')}</div>`:''}
-    </div>`:`
-    <div class="h-lead"><h2 class="t-heading24 w-bold">추가 정보를<br>업체에 전달했어요</h2></div>`}
-    <div class="expect ods-surface" style="margin:20px 16px 0">
-      <div class="er"><span class="k t-detail11L14">다음</span><span class="v t-detail12L16"><b>확정 견적서</b>가 도착하면 알림</span></div>
-      <div class="er"><span class="k t-detail11L14">계약</span><span class="v t-detail12L16"><b>앱 안에서 계약</b>까지 진행</span></div>
-      <div class="er"><span class="k t-detail11L14">변경</span><span class="v t-detail12L16">추가 정보는 <b>언제든 수정</b></span></div>
-    </div>
-    <div style="padding:24px 16px 30px;display:flex;justify-content:center">
-      ${textButton({label:'시공생활탭으로 나가기', size:14, variant:'neutral-500', id:'again'})}
-    </div>`;
-  $('#bk').onclick = ()=>go('more');
-  $('#again').onclick = ()=>go('entry');
 };
 
 /* ══════════════ 케이스 시나리오 ══════════════ */

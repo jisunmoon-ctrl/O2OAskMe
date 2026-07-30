@@ -747,6 +747,12 @@ body{
 .bub.note{align-self:flex-start;background:var(--ods-background);color:var(--ods-foreground);
   display:flex;gap:8px;align-items:flex-start}
 .bub.note svg{flex:0 0 auto;margin-top:3px;color:var(--ods-foreground-brand)}
+/* 상담 신청 완료 카드 (Figma 137:115367 · 208:3065) — 제목+체크 / Divider / 상세 */
+.done-card{display:flex;flex-direction:column;gap:12px;padding:12px;max-width:280px}
+.done-card .dc-h{display:flex;align-items:center;gap:4px}
+.done-card .dc-h .dc-t{line-height:22px;color:var(--ods-foreground)}
+.done-card .dc-h .dc-chk{display:inline-flex;color:var(--ods-foreground)}
+.done-card .dc-body{color:var(--ods-foreground)}
 
 /* ── bundle_progress (Figma 75:25314) ─────────────────
    p4 바깥 여백 · 흰 카드 p12 · r4 · shadow(2 2 10 #C2C8CC33)
@@ -1071,6 +1077,7 @@ const ODS_ICON = {
  "IconInfoCircle": "<path d=\"M240 209c8.836 0 16 7.164 16 16v81c0 8.836-7.164 16-16 16s-16-7.163-16-16v-81c0-8.837 7.163-16 16-16M240 157c9.941 0 18 8.059 18 18s-8.059 18-18 18-18-8.059-18-18 8.059-18 18-18\"></path><path fill-rule=\"evenodd\" d=\"M240 47c106.591 0 193 86.409 193 193s-86.409 193-193 193S47 346.591 47 240 133.409 47 240 47m0 32c-88.918 0-161 72.082-161 161s72.082 161 161 161 161-72.082 161-161S328.918 79 240 79\" clip-rule=\"evenodd\"></path>",
  "IconPencil": "<path fill-rule=\"evenodd\" d=\"M305.546 74.05c25.774-25.775 67.563-25.775 93.338 0l7.071 7.07c25.774 25.776 25.775 67.564 0 93.339L164.579 415.834a26 26 0 0 1-18.259 7.614l-63.94.312c-14.23.069-25.827-11.303-26.121-25.448l-.005-.675.302-63.951a26 26 0 0 1 7.615-18.262zM88.544 336.305l-.263 55.426 55.415-.268 194.146-194.146-55.154-55.154zM376.257 96.677c-13.278-13.278-34.805-13.278-48.083 0l-22.86 22.859 55.155 55.154 22.859-22.858c13.278-13.278 13.278-34.806 0-48.084z\" clip-rule=\"evenodd\"></path>",
  "IconCheckCircle": "<path d=\"M308.687 184.687c6.248-6.249 16.378-6.249 22.626 0s6.249 16.378 0 22.626l-98.555 98.556a16 16 0 0 1-22.627 0l-61.444-61.444c-6.249-6.249-6.249-16.379 0-22.627 6.248-6.249 16.378-6.249 22.626 0l50.131 50.131z\"></path><path fill-rule=\"evenodd\" d=\"M238 36c112.666 0 204 91.334 204 204s-91.334 204-204 204S34 352.666 34 240 125.334 36 238 36m0 32c-94.993 0-172 77.007-172 172s77.007 172 172 172 172-77.007 172-172S332.993 68 238 68\" clip-rule=\"evenodd\"></path>",
+ "IconCheckCircleFilled": "<path fill-rule=\"evenodd\" d=\"M240 40c110.457 0 200 89.543 200 200s-89.543 200-200 200S40 350.457 40 240 129.543 40 240 40m91.313 144.687c-6.248-6.249-16.378-6.249-22.626 0l-87.243 87.242-50.131-50.131c-6.248-6.249-16.378-6.249-22.626 0s-6.249 16.378 0 22.627l61.444 61.444a15.997 15.997 0 0 0 22.627 0l98.555-98.556c6.249-6.248 6.249-16.378 0-22.626\" clip-rule=\"evenodd\"></path>",
  "IconPhone": "<path d=\"M132 216c28.8 56.6 75.2 102.8 131.8 131.8l44-44c5.4-5.4 13.4-7.2 20.4-4.8 22.4 7.4 46.6 11.4 71.4 11.4 11 0 20 9 20 20v70c0 11-9 20-20 20-187.8 0-340-152.2-340-340 0-11 9-20 20-20h70c11 0 20 9 20 20 0 25 4 49 11.4 71.4 2.2 7 .6 14.8-5 20.4l-44 44z\"></path>",
  "IconBell": "<path d=\"M271.644 396.501c5.806-6.661 15.912-7.355 22.574-1.549 6.661 5.806 7.354 15.913 1.548 22.574-12.319 14.133-32.097 22.473-55.766 22.473s-43.447-8.34-55.766-22.473c-5.806-6.661-5.112-16.768 1.549-22.574 6.662-5.806 16.768-5.112 22.574 1.549 5.09 5.839 15.313 11.498 31.643 11.498 16.331 0 26.554-5.658 31.644-11.498\"></path><path fill-rule=\"evenodd\" d=\"M240 55c60.66 0 103.478 6.831 129.201 35.28 12.878 14.243 20.172 32.486 24.352 54.096C397.71 165.869 399 191.862 399 222.65V339h4c8.837 0 16 7.163 16 16s-7.163 16-16 16H77c-8.837 0-16-7.163-16-16s7.163-16 16-16h4V222.65c0-30.788 1.29-56.781 5.447-78.274 4.18-21.61 11.474-39.853 24.352-54.096C136.522 61.831 179.34 55 240 55m0 32c-61.562 0-90.245 7.908-105.466 24.742-7.594 8.399-13.133 20.433-16.669 38.711-3.558 18.395-4.865 41.901-4.865 72.197V339h254V222.65c0-30.296-1.307-53.802-4.865-72.197-3.536-18.278-9.075-30.312-16.669-38.711C330.245 94.908 301.562 87 240 87\" clip-rule=\"evenodd\"></path>",
  "IconClock": "<path d=\"M239 128c8.837 0 16 7.163 16 16v82.38c0 4.568 2.229 8.85 5.972 11.47l57.204 40.043c7.239 5.067 8.999 15.044 3.931 22.283-5.067 7.239-15.044 8.999-22.283 3.931l-57.203-40.042A46 46 0 0 1 223 226.38V144c0-8.837 7.163-16 16-16\"></path><path fill-rule=\"evenodd\" d=\"M240 40c110.457 0 200 89.543 200 200s-89.543 200-200 200S40 350.457 40 240 129.543 40 240 40m0 32c-92.784 0-168 75.216-168 168s75.216 168 168 168 168-75.216 168-168S332.784 72 240 72\" clip-rule=\"evenodd\"></path>",
@@ -1810,6 +1817,15 @@ function chatPrice(){
   </div>`;
 }
 
+/* 상담 신청 완료 카드 (Figma 137:115367 · 208:3065) — 제목+체크 / Divider / 상세 안내 */
+function doneCard(t){
+  return `<div class="bub bot done-card">
+    <div class="dc-h"><span class="dc-t t-heading17 w-semibold">상담 신청 완료</span><span class="dc-chk">${ic('IconCheckCircleFilled',16)}</span></div>
+    <hr class="ods-divider">
+    <div class="dc-body t-body16L20 w-medium"><b class="w-semibold">${t} 희망 시간대</b>에 오늘의집 전문 상담원이 연락을 드릴게요.<br><br>*늦어도 평일 기준 24시간 이내 연락을 드릴 예정이에요.<br>*모르는 번호로 연락이 갈 수 있으니 확인해주세요.</div>
+  </div>`;
+}
+
 /* 현재 진행 스텝 목록 — 선택 서비스 문항 + 크로스셀 + 견적/제안/연락처/완료 */
 function formSteps(){
   const steps=[]; const seen=new Set();
@@ -1887,7 +1903,7 @@ VIEW.form = ()=>{
   chat.innerHTML = `<div class="bub bot t-body16L20"><b class="w-bold">${pickedList().map(label).join(', ')}</b><br>한번에 상담을 도와드릴게요.</div>`;
   (S.log||[]).forEach(m=>{
     if(m.kind==='price'){ chat.insertAdjacentHTML('beforeend', chatPrice()); return; }
-    if(m.kind==='done'){ chat.insertAdjacentHTML('beforeend', `<div class="bub note t-body16L20">${ic('IconCheckCircle',18)}<span><b class="w-bold">상담 신청 완료</b><br>${m.text}</span></div>`); return; }
+    if(m.kind==='done'){ chat.insertAdjacentHTML('beforeend', doneCard(m.time||(S.ans.ctime||['희망'])[0])); return; }
     chat.insertAdjacentHTML('beforeend', `<div class="bub ${m.who} t-body16L20">${m.text}</div>`);
   });
 
@@ -1969,11 +1985,13 @@ VIEW.form = ()=>{
     });
 
   } else if(cur.kind==='done'){
+    /* Figma 137:115367 — 희망 시간대 선택 직후 '상담 신청 완료' 카드가 종착(상단 바 [상담예약중]).
+       done 은 완료 상태라 cur 로 계속 남으므로 render() 재호출 금지(무한 재귀). 카드만 append. */
     const t=(S.ans.ctime||['희망'])[0];
-    S.log=S.log||[]; if(!S.log.some(m=>m.kind==='done')) S.log.push({kind:'done', text:`${t} 시간대에 오늘의집 전문 상담원이 연락을 드릴게요. 모르는 번호로 연락이 갈 수 있으니 확인해주세요.`});
-    quick.innerHTML = boxButton({label:'견적서 확인하기', size:'medium', variant:'solid', id:'toCfm', full:true});
-    $('#toCfm').onclick=()=>go('branch');
-    render();
+    S.log=S.log||[];
+    if(!S.log.some(m=>m.kind==='done')){ S.log.push({kind:'done', time:t}); chat.insertAdjacentHTML('beforeend', doneCard(t)); }
+    quick.innerHTML='';
+    setTimeout(()=>{ if(!S.modal) screen.scrollTop=screen.scrollHeight; },10);
     return;
   }
 

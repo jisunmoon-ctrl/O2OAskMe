@@ -1251,10 +1251,10 @@ const HOME_PART = [
 ];
 
 /* 광역시·도 주소 옵션 (17개 시도 + 직접 입력) */
+/* 광역시/도 표기는 접미사 제거한 단축 레이블로 일괄 사용(서울/경기 통합) */
 const REGION_SIDO = [
-  '서울특별시','부산광역시','대구광역시','인천광역시','광주광역시','대전광역시','울산광역시',
-  '세종특별자치시','경기도','강원특별자치도','충청북도','충청남도','전북특별자치도',
-  '전라남도','경상북도','경상남도','제주특별자치도'
+  '서울/경기','부산','대구','인천','광주','대전','울산','세종',
+  '강원','충북','충남','전북','전남','경북','경남','제주'
 ];
 const REGION = [...REGION_SIDO, '직접 입력'];
 
@@ -1681,7 +1681,7 @@ VIEW.loading = ()=>{
     ${floatingBar({mode:'progress', label:'필수 정보 입력', done:0, total:qTotal})}
     <div class="chat" id="chat">
       <div class="bub me t-body16L20">${pickedList().map(label).join(', ')}</div>
-      <div class="load-bub">${spinner(32)}<span class="grad-load t-body16L20">견적 계산에 필요한 항목 불러오는 중...</span></div>
+      <div class="load-bub">${spinner(16)}<span class="grad-load t-body16L20">견적 계산에 필요한 항목 불러오는 중...</span></div>
     </div>
   </div>`;
   $('#bk').onclick = ()=>go('select');

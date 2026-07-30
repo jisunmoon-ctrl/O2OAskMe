@@ -791,6 +791,12 @@ body{
 .bs-item .bs-txt b{color:var(--ods-foreground)}
 .bs-item .bs-txt span{color:var(--ods-foreground-weak)}
 .bsheet .bs-foot{padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+/* floatingfullpage 시트 (Figma 209:5705/6278) — 총 예상 견적 상세 + dual 버튼 */
+.fp-sheet{max-height:92%}
+.fp-sheet .fp-x{background:none;border:0;padding:0;cursor:pointer;color:var(--ods-foreground);display:inline-flex;flex:0 0 auto}
+.fp-sheet .fp-body{padding:0}
+.fp-sheet .fp-foot{display:flex;gap:8px}
+.fp-sheet .fp-foot .ods-btn{flex:1}
 
 /* ═══ 하단 액션 모달 — 직접입력/갤러리/캘린더 (Figma 미정의 동작) ═══════════════ */
 .fm-sheet .fm-h{display:flex;align-items:center;gap:6px;padding:8px 16px 14px;color:var(--ods-foreground)}
@@ -1819,10 +1825,11 @@ function chatPrice(){
 
 /* 상담 신청 완료 카드 (Figma 137:115367 · 208:3065) — 제목+체크 / Divider / 상세 안내 */
 function doneCard(t){
+  const lead = t ? `<b class="w-semibold">${t} 희망 시간대</b>에` : `<b class="w-semibold">희망하시는 시간대</b>에`;
   return `<div class="bub bot done-card">
     <div class="dc-h"><span class="dc-t t-heading17 w-semibold">상담 신청 완료</span><span class="dc-chk">${ic('IconCheckCircleFilled',16)}</span></div>
     <hr class="ods-divider">
-    <div class="dc-body t-body16L20 w-medium"><b class="w-semibold">${t} 희망 시간대</b>에 오늘의집 전문 상담원이 연락을 드릴게요.<br><br>*늦어도 평일 기준 24시간 이내 연락을 드릴 예정이에요.<br>*모르는 번호로 연락이 갈 수 있으니 확인해주세요.</div>
+    <div class="dc-body t-body16L20 w-medium">${lead} 오늘의집 전문 상담원이 연락을 드릴게요.<br><br>*늦어도 평일 기준 24시간 이내 연락을 드릴 예정이에요.<br>*모르는 번호로 연락이 갈 수 있으니 확인해주세요.</div>
   </div>`;
 }
 
@@ -1882,8 +1889,9 @@ VIEW.form = ()=>{
   const qSteps = steps.filter(s=>s.kind==='q');
   const qDone = qSteps.filter(s=> s.multi ? (S.confirmed&&S.confirmed.has(s.id)) : (S.ans[s.id]||[]).length).length;
   const isGen = cur && cur.kind==='gen';   // 견적 생성중 → floatingProgress/loading
+  /* 견적 발송(genDone) → confirm / 상담 신청 완료(S.ffin) → inquiry */
   const bar = S.genDone
-    ? floatingBar({mode:'confirm', value:estText(), action:S.ffin?'상담예약중':'상담신청', disabled:S.ffin})
+    ? floatingBar({mode:'confirm', value:estText(), action:S.ffin?'상담예약중':'맞춤 상담 신청', disabled:S.ffin})
     : isGen
     ? floatingBar({mode:'loading', label:'총 예상 견적 계산 중...'})
     : floatingBar({mode:'progress', label:'필수 정보 입력', done:Math.min(qDone,qSteps.length), total:qSteps.length});
@@ -1894,16 +1902,29 @@ VIEW.form = ()=>{
     <div class="chat" id="chat"></div>
     <div class="chatdock"><div class="quick" id="quick"></div></div>
     ${S.modal?formModal():''}
+    ${S.sheet==='fullpage'?fullpageSheet():''}
   </div>`;
-  screen.classList.toggle('has-sheet', !!S.modal);
+  screen.classList.toggle('has-sheet', !!S.modal || S.sheet==='fullpage');
   $('#bk').onclick = ()=> go('select');
-  const fb=$('#fbGo'); if(fb) fb.onclick = ()=>{ if(!S.ffin) go('branch'); };
+  /* confirm 상태 floatingProgress 클릭 → floatingfullpage 바텀시트로 이동 (inquiry면 버튼 disabled) */
+  const fb=$('#fbGo'); if(fb) fb.onclick = ()=>{ if(!S.ffin){ S.sheet='fullpage'; render(); } };
+  if(S.sheet==='fullpage'){
+    const close=()=>{ S.sheet=null; render(); };
+    const ov=$('#fpOv'); if(ov) ov.onclick=close;
+    const x=$('#fpX'); if(x) x.onclick=close;
+    const cmp=$('#fpCmp'); if(cmp) cmp.onclick=()=>{ S.sheet=null; setStage('applied'); go('list'); };  // 비교 견적 → 상담 내역
+    const ap=$('#fpApply'); if(ap && !S.ffin) ap.onclick=()=>{                                            // 맞춤 상담 신청 → 완료(inquiry)
+      S.offerDone=S.contactDone=S.timeDone=true; S.ffin=true; setStage('applied');
+      S.log=S.log||[]; if(!S.log.some(m=>m.kind==='done')) S.log.push({kind:'done', time:(S.ans.ctime||[])[0]});
+      render();  // 시트 유지 → confirm→inquiry(버튼 disabled) 전환, 닫으면 채팅에 완료 카드
+    };
+  }
 
   const chat=$('#chat');
   chat.innerHTML = `<div class="bub bot t-body16L20"><b class="w-bold">${pickedList().map(label).join(', ')}</b><br>한번에 상담을 도와드릴게요.</div>`;
   (S.log||[]).forEach(m=>{
     if(m.kind==='price'){ chat.insertAdjacentHTML('beforeend', chatPrice()); return; }
-    if(m.kind==='done'){ chat.insertAdjacentHTML('beforeend', doneCard(m.time||(S.ans.ctime||['희망'])[0])); return; }
+    if(m.kind==='done'){ chat.insertAdjacentHTML('beforeend', doneCard(m.time||(S.ans.ctime||[])[0])); return; }
     chat.insertAdjacentHTML('beforeend', `<div class="bub ${m.who} t-body16L20">${m.text}</div>`);
   });
 
@@ -1987,7 +2008,7 @@ VIEW.form = ()=>{
   } else if(cur.kind==='done'){
     /* Figma 137:115367 — 희망 시간대 선택 직후 '상담 신청 완료' 카드가 종착(상단 바 [상담예약중]).
        done 은 완료 상태라 cur 로 계속 남으므로 render() 재호출 금지(무한 재귀). 카드만 append. */
-    const t=(S.ans.ctime||['희망'])[0];
+    const t=(S.ans.ctime||[])[0];
     S.log=S.log||[];
     if(!S.log.some(m=>m.kind==='done')){ S.log.push({kind:'done', time:t}); chat.insertAdjacentHTML('beforeend', doneCard(t)); }
     quick.innerHTML='';
@@ -2387,6 +2408,30 @@ function cfmCard(k){
       ${cfmRows(k).map(([kk,vv])=>`<div class="cfm-row"><span class="cfm-k t-body14L18">${kk}</span><span class="cfm-v t-body14L18">${vv}</span></div>`).join('')}
     </div>
   </div>`;
+}
+/* floatingfullpage 바텀시트 (Figma 209:5705 confirm / 209:6278 inquiry)
+   총 예상 견적 상세(서비스 카드) + [비교 견적 받기]/[맞춤 상담 신청]. inquiry(S.ffin)면 맞춤상담 disabled. */
+function fullpageSheet(){
+  const inquiry = !!S.ffin;
+  return `<div class="bs-overlay" id="fpOv"></div>
+    <div class="bsheet fp-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-head"><span class="bs-title t-body16L20 w-bold">총 예상 견적</span>
+        <button class="fp-x" id="fpX" aria-label="닫기">${ic('IconX',24)}</button></div>
+      <div class="bs-body fp-body">
+        <div class="cfm-head">
+          <div class="t-detail13L18 w-medium c-fg">총 예상 견적</div>
+          <div class="cfm-total t-heading24 w-semibold c-fg-brand">${estText()}</div>
+          <p class="cfm-sub t-detail13L18">자세한 확정 견적은 파트너와 상담 후 확정되요.<br>이 내용으로 맞춤 상담을 받아보세요.</p>
+        </div>
+        <hr class="ods-divider">
+        <div class="cfm-cards">${pickedList().map(cfmCard).join('')}</div>
+      </div>
+      <div class="bs-foot fp-foot">
+        ${boxButton({label:'비교 견적 받기', size:'large', variant:'outlined', id:'fpCmp'})}
+        ${boxButton({label:`<span style="display:inline-flex;align-items:center;gap:6px">${ic('IconPhone',18)}맞춤 상담 신청</span>`, size:'large', variant:'brand-solid', id:'fpApply', disabled:inquiry})}
+      </div>
+    </div>`;
 }
 /* 상담 신청 완료 바텀시트 (Figma 137:114484) */
 function cfmDoneSheet(){

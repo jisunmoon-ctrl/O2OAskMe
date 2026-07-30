@@ -1719,20 +1719,20 @@ const QMX = {
     {id:'mdate', q:'이사 예정일을 선택해주세요.', cal:true},
     {id:'mtime', q:'이사 선호 시간대를 알려주세요.', opts:TIME_OPTS},
     {id:'mfrom', q:'출발지(현재 집) 주소를 알려주세요.', opts:REGION},
-    {id:'mto',   q:'도착지 주소를 알려주세요.', prefill:'caddr', opts:['(시공 주소와 동일)', ...REGION_SIDO, '직접 입력']},
-    {id:'mtype', q:'이사 유형을 골라주세요.', opts:['가정 이사','사무실 이사','원룸 이사']},
+    /* 시공 주소를 이미 받았으면 도착지는 시공 주소로 채우고 스킵(skipIfConAddr) */
+    {id:'mto',   q:'도착지 주소를 알려주세요.', prefill:'caddr', skipIfConAddr:true, opts:[...REGION_SIDO, '직접 입력']},
+    {id:'mtype', q:'이사 유형을 골라주세요.', opts:['소형/원룸이사','가정이사']},
     {id:'mpack', q:'포장 종류를 선택해주세요.', list:[
       {t:'포장이사',   s:'포장부터 정리까지 모두 맡겨요'},
       {t:'반포장이사', s:'깨지기 쉬운 짐만 포장해요'},
-      {t:'일반이사',   s:'운반만, 포장은 직접 해요'}]},
+      {t:'짐 운반만',  s:'운반만, 포장은 직접 해요'}]},
     {id:'mcargo', q:'이사할 짐 정보를 알려주세요.', gallery:true, opts:['사진·영상 첨부','건너뛰기']},
   ],
   clean:[
     {id:'size',  q:'청소할 집은 몇 평인가요?', opts:AREA_M},
+    /* 시공 주소를 이미 받았으면 청소 주소지는 시공 주소로 채우고 스킵 */
+    {id:'claddr',q:'청소할 집 주소를 알려주세요.', prefill:'caddr', skipIfConAddr:true, opts:REGION},
     {id:'clday', q:'청소 희망일을 선택해주세요.', cal:true, opts:['이사/시공 다음날']},
-    {id:'cltime',q:'청소 선호 시간대를 알려주세요.', opts:TIME_OPTS},
-    {id:'rooms', q:'방은 몇 개인가요?', opts:['원룸','1.5룸','2룸','3룸','4룸','5룸 이상']},
-    {id:'veranda',q:'베란다는 몇 개인가요?', opts:['없음','1','2','3개 이상']},
     {id:'toilet',q:'화장실은 몇 개인가요?', opts:['없음','1','2','3개 이상']},
   ],
   net:[
@@ -1835,7 +1835,12 @@ function formSteps(){
       steps.push({kind:'cross', svc:'clean', q:'시공 후 인테리어 청소도 함께 상담 받아보시겠어요?'});
   }
   /* ── 이사·청소·인터넷·렌탈 (평수 등 공통 id는 dedup 되어 prefill) ── */
-  picked.filter(k=>k!=='full'&&k!=='part').forEach(k=>{ (QMX[k]||[]).forEach(q=> pushQ(k,q)); });
+  const hasConAddr = (S.ans.caddr||[]).length>0;   // 시공 주소 입력 여부
+  picked.filter(k=>k!=='full'&&k!=='part').forEach(k=>{ (QMX[k]||[]).forEach(q=>{
+    /* 시공지 주소가 있으면 이사 도착지·이사청소 주소지는 물어보지 않고 시공 주소로 채운다 */
+    if(hasConAddr && q.skipIfConAddr){ S.ans[q.id]=[S.ans.caddr[0]]; return; }
+    pushQ(k,q);
+  }); });
 
   steps.push({kind:'gen'},{kind:'offer'},{kind:'contact'},{kind:'time'},{kind:'done'});
   return steps;
@@ -1952,7 +1957,8 @@ VIEW.form = ()=>{
     quick.innerHTML = chip({label:'이 번호로 받기', size:'md', variant:'outlined', attrs:'id="c1"'})
                     + chip({label:'다른 번호로 받기', size:'md', variant:'normal', attrs:'id="c2"'});
     $('#c1').onclick=()=>{ S.contactDone=true; rec('연락 받을 번호를 확인해주세요.','010-9104-1024로 받기'); render(); };
-    $('#c2').onclick=()=>{ S.contactDone=true; rec('연락 받을 번호를 확인해주세요.','010-8888-8888로 받기'); render(); };
+    /* 다른 번호로 받기 → 숫자 입력 하단 바텀시트 노출 */
+    $('#c2').onclick=()=>{ S.modal={type:'phone', q:'연락 받을 번호를 확인해주세요.'}; render(); };
 
   } else if(cur.kind==='time'){
     say('마지막으로 통화 희망 시간대를 알려주세요.');
@@ -1981,13 +1987,40 @@ VIEW.form = ()=>{
       const ok=$('#fmOk'); if(ok) ok.onclick=submit;
       if(inp) inp.onkeydown=e=>{ if(e.key==='Enter') submit(); };
     } else if(m.type==='gallery'){
+      /* 선택 시 render() 하지 않고 시트 DOM만 갱신 → 시트가 닫혔다 다시 열리지 않게 함 */
+      const ok=$('#fmGalOk'), cnt=screen.querySelector('.fm-cnt');
+      const setFoot=()=>{ const n=m.picked.size;
+        ok.disabled=!n; ok.toggleAttribute('data-disabled',!n);
+        ok.querySelector('.ods-btn-label').textContent = n?`${n}개 첨부하기`:'사진·영상을 선택해주세요';
+        if(cnt) cnt.textContent=`${n}/5`; };
       screen.querySelectorAll('[data-g]').forEach(b=> b.onclick=()=>{
-        const i=+b.dataset.g; if(m.picked.has(i)) m.picked.delete(i); else if(m.picked.size<5) m.picked.add(i); render();
+        const i=+b.dataset.g;
+        if(m.picked.has(i)){ m.picked.delete(i); b.classList.remove('on'); b.querySelector('.fg-chk')?.remove(); }
+        else if(m.picked.size<5){ m.picked.add(i); b.classList.add('on'); b.insertAdjacentHTML('beforeend', `<span class="fg-chk">${ic('IconCheck',12)}</span>`); }
+        setFoot();
       });
-      const ok=$('#fmGalOk'); if(ok) ok.onclick=()=>{ const n=m.picked.size; if(!n)return; S.ans[m.id]=[`사진·영상 ${n}개 첨부`]; S.modal=null; rec(m.q, `사진·영상 ${n}개 첨부`); render(); };
+      if(ok) ok.onclick=()=>{ const n=m.picked.size; if(!n)return; S.ans[m.id]=[`사진·영상 ${n}개 첨부`]; S.modal=null; rec(m.q, `사진·영상 ${n}개 첨부`); render(); };
     } else if(m.type==='cal'){
-      screen.querySelectorAll('[data-d]').forEach(b=> b.onclick=()=>{ m.day=+b.dataset.d; render(); });
-      const ok=$('#fmCalOk'); if(ok) ok.onclick=()=>{ const v=`2026.08.${String(m.day).padStart(2,'0')}`; S.ans[m.id]=[v]; S.modal=null; rec(m.q, v); render(); };
+      /* 날짜 탭 시 render() 하지 않고 시트 DOM만 갱신 → 시트 유지 */
+      const ok=$('#fmCalOk');
+      screen.querySelectorAll('[data-d]').forEach(b=> b.onclick=()=>{
+        m.day=+b.dataset.d;
+        screen.querySelectorAll('[data-d]').forEach(x=>x.classList.toggle('on', +x.dataset.d===m.day));
+        if(ok){ ok.disabled=false; ok.removeAttribute('data-disabled'); ok.querySelector('.ods-btn-label').textContent=`8월 ${m.day}일 선택`; }
+      });
+      if(ok) ok.onclick=()=>{ if(!m.day)return; const v=`2026.08.${String(m.day).padStart(2,'0')}`; S.ans[m.id]=[v]; S.modal=null; rec(m.q, v); render(); };
+    } else if(m.type==='phone'){
+      /* 다른 번호 입력 — 입력 중 render() 하지 않고 시트 유지, 자동 하이픈 포맷 */
+      const inp=$('#fmPhone'), ok=$('#fmPhoneOk');
+      if(inp) setTimeout(()=>inp.focus(),30);
+      const fmt=s=>{ const d=(s||'').replace(/\D/g,'').slice(0,11);
+        return d.length>7?`${d.slice(0,3)}-${d.slice(3,7)}-${d.slice(7)}`:d.length>3?`${d.slice(0,3)}-${d.slice(3)}`:d; };
+      const valid=()=> (inp.value||'').replace(/\D/g,'').length>=10;
+      const sync=()=>{ inp.value=fmt(inp.value); ok.disabled=!valid(); ok.toggleAttribute('data-disabled',!valid()); };
+      if(inp) inp.oninput=sync;
+      const submit=()=>{ if(!valid())return; const v=fmt(inp.value); S.contactDone=true; S.modal=null; rec(m.q, `${v}로 받기`); render(); };
+      if(ok) ok.onclick=submit;
+      if(inp) inp.onkeydown=e=>{ if(e.key==='Enter') submit(); };
     }
   }
   setTimeout(()=>{ if(!S.modal) screen.scrollTop=screen.scrollHeight; },10);
@@ -2003,11 +2036,18 @@ function formModal(){
       <div class="fm-body"><input class="fm-input t-body16L20" id="fmInput" placeholder="직접 입력해주세요" ${m.num?'inputmode="numeric"':''} autocomplete="off"></div>
       <div class="bs-foot">${boxButton({label:'확인', size:'large', variant:'brand-solid', id:'fmOk', full:true})}</div>
     </div>`;
+  if(m.type==='phone') return `<div class="bs-overlay"></div>
+    <div class="bsheet fm-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="fm-h t-body16L20 w-bold">다른 번호 입력</div>
+      <div class="fm-body"><input class="fm-input t-body16L20" id="fmPhone" inputmode="numeric" placeholder="숫자만 입력 (예: 010 1234 5678)" autocomplete="off"></div>
+      <div class="bs-foot">${boxButton({label:'이 번호로 받기', size:'large', variant:'brand-solid', id:'fmPhoneOk', full:true, disabled:true})}</div>
+    </div>`;
   if(m.type==='gallery'){ const c=m.picked.size;
     return `<div class="bs-overlay"></div>
     <div class="bsheet fm-sheet">
       <div class="bs-grab"><i></i></div>
-      <div class="fm-h t-body16L20 w-bold">사진·영상 첨부 <span class="c-fg-weak t-body14L18 w-regular">${c}/5</span></div>
+      <div class="fm-h t-body16L20 w-bold">사진·영상 첨부 <span class="fm-cnt c-fg-weak t-body14L18 w-regular">${c}/5</span></div>
       <div class="fm-body"><div class="fm-gal">${Array.from({length:9},(_,i)=>
         `<button class="fm-tile${m.picked.has(i)?' on':''}" data-g="${i}"><span class="fg-ph"></span>${m.picked.has(i)?`<span class="fg-chk">${ic('IconCheck',12)}</span>`:''}</button>`).join('')}</div></div>
       <div class="bs-foot">${boxButton({label:c?`${c}개 첨부하기`:'사진·영상을 선택해주세요', size:'large', variant:'brand-solid', id:'fmGalOk', full:true, disabled:!c})}</div>

@@ -713,6 +713,10 @@ body{
 .load-box{display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:16px}
 .load-usp{display:flex;align-items:center;gap:4px;padding-bottom:8px;color:var(--ods-foreground)}
 .load-chips{display:flex;gap:4px;align-items:flex-start;flex-wrap:wrap}
+/* 로딩 버블 — Figma 121:47710 (배경 없는 인라인: Spinner + 그라디언트 텍스트) */
+.load-bub{align-self:flex-start;display:flex;align-items:center;gap:4px}
+.grad-load{background:linear-gradient(90deg,var(--ods-foreground-weak),var(--ods-foreground));
+  -webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
 
 /* 로딩 — 항목 조립 */
 .assembling{padding:80px 24px 0;display:flex;flex-direction:column;align-items:center}
@@ -1667,23 +1671,19 @@ VIEW.select = ()=>{
   };
 };
 
-/* 입력폼 로딩 — Figma 56:19496
-   전체 화면 로더가 아니라 TopNav 아래 한 줄 + 선택 서비스 chip(solid·disabled) */
+/* 03 항목 조립(로딩) — Figma 121:47710
+   폼 챗봇과 동일한 chat-screen chrome(상단 floatingProgress) + 선택 서비스 사용자 버블
+   + 배경 없는 로딩 버블(Spinner 32 + 그라디언트 텍스트). 완료 시 폼으로 전환. */
 VIEW.loading = ()=>{
-  screen.innerHTML = `
-    <div class="load-screen">
-      ${topNav({title:'견적 한번에 받기', backId:'bk'})}
-      <div class="load-box">
-        <div class="load-usp">
-          ${spinner(14)}
-          <span class="t-body15L24 w-medium">신청에 필요한 항목을 불러오는 중...</span>
-        </div>
-        <div class="load-chips">
-          ${pickedList().map(k=>chip({label:label(k), size:'md', variant:'solid', attrs:'data-disabled disabled'})).join('')}
-        </div>
-      </div>
-      <hr class="ods-divider">
-    </div>`;
+  const qTotal = formSteps().filter(s=>s.kind==='q').length;
+  screen.innerHTML = `<div class="chat-screen">
+    ${topNav({title:'견적 한번에 받기', backId:'bk'})}
+    ${floatingBar({mode:'progress', label:'필수 정보 입력', done:0, total:qTotal})}
+    <div class="chat" id="chat">
+      <div class="bub me t-body16L20">${pickedList().map(label).join(', ')}</div>
+      <div class="load-bub">${spinner(32)}<span class="grad-load t-body16L20">견적 계산에 필요한 항목 불러오는 중...</span></div>
+    </div>
+  </div>`;
   $('#bk').onclick = ()=>go('select');
   setTimeout(()=>{ if(S.screen==='loading') go('form'); }, 1600);
 };

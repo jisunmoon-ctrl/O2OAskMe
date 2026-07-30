@@ -1362,7 +1362,7 @@ const dday = () => DDAY[(S.ans['dday']||[])[0]] ?? undefined;
 const isReserve = () => { const d=dday(); return d==null || d>45; };
 
 /* ══════════════ 상태 ══════════════ */
-const LABELS = {entry:'진입',select:'서비스 선택',loading:'항목 조립',form:'정보 입력',
+const LABELS = {entry:'진입',select:'서비스 선택',loading:'정보 항목 구성',form:'정보 입력',
   branch:'견적서 확인',list:'상담 내역'};
 /* 02 서비스 선택 ~ 06 상담 내역. 견적서 확인 → 상담 신청 완료 → 상담 내역(매칭 리스트). */
 const PHASE1 = ['entry','select','loading','form','branch','list'];

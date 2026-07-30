@@ -1241,6 +1241,14 @@ const HOME_PART = [
   {label:'장판', art:'photoVinyl'}
 ];
 
+/* 광역시·도 주소 옵션 (17개 시도 + 직접 입력) */
+const REGION_SIDO = [
+  '서울특별시','부산광역시','대구광역시','인천광역시','광주광역시','대전광역시','울산광역시',
+  '세종특별자치시','경기도','강원특별자치도','충청북도','충청남도','전북특별자치도',
+  '전라남도','경상북도','경상남도','제주특별자치도'
+];
+const REGION = [...REGION_SIDO, '직접 입력'];
+
 /* ── 입력 항목 계층 ──────────────────────────────────
    t:1 견적 판단 — 없으면 금액을 못 냄 (평수 · 시공 범위 · 이사 유형 · 출발지)
    t:2 가능 여부 — 없으면 매칭이 성립 안 됨 (주소지 · 각 서비스 희망일)
@@ -1248,7 +1256,7 @@ const HOME_PART = [
    신청폼은 t1+t2만 받고, t3는 파트너 확정 시점으로 미룹니다. */
 const COMMON = [
   {id:'addr', t:2, q:'새로 들어갈 집 주소를 알려주세요.', label:'신규 주거지 주소',
-    opts:['서울 송파구','서울 강남구','경기 성남시','다른 지역']},
+    opts:REGION},
   {id:'size', t:1, q:'그 집은 몇 평인가요? 대략이면 돼요.', label:'평수',
     opts:['10평 이하','10평대','20평대','30평대','40평대','50평대','60평대','70평 이상']},
   {id:'dday', t:2, q:'언제 들어가세요?', label:'입주 예정일',
@@ -1284,7 +1292,7 @@ const Q = {
       opts:['가정이사','소형 포장','소형 반포장','소형 일반(용달)']},
     {id:'from', t:1, q:'지금 사는 곳(출발지) 주소를 알려주세요.', label:'출발지 주소',
       why:'거리를 알아야 금액이 나와요',
-      opts:['서울 마포구','서울 강서구','경기 고양시','아직 안 정했어요']},
+      opts:[...REGION_SIDO, '아직 안 정했어요']},
     {id:'mdate', t:2, q:'이사 날짜는 언제인가요?', label:'이사 예정일',
       opts:['입주일과 같은 날','입주 하루 전','손없는날로 맞출래요','아직 미정']},
     {id:'ffloor', t:2, q:'출발지는 몇 층이고, 엘리베이터가 있나요?', label:'출발지 층수·엘베',
@@ -1361,7 +1369,7 @@ const ordOf = f => ORD[keyOf(f)] ?? 99;
 
 /* ── 주소지 기반 자동 채움 ─────────────────────────
    단지 정보가 있는 주소는 엘리베이터 유무를 조회해 채우고, 그 문항은 묻지 않는다 */
-const ELEV_DB = {'서울 송파구':1,'서울 강남구':1,'경기 성남시':1,'서울 강서구':1,'경기 고양시':1};
+const ELEV_DB = {'서울특별시':1,'경기도':1,'인천광역시':1};
 const AUTOFILL = '엘베 있음 · 단지 정보';
 const AUTO = {
   'move.tfloor': ()=> ELEV_DB[(S.ans['addr']||[])[0]]
@@ -1649,7 +1657,7 @@ VIEW.select = ()=>{
   const nx=$('#next'); if(nx) nx.onclick = ()=>{
     /* 새 폼 챗봇 플로우 상태 초기화 (문항 답변·크로스셀·견적/제안/연락처 플래그) */
     S.log=[]; S.qi=0; S.step=0; S.ans={}; S.dismiss={};
-    S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null;
+    S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null; S.confirmed=new Set();
     go('loading');
   };
 };
@@ -1682,14 +1690,13 @@ VIEW.loading = ()=>{
 /* 정책 B 세부 옵션. multi=다중, list=title+subtitle 리스트, cal=캘린더 피커, '직접 입력'=텍스트 모달 */
 const AREA_C = ['10평 이하','10평대','20평대','30평대','40평대','60평대 이상'];        // 시공 평수
 const AREA_M = ['10평 이하','10평대','20평대','30평대','40평대','50평대','60평 이상']; // 이사·청소 평수
-const REGION = ['서울 송파구','서울 강남구','경기 성남시','인천 연수구','직접 입력'];   // 시/도>구/군 (간소화)
 const TIME4  = ['아침 (9시 이전)','오전 (9-12시)','오후 (12-18시)','저녁 (18시 이후)'];
 const TIME_OPTS = [...TIME4, '직접 입력'];
 const QMX = {
   full:[
     {id:'size',   q:'시공할 집은 몇 평인가요?', opts:AREA_C},
     {id:'caddr',  q:'시공 주소를 알려주세요.', opts:REGION},
-    {id:'fbudget',q:'시공 예산은 어느 정도로 생각하세요?', opts:['500만원 이하','1000만원대','2000만원대','상담 후 결정','직접 입력']},
+    {id:'fbudget',q:'집 전체 시공 예산은 어느 정도로 생각하세요?', opts:['500만원 이하','1000만원대','2000만원대','상담 후 결정','직접 입력']},
     {id:'scope',  q:'어떤 시공을 희망하세요? (여러 개 선택)', multi:true, opts:['도배','마루·장판','주방','욕실','도어·문틀','창호·샷시','발코니 확장','시스템에어컨']},
     {id:'space',  q:'시공하실 공간 상황은 어떤가요?', opts:['현재 공실','시공 시 공실 예정','시공 시 짐 (일부) 있을 예정']},
     {id:'cdate',  q:'시공 희망 일정을 알려주세요.', opts:['한달 내','2-3개월 내','3개월 이후','상담 후 결정']},
@@ -1697,7 +1704,7 @@ const QMX = {
   part:[
     {id:'size',   q:'시공할 집은 몇 평인가요?', opts:AREA_C},
     {id:'caddr',  q:'시공 주소를 알려주세요.', opts:REGION},
-    {id:'pbudget',q:'시공 예산은 어느 정도로 생각하세요?', opts:['100만원 미만','100만원대','200만원대','300만원대','400만원대','상담 후 결정','직접 입력']},
+    {id:'pbudget',q:'부분 시공 예산은 어느 정도로 생각하세요?', opts:['100만원 미만','100만원대','200만원대','300만원대','400만원대','상담 후 결정','직접 입력']},
     {id:'scope',  q:'어떤 시공을 희망하세요? (여러 개 선택)', multi:true, opts:['도배','마루·장판','주방','욕실','도어·문틀','창호·샷시','발코니 확장','시스템에어컨']},
     {id:'space',  q:'시공하실 공간 상황은 어떤가요?', opts:['현재 공실','시공 시 공실 예정','시공 시 짐 (일부) 있을 예정']},
     {id:'cdate',  q:'시공 희망 일정을 알려주세요.', opts:['한달 내','2-3개월 내','3개월 이후','상담 후 결정']},
@@ -1707,7 +1714,7 @@ const QMX = {
     {id:'mdate', q:'이사 예정일을 선택해주세요.', cal:true},
     {id:'mtime', q:'이사 선호 시간대를 알려주세요.', opts:TIME_OPTS},
     {id:'mfrom', q:'출발지(현재 집) 주소를 알려주세요.', opts:REGION},
-    {id:'mto',   q:'도착지 주소를 알려주세요.', prefill:'caddr', opts:['(시공 주소와 동일)','서울 강남구','경기 성남시','직접 입력']},
+    {id:'mto',   q:'도착지 주소를 알려주세요.', prefill:'caddr', opts:['(시공 주소와 동일)', ...REGION_SIDO, '직접 입력']},
     {id:'mtype', q:'이사 유형을 골라주세요.', opts:['가정 이사','사무실 이사','원룸 이사']},
     {id:'mpack', q:'포장 종류를 선택해주세요.', list:[
       {t:'포장이사',   s:'포장부터 정리까지 모두 맡겨요'},
@@ -1800,24 +1807,39 @@ function chatPrice(){
 
 /* 현재 진행 스텝 목록 — 선택 서비스 문항 + 크로스셀 + 견적/제안/연락처/완료 */
 function formSteps(){
-  const steps=[]; let crossDone=false;
-  FSVC_ORDER.filter(k=>S.picked.has(k)).forEach(k=>{
-    (QMX[k]||[]).forEach(q=> steps.push({kind:'q', svc:k, ...q}));
-    if((k==='full'||k==='part') && !crossDone){
-      crossDone=true;
-      if((S.ans.space||[])[0]==='시공 시 짐 (일부) 있을 예정' && !S.picked.has('move') && !(S.dismiss||{}).move)
-        steps.push({kind:'cross', svc:'move', q:'짐이 있으시군요. 보관이사도 함께 상담 받아보시겠어요?'});
-      if(!S.picked.has('clean') && !(S.dismiss||{}).clean)
-        steps.push({kind:'cross', svc:'clean', q:'시공 후 인테리어 청소도 함께 상담 받아보시겠어요?'});
-    }
-  });
+  const steps=[]; const seen=new Set();
+  /* 공통 항목(id 동일)은 한 번만 push → 중복 문항·progress 총합 부풀림 방지 */
+  const pushQ=(svc,q)=>{ if(!q) return; if(q.id && seen.has(q.id)) return; if(q.id) seen.add(q.id); steps.push({kind:'q', svc, ...q}); };
+  const picked = FSVC_ORDER.filter(k=>S.picked.has(k));
+
+  /* ── 시공(종합/부분): 평수·주소·범위·공간·일정은 공통 1회, 예산만 종합/부분 각각 1회(예산끼리 인접) ── */
+  const con = picked.filter(k=>k==='full'||k==='part');
+  if(con.length){
+    const P=con[0], byId=id=>(QMX[P]||[]).find(q=>q.id===id);
+    pushQ(P, byId('size'));
+    pushQ(P, byId('caddr'));
+    if(S.picked.has('full')) pushQ('full', QMX.full.find(q=>q.id==='fbudget'));  // 종합시공-예산 1회
+    if(S.picked.has('part')) pushQ('part', QMX.part.find(q=>q.id==='pbudget'));  // 부분시공-예산 1회
+    pushQ(P, byId('scope'));
+    pushQ(P, byId('space'));
+    pushQ(P, byId('cdate'));
+    /* 크로스셀: 짐있음 → 이사 / 시공 → 청소 */
+    if((S.ans.space||[])[0]==='시공 시 짐 (일부) 있을 예정' && !S.picked.has('move') && !(S.dismiss||{}).move)
+      steps.push({kind:'cross', svc:'move', q:'짐이 있으시군요. 보관이사도 함께 상담 받아보시겠어요?'});
+    if(!S.picked.has('clean') && !(S.dismiss||{}).clean)
+      steps.push({kind:'cross', svc:'clean', q:'시공 후 인테리어 청소도 함께 상담 받아보시겠어요?'});
+  }
+  /* ── 이사·청소·인터넷·렌탈 (평수 등 공통 id는 dedup 되어 prefill) ── */
+  picked.filter(k=>k!=='full'&&k!=='part').forEach(k=>{ (QMX[k]||[]).forEach(q=> pushQ(k,q)); });
+
   steps.push({kind:'gen'},{kind:'offer'},{kind:'contact'},{kind:'time'},{kind:'done'});
   return steps;
 }
 /* 첫 미해결 스텝 */
 function curStep(steps){
   for(const s of steps){
-    if(s.kind==='q'    && !(S.ans[s.id]||[]).length) return s;
+    /* 멀티 문항은 '고른 걸로 할게요' 확정 전까지 현재 스텝 유지(첫 선택에 넘어가지 않게) */
+    if(s.kind==='q'    && (s.multi ? !(S.confirmed&&S.confirmed.has(s.id)) : !(S.ans[s.id]||[]).length)) return s;
     if(s.kind==='cross') return s;                 // 미해결일 때만 생성됨
     if(s.kind==='gen'    && !S.genDone)    return s;
     if(s.kind==='offer'  && !S.offerDone)  return s;
@@ -1832,7 +1854,7 @@ VIEW.form = ()=>{
   const steps = formSteps();
   const cur = curStep(steps);
   const qSteps = steps.filter(s=>s.kind==='q');
-  const qDone = qSteps.filter(s=>(S.ans[s.id]||[]).length).length;
+  const qDone = qSteps.filter(s=> s.multi ? (S.confirmed&&S.confirmed.has(s.id)) : (S.ans[s.id]||[]).length).length;
   const isGen = cur && cur.kind==='gen';   // 견적 생성중 → floatingProgress/loading
   const bar = S.genDone
     ? floatingBar({mode:'confirm', value:estText(), action:S.ffin?'상담예약중':'상담신청', disabled:S.ffin})
@@ -1898,7 +1920,7 @@ VIEW.form = ()=>{
         if(cur.multi){ const arr=S.ans[cur.id]||[]; S.ans[cur.id]=arr.includes(o)?arr.filter(x=>x!==o):[...arr,o]; render(); }
         else { let v=o; if(o==='(시공 주소와 동일)'&&pre) v=pre; S.ans[cur.id]=[v]; rec(cur.q, v); render(); }
       });
-      if(cur.multi){ const ok=$('#mok'); if(ok) ok.onclick=()=>{ const arr=S.ans[cur.id]||[]; if(!arr.length)return; rec(cur.q, arr.join(', ')); render(); }; }
+      if(cur.multi){ const ok=$('#mok'); if(ok) ok.onclick=()=>{ const arr=S.ans[cur.id]||[]; if(!arr.length)return; (S.confirmed=S.confirmed||new Set()).add(cur.id); rec(cur.q, arr.join(', ')); render(); }; }
     }
 
   } else if(cur.kind==='cross'){

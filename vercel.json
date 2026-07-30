@@ -2,6 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/o2o_prototype_ods.html" }
+    { "source": "/", "destination": "/o2o_prototype_ods" }
   ]
 }

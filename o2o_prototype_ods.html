@@ -707,9 +707,9 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 .fbar .fb-t{flex:1;min-width:0;display:flex;align-items:center;gap:7px;color:var(--ods-foreground);overflow:hidden}
 .fbar .fb-lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fbar .fb-ring{flex:0 0 auto;width:20px;height:20px;display:grid;place-items:center}
-/* arc 를 재렌더마다 empty(--c) → 현재(--off) 로 채워 1/n 단계 진행을 표현 */
+/* arc 는 직전 렌더의 채움(--from) → 현재 단계(--off) 로만 이어서 채운다 */
 .fbar .fb-arc{animation:fb-fill .5s cubic-bezier(.65,0,.35,1) both}
-@keyframes fb-fill{from{stroke-dashoffset:var(--c)}to{stroke-dashoffset:var(--off)}}
+@keyframes fb-fill{from{stroke-dashoffset:var(--from)}to{stroke-dashoffset:var(--off)}}
 .fbar .fb-doc{flex:0 0 auto;display:grid;place-items:center;color:var(--ods-foreground-weak)}
 .fbar .fb-spin{flex:0 0 auto;display:grid;place-items:center}
 .fbar .fb-count{flex:0 0 auto;color:var(--ods-foreground-weak)}
@@ -1578,7 +1578,7 @@ function renderCases(){
     `<li><button data-case="${c.id}" aria-current="${cur&&cur.id===c.id}"><i>${c.id}</i>${c.n}</button></li>`).join('');
   $('#caseMenu').querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
     const c = CASES.find(x=>x.id===b.dataset.case);
-    S.picked=new Set(c.s); S.ans={}; S.log=[]; S.qi=0; S.step=0;
+    S.picked=new Set(c.s); S.ans={}; S.log=[]; S.qi=0; S.step=0; S.ringFrac=0;
     S.route=null; S.pick=null; S.prod={}; S.stage='none'; S.openPart=false; S.gen=false; S.rtab=null;
     go('select');
   });
@@ -1615,7 +1615,7 @@ function bindProgress(){
   const b = screen.querySelector('[data-pgo]');
   if(b) b.onclick = ()=>go(b.dataset.pgo);
   const c = screen.querySelector('[data-pclear]');
-  if(c) c.onclick = ()=>{ S.ans={}; S.log=[]; S.qi=0; S.step=0; S.stage='none'; render(); };
+  if(c) c.onclick = ()=>{ S.ans={}; S.log=[]; S.qi=0; S.step=0; S.ringFrac=0; S.stage='none'; render(); };
 }
 
 /* ── 화면 ─────────────────────────────── */
@@ -1885,7 +1885,7 @@ VIEW.select = ()=>{
   });
   const nx=$('#next'); if(nx) nx.onclick = ()=>{
     /* 새 폼 챗봇 플로우 상태 초기화 (문항 답변·크로스셀·견적/제안/연락처 플래그) */
-    S.log=[]; S.qi=0; S.step=0; S.ans={}; S.dismiss={};
+    S.log=[]; S.qi=0; S.step=0; S.ans={}; S.dismiss={}; S.ringFrac=0;
     S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null; S.confirmed=new Set(); S.priceOpen=false;
     go('loading');
   };
@@ -1978,16 +1978,18 @@ function estMin(){
 const estText = ()=> `${estMin().toLocaleString('ko-KR')}만원부터 ~`;
 
 /* 원형 progress 링 (Figma 178:23716) — 필수 항목 n개 중 done개 완료 → done/n 만큼 arc 채움.
-   재렌더마다 0→현재값으로 fill 애니메이션(1/n씩 분할 채워지는 동작). */
+   직전 렌더의 채움 비율(S.ringFrac)에서 현재 단계까지만 이어서 채운다(0부터 다시 차오르지 않음). */
 function progressRing(done,total){
   const r=8, C=2*Math.PI*r, frac = total ? Math.min(done/total,1) : 0;
-  const off = (C*(1-frac));
+  const prev = S.ringFrac||0;
+  const from = (C*(1-prev)), off = (C*(1-frac));
+  S.ringFrac = frac;
   return `<span class="fb-ring" aria-hidden="true">
     <svg width="20" height="20" viewBox="0 0 20 20">
       <circle cx="10" cy="10" r="${r}" fill="var(--ods-background-weak)" stroke="var(--ods-border)" stroke-width="2"/>
       <circle class="fb-arc" cx="10" cy="10" r="${r}" fill="none" stroke="var(--ods-foreground)" stroke-width="2"
         stroke-linecap="round" transform="rotate(-90 10 10)"
-        style="--c:${C.toFixed(2)};--off:${off.toFixed(2)};stroke-dasharray:${C.toFixed(2)}"/>
+        style="--from:${from.toFixed(2)};--off:${off.toFixed(2)};stroke-dasharray:${C.toFixed(2)}"/>
     </svg></span>`;
 }
 /* 상단 floatingProgress 바 — loading(견적 생성중) / progress(입력중) / confirm(견적후) / inquiry(상담후)

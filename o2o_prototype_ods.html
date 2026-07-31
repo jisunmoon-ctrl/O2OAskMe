@@ -671,17 +671,19 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 /* 선택 상태 — border 1.5px borderStrong + Checkbox checked */
 .pick[aria-pressed="true"]{border-color:var(--ods-border-strong);border-width:1.5px;padding:15.5px}
 
-/* 서비스 선택 — 부분시공 시공 범위 타일(Figma 131:58576)
-   화면 배경이 backgroundWeak 이므로 카드에 붙는 인라인 옵션은 흰 배경을 유지한다 */
-.svcopt{border:1.5px solid var(--ods-border-strong);border-top:0;border-radius:0 0 12px 12px;
-  padding:4px 12px 12px;margin:-6px 0 0;background:var(--ods-background)}
-.svc-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+/* 서비스 선택 — 부분시공 체크 시 타이틀 행 + 시공 범위 타일이 한 카드(Figma 131:58526)
+   pl12 · pr16 · py16 · gap12 · r12 · border 1.5px borderStrong */
+.svccard{display:flex;flex-direction:column;gap:12px;overflow:hidden;background:var(--ods-background);
+  border:1.5px solid var(--ods-border-strong);border-radius:12px;padding:14.5px 14.5px 14.5px 10.5px}
+.svccard .pick{border:0;border-radius:0;padding:0;gap:12px;background:none;width:auto}
+.svccard .pick:hover{border-color:var(--ods-transparent)}
+/* contents(131:58576) — 5열 grid · column gap 0 · row gap 4 */
+.svc-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));column-gap:0;row-gap:4px}
 /* CategoryTile — h77 · r8 · asset 44 + label(detail12L16). 선택 시 backgroundWeak */
 .svc-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   height:77px;padding:4px;border:0;border-radius:8px;background:none;cursor:pointer;
   font-family:inherit;color:var(--ods-foreground);overflow:hidden;transition:.15s}
 .svc-tile.on{background:var(--ods-background-weak)}
-.pick[aria-pressed="true"]:has(+ .svcopt){border-bottom-left-radius:0;border-bottom-right-radius:0}
 /* Sticky Action — 투명→backgroundWeak 그라디언트 위 solid BoxButton */
 .sticky-action{position:sticky;bottom:0;z-index:6;padding:32px 16px 16px;margin-top:auto;
   background:linear-gradient(180deg, rgba(245,245,245,0) 0%, var(--ods-background-weak) 100%)}
@@ -1138,6 +1140,11 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
    패키지에서 추출해 인라인한다(ODS_PROTOTYPE_GUIDE.md §5.1). */
 const ODS_ICON = {
  "IconStarFilled": "<path d=\"M213.697 40.7c11.46-20.585 41.145-20.584 52.604 0l.269.494 49.728 93.115 105.26 17.948c23.802 4.059 33.394 33.07 16.702 50.517l-72.843 76.136 14.523 107.862c3.188 23.678-21.139 41.466-42.736 31.248l-97.205-45.989-97.205 45.989c-21.597 10.218-45.924-7.57-42.736-31.248L114.58 278.91l-72.842-76.136c-16.692-17.447-7.1-46.458 16.702-50.517L163.7 134.309l49.729-93.115z\"></path>",
+ "IconHouse": "<path d=\"M207.253 58.53a61.02 61.02 0 0 1 65.494 0l120 76.33.819.53A60.98 60.98 0 0 1 421 186.307v93.818l-.021 5v.064c-.423 51.967-7.292 90.791-32.866 115.31-22.77 21.83-57.013 29.033-102.113 30.287V431h-76c-53.884 0-93.972-6.344-119.31-31.67-24.945-24.933-31.487-64.156-31.685-116.753L59 280.062v-93.755a60.98 60.98 0 0 1 28.253-51.447zm48.319 27.002a29.02 29.02 0 0 0-31.144 0l-120 76.329A28.98 28.98 0 0 0 91 186.307v93.755l.005 2.516c.22 52.427 7.384 79.204 22.307 94.119C128.474 391.851 155.885 399 210 399h44v-.003h16c53.246 0 80.657-6.919 95.968-21.598 15.12-14.497 22.585-40.626 23.011-92.405l.021-4.935v-93.752a28.98 28.98 0 0 0-13.428-24.447z\"></path>",
+ "IconBubbleRight": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M267.454 49.001c56.151.702 97.904 9.135 124.308 38.026C417.778 115.494 425 159.75 425 220.136c0 80.943-13.87 138.656-34.46 185.551-1.669 3.802-3.403 7.801-5.195 10.956-1.835 3.228-4.915 7.798-10.416 10.732-6.821 3.637-15.23 4.017-22.351 1.01-5.85-2.471-9.366-6.911-11.451-9.939-2.094-3.041-4.241-6.971-6.351-10.797l-26.005-47.157H185.808l-.1-.002c-46.03-.576-81.093-7.001-103.317-30.707C60.429 306.358 55 270.185 55 222.686v-.195l.232-9.556c.016-57.681 6.712-100.296 32.38-127.658 25.957-27.67 67.229-35.522 123.165-36.221l.092-.001L267.347 49zm-56.335 32.052c-55.556.7-84.143 9.032-100.17 26.117C94.656 124.54 87.232 155.2 87.231 213.136v.193L87 222.854c.015 47.54 6.186 71.656 18.736 85.043 12.297 13.116 34.674 20.018 80.306 20.595h122.729c2.26 0 6.859-.181 11.295 1.184l.429.136.657.228a26 26 0 0 1 8.308 4.905l.517.466.327.31c3.337 3.226 5.399 7.339 6.49 9.318l25.285 45.854C380.259 348.786 393 295.968 393 220.136c0-60.332-7.885-92.948-24.859-111.521C351.562 90.475 322.46 81.7 267.129 81z\"></path>",
+ "IconStore": "<path d=\"M372.606 62.629C398.229 62.629 419 83.4 419 109.022v156.517c0 54.285-6.579 94.58-32.242 120.029-25.622 25.408-66.04 31.805-120.276 31.805h-52.964c-54.236 0-94.654-6.397-120.276-31.805C67.58 360.119 61 319.824 61 265.539V109.022c0-25.622 20.771-46.393 46.394-46.393zm-77.962 140.058c-13.146 15-33.053 24.292-54.582 24.292s-41.437-9.292-54.583-24.292c-13.145 15-33.052 24.292-54.581 24.292-13.873 0-26.919-3.837-37.898-10.537v49.097c0 54.384 7.346 82.008 22.774 97.308 15.471 15.341 43.313 22.526 97.744 22.526h52.964c54.431 0 82.273-7.185 97.744-22.526 15.428-15.3 22.774-42.924 22.774-97.308v-49.043c-10.935 6.664-23.929 10.483-37.774 10.483-21.529 0-41.437-9.292-54.582-24.292M107.394 94.629c-7.95 0-14.394 6.444-14.394 14.393v51.454l.012.849c.48 17.819 16.004 33.654 37.886 33.654 22.501 0 38.581-16.595 38.581-34.503V94.629zm94.085 65.847c0 17.908 16.082 34.503 38.583 34.503s38.582-16.595 38.582-34.503V94.629h-77.165zm109.165 0c0 17.908 16.081 34.503 38.582 34.503 22.179 0 37.774-16.295 37.774-34.503v-51.454c0-7.949-6.444-14.393-14.394-14.393h-61.962z\"></path>",
+ "IconFaceSmilingSafetyHelmetFilled": "<path d=\"M409.631 295.5c-2.948 46.367-12.57 81.723-38.788 104.768-28.548 25.091-72.258 31.377-130.842 31.378-58.584 0-102.295-6.287-130.843-31.378C82.94 377.223 73.318 341.867 70.37 295.5zM259.095 46.547c14.498 0 27.049 8.751 27.05 17.503v72.603c0 9.667 7.836 17.503 17.502 17.503 9.667 0 17.503-7.836 17.503-17.503v-57.06c0-4.057 3.753-7.086 7.676-6.053 26.191 6.899 46.408 19.089 60.401 39.831 19.253 28.542 23.936 69.847 24.2 123.629h7.073c9.941 0 18 8.059 18 18s-8.059 18-18 18h-360c-9.941 0-18-8.059-18-18s8.059-18 18-18h6.073c.264-53.782 4.946-95.087 24.2-123.629 13.992-20.742 34.209-32.933 60.401-39.832 3.924-1.034 7.676 1.996 7.676 6.054v57.06c0 9.667 7.836 17.503 17.503 17.503s17.502-7.836 17.502-17.503V64.05c.001-8.752 12.552-17.503 27.05-17.503z\"></path>",
+ "IconPerson": "<path d=\"M268.731 273.986c25.235 0 46.775 1.072 64.8 4.405 18.101 3.346 33.725 9.157 46.261 19.41 25.463 20.823 32.606 55.203 33.962 101.718.072 2.472.169 5.333.028 7.826-.154 2.731-.632 6.311-2.445 10.056a26.17 26.17 0 0 1-11.396 11.734c-3.726 1.939-7.332 2.511-10.047 2.74-2.503.211-5.396.197-7.93.197H98.036c-2.534 0-5.427.014-7.93-.197-2.715-.229-6.32-.801-10.046-2.74a26.17 26.17 0 0 1-11.397-11.734c-1.813-3.745-2.29-7.325-2.445-10.056-.14-2.493-.044-5.354.028-7.826 1.357-46.515 8.501-80.895 33.965-101.718 12.537-10.253 28.162-16.064 46.263-19.41 18.025-3.333 39.566-4.405 64.802-4.405zm-57.455 32c-24.674 0-43.88 1.079-58.984 3.871-15.028 2.779-24.917 7.068-31.823 12.715-13.386 10.947-20.845 31.484-22.225 77.5h283.512c-1.379-46.016-8.837-66.553-22.222-77.5-6.905-5.647-16.793-9.936-31.821-12.715-15.103-2.792-34.309-3.871-58.982-3.871zM240 47.928c55.781 0 101 45.22 101 101s-45.219 101-101 101-101-45.22-101-101 45.219-101 101-101m0 32c-38.107 0-69 30.892-69 69 0 38.107 30.893 69 69 69s69-30.893 69-69-30.892-69-69-69\"></path>",
  "IconArrowLeft": "<path d=\"M202.655 89.967c6.232-6.265 16.363-6.293 22.628-.062 6.265 6.232 6.293 16.363.062 22.628L114.479 224H404c8.836 0 16 7.164 16 16s-7.164 16-16 16H114.479l110.866 111.467c6.231 6.265 6.203 16.396-.062 22.628s-16.396 6.203-22.628-.062l-138-138.75c-6.11-6.144-6.205-16.01-.286-22.27l.286-.296z\"></path>",
  "IconArrowUpCircleFilled": "<path d=\"M240 444c112.666 0 204-91.334 204-204S352.666 36 240 36 36 127.334 36 240s91.334 204 204 204m0-101.503c-8.837 0-16-7.163-16-16v-132.87l-32.687 32.686c-6.248 6.249-16.378 6.249-22.626 0s-6.249-16.378 0-22.626l60-60 .295-.289c6.269-5.958 16.181-5.862 22.331.289l60 60c6.249 6.248 6.249 16.378 0 22.626s-16.378 6.249-22.626 0L256 193.627v132.87c0 8.837-7.163 16-16 16\"></path>",
  "IconSparklesHouse": "<path d=\"M273.066 206c4.287 0 7.921 3.092 8.872 7.272 7.634 33.574 25.216 51.176 58.775 58.831 4.189.956 7.287 4.599 7.287 8.896s-3.098 7.939-7.287 8.894c-33.559 7.656-51.141 25.261-58.775 58.834-.951 4.181-4.584 7.273-8.872 7.273-4.287 0-7.921-3.092-8.872-7.273-7.645-33.625-25.27-51.232-58.928-58.869-4.177-.947-7.266-4.577-7.266-8.859s3.089-7.912 7.266-8.86c33.658-7.636 51.283-25.242 58.928-58.867.951-4.18 4.585-7.272 8.872-7.272M182.533 161c2.144 0 3.96 1.546 4.436 3.636 3.817 16.786 12.608 25.588 29.387 29.416 2.095.477 3.644 2.299 3.644 4.447s-1.549 3.97-3.644 4.448c-16.779 3.828-25.57 12.63-29.387 29.417-.476 2.09-2.292 3.636-4.436 3.636-2.143 0-3.96-1.546-4.435-3.636-3.823-16.812-12.636-25.617-29.465-29.436-2.088-.473-3.633-2.288-3.633-4.429s1.545-3.956 3.633-4.43c16.829-3.818 25.642-12.621 29.465-29.433.475-2.09 2.292-3.636 4.435-3.636\"></path><path fill-rule=\"evenodd\" d=\"M207.253 58.531a61.02 61.02 0 0 1 65.494 0l120 76.329.819.53A60.98 60.98 0 0 1 421 186.307v93.818l-.021 5v.064c-.423 51.967-7.292 90.791-32.866 115.31-22.77 21.83-57.013 29.033-102.113 30.287V431h-76c-53.884 0-93.972-6.344-119.31-31.67-24.945-24.933-31.487-64.156-31.685-116.753L59 280.062v-93.755a60.98 60.98 0 0 1 28.253-51.447zm48.319 27.001a29.02 29.02 0 0 0-31.144 0l-120 76.329A28.98 28.98 0 0 0 91 186.307v93.755l.005 2.516c.22 52.427 7.384 79.204 22.307 94.119C128.474 391.851 155.885 399 210 399h44v-.003h16c53.246 0 80.657-6.919 95.968-21.598 15.12-14.497 22.585-40.626 23.011-92.405l.021-4.935v-93.752a28.98 28.98 0 0 0-13.428-24.447z\" clip-rule=\"evenodd\"></path>",
@@ -1196,6 +1203,7 @@ const ODS_ASSET = {
   photoKitchen: 'AssetPhotoKitchenSinkLarge/image_240.png',
   photoWall:    'AssetPhotoWhiteWallpaperLarge/image_240.png',
   photoFloor:   'AssetPhotoWoodFlooringLarge/image_240.png',
+  photoFloorIso:'AssetPhotoHardwoodFlooringIsometric/image_240.webp',  /* 마루 — Figma 137:113973 */
   photoVinyl:   'AssetPhotoWoodPatternVinylLarge/image_240.png',
   truck:        'AssetTruckLargeGenuineBlueView2/image_240.png',
   cleaningTool: 'AssetCleaningToolLargeGenuineBlueView1/image_240.png',
@@ -1335,7 +1343,7 @@ const SELECT_LIST = [
 const PART_TILES = [
   {label:'주방', art:'photoKitchen'},
   {label:'도배', art:'photoWall'},
-  {label:'마루', art:'photoFloor'},
+  {label:'마루', art:'photoFloorIso'},
   {label:'장판', art:'photoVinyl'},
   {label:'욕실', art:'photoBasin'}
 ];
@@ -1692,13 +1700,13 @@ function homeBundles(){
 }
 /* 하단 고정 GNB (Figma 208:2649) — GNB chrome (ODS 아이콘/QA 제외). 아이콘은 nav 글리프 인라인 */
 function bottomGnb(){
-  const G=`stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+  /* ODS 아이콘(@bucketplace/icons) 매핑 — House / BubbleRight / Store / FaceSmilingSafetyHelmet(Filled=active) / Person */
   const tabs = [
-    {l:'홈', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/></svg>`},
-    {l:'커뮤니티', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><path d="M20 12a8 8 0 0 1-11.5 7.2L4 20l.8-4.5A8 8 0 1 1 20 12z"/></svg>`},
-    {l:'쇼핑', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><path d="M5 8h14l-1 12H6zM8.5 8a3.5 3.5 0 0 1 7 0"/></svg>`},
-    {l:'인테리어/생활', on:true, s:`<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4a7 7 0 0 0-7 7v1.5h14V11a7 7 0 0 0-7-7z"/><rect x="3.5" y="13.5" width="17" height="3" rx="1.5" fill="currentColor"/></svg>`},
-    {l:'마이페이지', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>`},
+    {l:'홈',            s:ic('IconHouse',24)},
+    {l:'커뮤니티',       s:ic('IconBubbleRight',24)},
+    {l:'쇼핑',           s:ic('IconStore',24)},
+    {l:'인테리어/생활', on:true, s:ic('IconFaceSmilingSafetyHelmetFilled',24)},
+    {l:'마이페이지',     s:ic('IconPerson',24)},
   ];
   return `<nav class="home-gnb" role="navigation" aria-label="하단 내비게이션">
     <div class="gnb-row">
@@ -1824,24 +1832,28 @@ VIEW.select = ()=>{
       <span class="t-body16L20 w-semibold">어떤 서비스가 필요한가요?</span>
     </div>
     <div class="picks">
-      ${SELECT_LIST.map(({k,title,desc})=>`
+      ${SELECT_LIST.map(({k,title,desc})=>{
+        /* list 행(131:58537) — title(Body15L24 semibold) + sub(Detail13L18) + Checkbox 20 */
+        const row = `
         <button class="pick" data-k="${k}" aria-pressed="${S.picked.has(k)}">
           <span class="pk-t">
-            <b class="t-body16L20 w-semibold">${title}</b>
-            <span class="d t-body14L18">${desc}</span>
+            <b class="t-body15L24 w-semibold">${title}</b>
+            <span class="d t-detail13L18 w-regular">${desc}</span>
           </span>
           ${cbxIndicator(S.picked.has(k))}
-        </button>
-        ${k==='part'&&partOn?`
-          <div class="svcopt">
-            <div class="svc-tiles">
-              ${PART_TILES.map(t=>`
-                <button class="svc-tile${area.includes(t.label)?' on':''}" data-area="${t.label}" aria-pressed="${area.includes(t.label)}">
-                  ${asset(t.art,44)}
-                  <span class="t-detail12L16 w-medium">${t.label}</span>
-                </button>`).join('')}
-            </div>
-          </div>`:''}`).join('')}
+        </button>`;
+        if(!(k==='part'&&partOn)) return row;
+        /* 부분시공 체크 상태(131:58526) — 행과 시공 범위 타일이 한 카드 안에 들어간다 */
+        return `<div class="svccard">${row}
+          <div class="svc-tiles">
+            ${PART_TILES.map(t=>`
+              <button class="svc-tile${area.includes(t.label)?' on':''}" data-area="${t.label}" aria-pressed="${area.includes(t.label)}">
+                ${asset(t.art,44)}
+                <span class="t-detail12L16 w-medium">${t.label}</span>
+              </button>`).join('')}
+          </div>
+        </div>`;
+      }).join('')}
     </div>
     ${n?`<div class="sticky-action">
       ${boxButton({label:`<span style="display:inline-flex;align-items:center;gap:6px">${n}개 선택 완료 ${ic('IconCheck',20)}</span>`,

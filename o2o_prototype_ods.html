@@ -1138,7 +1138,8 @@ const ODS_ASSET = {
   movingBox:    'AssetMovingBoxLargeGenuineBlueView1/image_240.png',
   wifiRouter:   'AssetWiFiRouterLargeDarkBlueView1/image_240.png',
   waterPurifier:'AssetWaterPurifierLargeGenuineBlueView1/image_240.png',
-  photoBasin:   'AssetPhotoWashBasinLarge/image_240.png'   /* 욕실 — Figma 75:28628 */
+  photoBasin:   'AssetPhotoWashBasinLarge/image_240.png',  /* 욕실 — Figma 75:28628 */
+  headset:      'AssetFaceSmilingCapHeadsetLarge/image_240.webp'  /* 상담원 — 종합 상담 카드(209:9522) */
 };
 const asset = (key, size, cls='') =>
   `<img src="${ODS_ASSET_BASE}/${ODS_ASSET[key]}" alt="" class="${cls}" width="${size}" height="${size}"
@@ -1932,9 +1933,9 @@ VIEW.form = ()=>{
     <div class="chat" id="chat"></div>
     <div class="chatdock"><div class="quick" id="quick"></div></div>
     ${S.modal?formModal():''}
-    ${S.sheet==='fullpage'?fullpageSheet():''}
+    ${S.sheet==='fullpage'?fullpageSheet():S.sheet==='cfmDone'?cfmDoneSheet():S.sheet==='cross'?crossSheet():''}
   </div>`;
-  screen.classList.toggle('has-sheet', !!S.modal || S.sheet==='fullpage');
+  screen.classList.toggle('has-sheet', !!S.modal || !!S.sheet);
   $('#bk').onclick = ()=> go('select');
   /* confirm 상태 floatingProgress 클릭 → floatingfullpage 바텀시트로 이동 (inquiry면 버튼 disabled) */
   const fb=$('#fbGo'); if(fb) fb.onclick = ()=>{ if(!S.ffin){ S.sheet='fullpage'; render(); } };
@@ -1942,12 +1943,20 @@ VIEW.form = ()=>{
     const close=()=>{ S.sheet=null; render(); };
     const ov=$('#fpOv'); if(ov) ov.onclick=close;
     const x=$('#fpX'); if(x) x.onclick=close;
-    const cmp=$('#fpCmp'); if(cmp) cmp.onclick=()=>{ S.sheet=null; setStage('applied'); go('list'); };  // 비교 견적 → 상담 내역
-    const ap=$('#fpApply'); if(ap && !S.ffin) ap.onclick=()=>{                                            // 맞춤 상담 신청 → 완료(inquiry)
+    /* 비교 견적 받기 → 비교견적 컨펌 모달 */
+    const cmp=$('#fpCmp'); if(cmp) cmp.onclick=()=>{ S.sheet='cross'; render(); };
+    /* 맞춤 상담 신청 → 상담 신청 완료 컨펌 모달 */
+    const ap=$('#fpApply'); if(ap && !S.ffin) ap.onclick=()=>{
       S.offerDone=S.contactDone=S.timeDone=true; S.ffin=true; setStage('applied');
-      S.log=S.log||[]; if(!S.log.some(m=>m.kind==='done')) S.log.push({kind:'done', time:(S.ans.ctime||[])[0]});
-      render();  // 시트 유지 → confirm→inquiry(버튼 disabled) 전환, 닫으면 채팅에 완료 카드
+      S.sheet='cfmDone'; render();
     };
+  } else if(S.sheet==='cfmDone'){                    // 맞춤상담 완료 → [신청 내역 보기] → 매칭 목록(종합 상담)
+    const ov=screen.querySelector('.bs-overlay'); if(ov) ov.onclick=()=>{ S.sheet=null; render(); };
+    const cd=$('#cdGo'); if(cd) cd.onclick=()=>{ S.sheet=null; S.listTrack='total'; go('list'); };
+  } else if(S.sheet==='cross'){                       // 비교견적 컨펌 → [네, 받아볼래요] → 매칭 목록(서비스별)
+    const ov=screen.querySelector('.bs-overlay'); if(ov) ov.onclick=()=>{ S.sheet='fullpage'; render(); };
+    const csClose=$('#csClose'); if(csClose) csClose.onclick=()=>{ S.sheet='fullpage'; render(); };
+    const csGo=$('#csGo'); if(csGo) csGo.onclick=()=>{ S.sheet=null; S.listTrack='compare'; setStage('applied'); go('list'); };
   }
 
   const chat=$('#chat');
@@ -2524,9 +2533,9 @@ VIEW.branch = ()=>{
   const apply=$('#apply'); if(apply) apply.onclick=()=>{ S.sheet='cfmDone'; setStage('applied'); render(); }; // 메인: 아웃바운드 상담
   if(S.sheet){
     screen.querySelector('.bs-overlay').onclick = ()=>{ S.sheet=null; render(); };
-    const cd=$('#cdGo'); if(cd) cd.onclick=()=>{ S.sheet=null; go('list'); };              // 완료 → 상담 내역
+    const cd=$('#cdGo'); if(cd) cd.onclick=()=>{ S.sheet=null; S.listTrack='total'; go('list'); };       // 맞춤상담 완료 → 종합 상담
     const csClose=$('#csClose'); if(csClose) csClose.onclick=()=>{ S.sheet=null; render(); };
-    const csGo=$('#csGo'); if(csGo) csGo.onclick=()=>{ S.sheet=null; setStage('applied'); go('list'); }; // 비교견적 → 상담 내역
+    const csGo=$('#csGo'); if(csGo) csGo.onclick=()=>{ S.sheet=null; S.listTrack='compare'; setStage('applied'); go('list'); }; // 비교견적 → 서비스별
   }
 };
 
@@ -2535,29 +2544,42 @@ VIEW.branch = ()=>{
 const ML_TABS = ['신청 내역','받은 문서','채팅'];
 const ML_CHIPS = ['전체','전체시공','이사','이사청소','인터넷','렌탈'];
 VIEW.list = ()=>{
-  const list = pickedList();
+  /* total(맞춤상담·Figma 209:9522) = 단일 '종합 상담' 오더 카드 /
+     compare(비교견적·Figma 124:51989) = 견적 신청한 서비스별 매칭 카드 */
+  const track = S.listTrack || 'compare';
+  const cards = track==='total'
+    ? `<div class="ml-card">
+        <span class="ml-ic">${asset('headset',40)}</span>
+        <div class="ml-body">
+          <b class="ml-nm t-heading18 w-semibold">종합 상담</b>
+          <span class="ml-stat t-body14L18 c-fg-weak">상담원 매칭중</span>
+          <span class="ml-sub t-body16L20 c-fg" style="margin-top:5px">희망 시간대에 맞춰 연락을 드릴게요</span>
+        </div>
+        <span class="ml-time t-body14L18 c-fg-weak">방금</span>
+      </div>`
+    : pickedList().map(k=>{
+        const isProd = k==='net'||k==='rent';
+        return `<div class="ml-card">
+          <span class="ml-ic">${asset(PRICE_ART[k],28)}</span>
+          <div class="ml-body">
+            <b class="ml-nm t-body16L20 w-semibold">${label(k)}</b>
+            <span class="ml-stat t-detail13L18">${isProd?'상담원 매칭중':'업체 매칭 중'}</span>
+            ${isProd?'':`<span class="ml-sub t-detail13L18">딱 맞는 업체를 찾고 있어요</span>`}
+          </div>
+          <span class="ml-time t-detail11L14">방금</span>
+        </div>`;
+      }).join('');
+  const snack = track==='total' ? '신청 완료!  알림으로 알려드릴게요.'
+    : '비교견적 신청 완료 · 매칭이 완료되면 알림으로 알려드릴게요.';
   screen.innerHTML = `
-    ${topNav({title:'상담 내역', backId:'bk'})}
+    ${topNav({title:'시공/생활 상담내역', backId:'bk'})}
     <div class="mlist">
       <div class="ml-tabs">${ML_TABS.map((t,i)=>`<button class="ml-tab${i?'':' on'}"><span class="t-body16L28 ${i?'w-medium':'w-bold'}">${t}</span></button>`).join('')}</div>
       <div class="ml-chips">${ML_CHIPS.map((c,i)=>chip({label:c, size:'sm', variant:i?'normal':'outlined', pressed:i===0})).join('')}</div>
       <button class="ml-period t-detail13L18 w-medium">6개월 이내 <span class="ml-caret">${ic('IconChevronRight',14)}</span></button>
-      <div class="ml-cards">
-        ${list.map(k=>{
-          const isProd = k==='net'||k==='rent';
-          return `<div class="ml-card">
-            <span class="ml-ic">${asset(PRICE_ART[k],28)}</span>
-            <div class="ml-body">
-              <b class="ml-nm t-body16L20 w-semibold">${label(k)}</b>
-              <span class="ml-stat t-detail13L18">${isProd?'상담원 매칭중':'업체 매칭 중'}</span>
-              ${isProd?'':`<span class="ml-sub t-detail13L18">딱 맞는 업체를 찾고 있어요</span>`}
-            </div>
-            <span class="ml-time t-detail11L14">방금</span>
-          </div>`;
-        }).join('')}
-      </div>
+      <div class="ml-cards">${cards}</div>
     </div>
-    <div class="ml-snack t-detail13L18">신청 완료 · 매칭이 완료되면 알림으로 알려드릴게요.</div>`;
+    <div class="ml-snack t-detail13L18">${snack}</div>`;
   $('#bk').onclick = ()=>go('entry');
 };
 

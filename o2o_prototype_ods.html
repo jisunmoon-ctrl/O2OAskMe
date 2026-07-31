@@ -626,7 +626,9 @@ body{
 
 /* ═══ 상단 floatingProgress 바 (Figma 178:23717/23769/23928) ═══════════
    폼 챗봇 상단 고정 — 입력중 progress(n/총) / 견적후 confirm(총 예상 견적+상담신청) */
-.fbar{margin:4px 16px 0;padding:8px 12px;background:var(--ods-background);border-radius:4px;
+/* floatingProgress 래퍼 — 스크롤 무관, 상단 네비게이션(44px) 하단에 sticky 고정 */
+.fbar-wrap{position:sticky;top:44px;z-index:3;background:var(--ods-background-weak);padding:4px 16px}
+.fbar{padding:8px 12px;background:var(--ods-background);border-radius:4px;
   box-shadow:2px 2px 10px 0 rgba(194,200,204,.2);display:flex;align-items:center;gap:8px}
 .fbar .fb-t{flex:1;min-width:0;display:flex;align-items:center;gap:7px;color:var(--ods-foreground);overflow:hidden}
 .fbar .fb-lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1783,20 +1785,23 @@ function progressRing(done,total){
         style="--c:${C.toFixed(2)};--off:${off.toFixed(2)};stroke-dasharray:${C.toFixed(2)}"/>
     </svg></span>`;
 }
-/* 상단 floatingProgress 바 — loading(견적 생성중) / progress(입력중) / confirm(견적후) */
+/* 상단 floatingProgress 바 — loading(견적 생성중) / progress(입력중) / confirm(견적후) / inquiry(상담후)
+   스크롤 무관하게 상단 네비게이션 하단에 sticky 고정(.fbar-wrap). */
 function floatingBar(st){
+  let inner;
   /* floatingProgress/loading (Figma 178:23688) — 좌측 ODS Spinner(137:59039) */
-  if(st.mode==='loading') return `<div class="fbar">
+  if(st.mode==='loading') inner = `<div class="fbar">
     <div class="fb-t"><span class="fb-spin">${spinner(20)}</span>
     <span class="fb-lb t-body14L18 w-medium">${st.label}</span></div></div>`;
-  if(st.mode==='progress') return `<div class="fbar">
+  else if(st.mode==='progress') inner = `<div class="fbar">
     <div class="fb-t">${progressRing(st.done,st.total)}
     <span class="fb-lb t-body14L18 w-medium">${st.label}</span></div>
     <span class="fb-count t-body14L18">${st.done}/${st.total}</span></div>`;
-  return `<div class="fbar">
+  else inner = `<div class="fbar">
     <div class="fb-t"><span class="fb-doc">${ic('IconTextDocument',16)}</span>
     <span class="fb-lb t-body14L18 w-medium">총 예상 견적 <b class="w-semibold">${st.value}</b></span></div>
     ${boxButton({label:st.action, size:'small', variant:'normal', id:'fbGo', disabled:!!st.disabled})}</div>`;
+  return `<div class="fbar-wrap">${inner}</div>`;
 }
 /* 인라인 견적 price 버블 (Figma type=price) */
 function chatPrice(){

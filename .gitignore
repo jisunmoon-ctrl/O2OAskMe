@@ -7,3 +7,5 @@
 # 프리뷰 QA 산출물
 .playwright-mcp/
 *.png
+# 단, Figma 노드에서 추출한 프로토타입 자산은 커밋 대상
+!assets/**/*.png

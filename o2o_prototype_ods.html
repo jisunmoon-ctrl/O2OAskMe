@@ -168,10 +168,13 @@ body{
 .preview-exit{display:none}
 body.preview-only{padding:0}
 body.preview-only .panel{display:none}
+/* 모바일 브라우저는 100vh 가 주소창·하단 툴바까지 포함한 큰 뷰포트라 하단이 툴바 뒤로 잘린다.
+   실제 보이는 높이(100dvh)를 쓰고, 미지원 브라우저는 위 100vh 로 폴백. */
 body.preview-only .phone{position:fixed;top:0;left:50%;transform:translateX(-50%);
-  width:min(100vw,420px);height:100vh;max-width:none;border-radius:0;box-shadow:none}
-/* statusbar(OS chrome) 미노출 */
-body.preview-only .statusbar{display:none}
+  width:min(100vw,420px);height:100vh;height:100dvh;max-width:none;border-radius:0;box-shadow:none}
+/* statusbar·home indicator(OS chrome) 미노출 — 실기기에선 OS/브라우저 바가 그 자리를 차지한다 */
+body.preview-only .statusbar,
+body.preview-only .gnb-ind{display:none}
 /* [메뉴 보기] — 폰 우측 하단 플로팅 아이콘 버튼(아이콘만) */
 body.preview-only .preview-exit{display:inline-flex;align-items:center;justify-content:center;
   position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;
@@ -179,8 +182,8 @@ body.preview-only .preview-exit{display:inline-flex;align-items:center;justify-c
   cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 8px 22px -8px rgba(0,0,0,.55)}
 body.preview-only .preview-exit:hover{background:rgba(20,20,20,.92)}
 body.preview-only .preview-exit svg{opacity:.9}
-/* 하단 GNB(88px)가 있는 화면에선 FAB 를 그 위로 올려 겹침 방지 */
-body.preview-only:has(.home-gnb) .preview-exit{bottom:100px}
+/* 하단 GNB(54px + safe area)가 있는 화면에선 FAB 를 그 위로 올려 겹침 방지 */
+body.preview-only:has(.home-gnb) .preview-exit{bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 /* 엔트리 헤더(navi + 주소변경)는 스크롤 고정, 아래 block container 만 스크롤 */
 body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background:var(--ods-background)}
 
@@ -649,7 +652,8 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
   display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
 .more-btn svg{color:var(--ods-foreground)}
 /* 하단 고정 GNB (Figma 208:2649) — GNB chrome, ODS 아이콘 규칙 제외 */
-.home-gnb{position:sticky;bottom:0;z-index:7;background:var(--ods-background);border-top:.5px solid var(--ods-border)}
+.home-gnb{position:sticky;bottom:0;z-index:7;background:var(--ods-background);border-top:.5px solid var(--ods-border);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
 .gnb-row{display:flex}
 .gnb-item{flex:1;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   background:none;border:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
@@ -692,7 +696,7 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
   font-family:inherit;color:var(--ods-foreground);overflow:hidden;transition:.15s}
 .svc-tile.on{background:var(--ods-background-weak)}
 /* Sticky Action — 투명→backgroundWeak 그라디언트 위 solid BoxButton */
-.sticky-action{position:sticky;bottom:0;z-index:6;padding:32px 16px 16px;margin-top:auto;
+.sticky-action{position:sticky;bottom:0;z-index:6;padding:32px 16px calc(16px + env(safe-area-inset-bottom,0px));margin-top:auto;
   background:linear-gradient(180deg, rgba(245,245,245,0) 0%, var(--ods-background-weak) 100%)}
 
 /* ═══ 입력폼 로딩 (Figma 56:19496) ══════════════════════ */
@@ -906,6 +910,44 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
   color:var(--ods-foreground);font-family:inherit;font-size:15px}
 .fm-cal .fc-day:hover{background:var(--ods-background-weak)}
 .fm-cal .fc-day.on{background:var(--ods-background-brand);color:var(--ods-foreground-inverse)}
+/* ═══ 짐 정보 직접 입력 시트 (Figma 8577:42566) ═══════════════════════════════
+   섹션(가전·가구·기타 가구) 타일 그리드 + 잔 짐 박스 수량 + 추가 설명 */
+.cargo-sheet{max-height:92%}
+.cargo-sheet .bs-body{display:flex;flex-direction:column;gap:20px;padding:16px 0 8px}
+.cg-sec{display:flex;flex-direction:column}
+.cg-sub{padding:0 16px 12px;color:var(--ods-foreground)}
+.cg-sub .cg-desc{display:block;margin-top:2px;color:var(--ods-foreground)}
+/* FurnitureSelector/Tile (2292:39421) — r4 · border 1px · px16 py10 · asset 36 + label 13/18 */
+.cg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:4px;padding:0 16px}
+.cg-tile{max-width:100px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;padding:10px 16px;border:1px solid var(--ods-border);border-radius:4px;
+  background:var(--ods-background);cursor:pointer;font-family:inherit;color:var(--ods-foreground);transition:.14s}
+.cg-tile[aria-pressed="true"]{border-color:var(--ods-border-strong);background:var(--ods-background-weak)}
+.cg-tile img{width:36px;height:36px;object-fit:contain;display:block}
+/* 라벨은 Figma 와 동일하게 줄바꿈 없이 한 줄 유지(긴 라벨은 좌우 패딩을 넘어 표시) */
+.cg-tile span{white-space:nowrap}
+.cg-div{height:1px;background:var(--ods-background-disabled);flex:0 0 auto}
+/* 잔 짐 박스 수량 — backgroundWeak r8 카드 + NumberField */
+.cg-box{margin:0 16px;background:var(--ods-background-weak);border-radius:8px;padding:0 20px;
+  display:flex;align-items:center;justify-content:center;gap:24px}
+.cg-box img{width:173px;height:153px;object-fit:contain;display:block}
+.cg-cnt{display:flex;flex-direction:column;align-items:center;gap:12px}
+.cg-cnt .cg-unit{color:var(--ods-foreground)}
+.cg-num{display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 8px;
+  border:1px solid var(--ods-border);border-radius:4px;background:var(--ods-background)}
+.cg-num button{width:16px;height:16px;padding:0;border:0;background:none;cursor:pointer;
+  display:grid;place-items:center;color:var(--ods-foreground)}
+.cg-num button[disabled]{color:var(--ods-foreground-disabled);cursor:not-allowed}
+.cg-num .cg-v{width:28px;text-align:center;color:var(--ods-foreground)}
+.cg-notes{display:flex;flex-direction:column;gap:8px;padding:12px 16px 0}
+.cg-note{display:flex;align-items:center;gap:6px;color:var(--ods-foreground-weak)}
+.cg-note i{flex:0 0 auto;width:4px;height:4px;border-radius:50%;background:currentColor}
+/* 추가 설명 — Textarea r4 · h108 · p16 */
+.cg-ta{display:block;width:calc(100% - 32px);margin:0 16px;height:108px;padding:16px;resize:none;
+  border:1px solid var(--ods-border);border-radius:4px;background:var(--ods-background);
+  color:var(--ods-foreground);font-family:inherit;font-size:16px;line-height:24px;letter-spacing:-.3px;outline:none}
+.cg-ta:focus{border-color:var(--ods-border-strong)}
+.cg-ta::placeholder{color:var(--ods-foreground-weak)}
 /* 리스트 셀렉 (포장종류 등) — 하단 액션 리스트 */
 .q-list{width:100%;display:flex;flex-direction:column;gap:8px}
 .q-li{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;width:100%;
@@ -1172,6 +1214,8 @@ const ODS_ICON = {
  "IconCheckSeal": "<path d=\"M291.279 191.602c6.3-6.197 16.43-6.114 22.627.185s6.114 16.43-.185 22.627l-83.355 82c-6.207 6.107-16.159 6.127-22.392.047l-46.646-45.5c-6.325-6.17-6.451-16.3-.281-22.625 6.17-6.326 16.299-6.452 22.625-.281l35.425 34.555z\"></path><path fill-rule=\"evenodd\" d=\"M215.811 45.343c13.723-12.45 34.655-12.45 48.378 0l33.868 30.726a4 4 0 0 0 2.841 1.034l45.695-1.768c18.515-.717 34.551 12.739 37.06 31.098l6.194 45.307a4 4 0 0 0 1.511 2.619l36.141 28.017c14.645 11.353 18.28 31.968 8.401 47.644l-24.379 38.688a4 4 0 0 0-.525 2.979l9.677 44.693c3.921 18.11-6.546 36.238-24.19 41.897l-43.544 13.966a4 4 0 0 0-2.316 1.944l-21.315 40.458c-8.638 16.393-28.308 23.553-45.462 16.546L241.513 413.9a4 4 0 0 0-3.026 0l-42.333 17.291c-17.154 7.007-36.824-.153-45.462-16.546l-21.315-40.458a4 4 0 0 0-2.316-1.944l-43.544-13.966c-17.644-5.659-28.11-23.787-24.19-41.897l9.677-44.693a4 4 0 0 0-.526-2.979L44.1 230.02c-9.88-15.676-6.244-36.291 8.4-47.644l36.142-28.017a4 4 0 0 0 1.511-2.619l6.194-45.307c2.51-18.36 18.544-31.815 37.06-31.098l45.695 1.769a4 4 0 0 0 2.841-1.035zm26.876 23.699a4 4 0 0 0-5.375 0l-33.867 30.727a36 36 0 0 1-25.582 9.311l-45.693-1.768a4 4 0 0 0-4.118 3.455l-6.193 45.306a36 36 0 0 1-13.612 23.577l-36.14 28.017a4 4 0 0 0-.934 5.294l24.379 38.687a36 36 0 0 1 4.727 26.811l-9.676 44.692a4 4 0 0 0 2.687 4.656l43.543 13.965a36 36 0 0 1 20.855 17.499l21.315 40.457a4 4 0 0 0 5.052 1.838l42.333-17.29a36 36 0 0 1 27.224 0l42.333 17.29a4 4 0 0 0 5.052-1.838l21.314-40.457a36 36 0 0 1 20.856-17.499l43.543-13.965a4 4 0 0 0 2.687-4.656l-9.676-44.692a36 36 0 0 1 4.727-26.811l24.379-38.688a4 4 0 0 0-.933-5.293l-36.141-28.017a36 36 0 0 1-13.611-23.577l-6.194-45.306a4 4 0 0 0-4.118-3.455l-45.693 1.768a36 36 0 0 1-25.582-9.311z\" clip-rule=\"evenodd\"></path>",
  "IconX": "<path d=\"M373.686 83.686c6.249-6.248 16.379-6.248 22.627 0s6.249 16.379 0 22.627L262.627 240l133.686 133.686.289.295c5.958 6.269 5.862 16.181-.289 22.332s-16.063 6.247-22.332.288l-.295-.288L240 262.627 106.313 396.313l-.294.288c-6.269 5.959-16.183 5.863-22.333-.288s-6.246-16.064-.288-22.332l.288-.295 133.686-133.687L83.686 106.313c-6.248-6.248-6.248-16.378 0-22.627s16.379-6.248 22.627 0l133.686 133.686z\"></path>",
  "IconMinus": "<path d=\"M406 224c8.837 0 16 7.163 16 16s-7.163 16-16 16H74c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path>",
+ /* [예외 기록] IconPlus 는 패키지 원본 path 를 확보하지 못해, IconMinus path 를 중심(240,240) 기준 90° 회전해 겹친 조합으로 구성 */
+ "IconPlus": "<path d=\"M406 224c8.837 0 16 7.163 16 16s-7.163 16-16 16H74c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path><path transform=\"rotate(90 240 240)\" d=\"M406 224c8.837 0 16 7.163 16 16s-7.163 16-16 16H74c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path>",
  "IconStar": "<path fill-rule=\"evenodd\" d=\"M208.244 44.254c13.558-25.39 49.956-25.39 63.514 0l46.765 87.588 99.05 16.893c28.444 4.851 39.908 39.519 19.963 60.371l-68.464 71.574 13.718 101.912c3.809 28.299-25.266 49.556-51.076 37.343l-91.713-43.4-91.713 43.4c-25.81 12.213-54.885-9.044-51.076-37.343l13.717-101.912-68.463-71.574c-19.945-20.852-8.482-55.52 19.963-60.371l99.048-16.893zm35.285 15.073c-1.506-2.821-5.55-2.821-7.056 0l-49.306 92.343a21 21 0 0 1-14.995 10.81L67.809 180.279c-3.16.539-4.435 4.391-2.22 6.708l72.123 75.4a21 21 0 0 1 5.638 17.318l-14.424 107.156c-.423 3.144 2.807 5.506 5.675 4.149l96.417-45.626.536-.245a21 21 0 0 1 16.894 0l.535.245 96.418 45.626c2.868 1.357 6.098-1.005 5.675-4.149l-14.424-107.156a21 21 0 0 1 5.638-17.318l72.122-75.4c2.216-2.317.942-6.169-2.218-6.708L307.83 162.48a21 21 0 0 1-14.995-10.81z\" clip-rule=\"evenodd\"></path>",
  "IconCamera": "<path fill-rule=\"evenodd\" d=\"M239.835 193.316c45.284 0 81.993 36.71 81.993 81.994s-36.709 81.993-81.993 81.993-81.993-36.71-81.993-81.993c0-45.284 36.709-81.993 81.993-81.994m0 32c-27.61.001-49.993 22.383-49.993 49.994 0 27.61 22.382 49.993 49.993 49.993s49.993-22.383 49.993-49.993-22.383-49.994-49.993-49.994\" clip-rule=\"evenodd\"></path><path fill-rule=\"evenodd\" d=\"M188.98 104.623h118.689c37.335.053 67.956 8.924 88.974 30.655C417.555 156.901 426 188.22 426 226.451v97.722c0 38.289-8.47 69.644-29.449 91.268C375.472 437.169 344.767 446 307.334 446H172.98c-37.434 0-68.196-8.832-89.347-30.533-20.738-21.277-29.362-51.993-29.627-89.504L54 324.171v-97.72c0-38.324 8.566-69.681 29.633-91.296 21.151-21.701 51.913-30.534 89.347-30.534h16zm-16.511 32c-32.668.08-53.247 7.864-65.92 20.867C93.725 170.648 86 192.207 86 226.451v97.72l.006 1.597c.237 33.32 7.92 54.413 20.543 67.364C119.288 406.202 140.015 414 172.98 414h134.354c32.967 0 53.595-7.798 66.249-20.841C386.337 380.013 394 358.454 394 324.173v-97.722c0-34.229-7.641-55.776-20.359-68.927-12.417-12.838-32.529-20.609-64.486-20.893l-1.531-.008z\" clip-rule=\"evenodd\"></path><path d=\"M284.836 48c8.836 0 16 7.163 16 16s-7.164 16-16 16h-90c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path>",
  "IconPhoto": "<path d=\"M188 157c17.121 0 31 13.879 31 31s-13.879 31-31 31-31-13.879-31-31 13.879-31 31-31\"></path><path fill-rule=\"evenodd\" d=\"M321 62c29.887 0 55.107 6.821 72.643 24.356C411.178 103.892 418 129.112 418 159v162c0 29.888-6.822 55.108-24.357 72.644C376.107 411.179 350.887 418 321 418H159c-29.887 0-55.107-6.821-72.643-24.356C68.822 376.108 62 350.888 62 321V159c0-29.888 6.822-55.108 24.357-72.644C103.893 68.821 129.113 62 159 62zm-10.53 197.098c-5.571-5.57-14.637-5.45-20.058.266L170.326 386H321c25.656 0 40.936-5.906 50.015-14.984 7.419-7.42 12.719-18.982 14.409-36.965zM159 94c-25.656 0-40.936 5.906-50.015 14.984C99.907 118.063 94 133.343 94 159v162c0 25.657 5.907 40.937 14.985 50.016 4.868 4.867 11.519 8.822 20.596 11.444l137.611-145.115c17.81-18.781 47.604-19.177 65.906-.875L386 289.372V159c0-25.657-5.907-40.937-14.985-50.016C361.936 99.906 346.656 94 321 94z\" clip-rule=\"evenodd\"></path>",
@@ -1353,6 +1397,22 @@ const PART_TILES = [
   {label:'마루', art:'photoFloorIso'},
   {label:'장판', art:'photoVinyl'},
   {label:'욕실', art:'photoBasin'}
+];
+
+/* 짐 정보 직접 입력 시트 품목 (Figma 8577:42566 — 가전 14 · 가구 13 · 기타 가구 8).
+   타일 이미지는 해당 노드의 [Shortcut] 상품 이미지를 추출해 assets/moving 에 보관. */
+const CARGO_SECTIONS = [
+  {t:'가전', items:[
+    ['TV','tv'],['냉장고','fridge'],['세탁기','washer'],['건조기','dryer'],['스타일러','styler'],
+    ['에어컨','aircon'],['레인지·인덕션','range'],['안마의자','massage-chair'],['정수기','water-purifier'],
+    ['공기청정기','air-purifier'],['청소기','vacuum'],['모니터','monitor'],['식기세척기','dishwasher'],['전자레인지','microwave']]},
+  {t:'가구', items:[
+    ['침대','bed'],['소파','sofa'],['옷장(단품)','wardrobe'],['장롱','closet'],['행거','hanger'],
+    ['거실장·TV장','tv-stand'],['수납·서랍장','drawer'],['화장대','vanity'],['선반','shelf'],
+    ['진열장·책장','bookshelf'],['책상','desk'],['테이블·식탁','table'],['의자','chair']]},
+  {t:'기타 가구', items:[
+    ['거울','mirror'],['커튼','curtain'],['조명','lamp'],['피아노','piano'],
+    ['캣타워','cat-tower'],['운동용품','fitness'],['화분','plant'],['캐리어','luggage']]},
 ];
 
 /* 홈 Section_Part "오늘의집이 직접하는 부분 시공" */
@@ -2185,8 +2245,11 @@ VIEW.form = ()=>{
 
     } else if(cur.gallery){             /* 갤러리 피커 → 하단 모달 */
       quick.innerHTML = chip({label:'사진·영상 첨부', size:'md', variant:'outlined', attrs:'id="galOpen"'})
+                      + chip({label:'직접 선택', size:'md', variant:'outlined', attrs:'id="cgOpen"'})
                       + chip({label:'건너뛰기', size:'md', variant:'normal', attrs:'id="galSkip"'});
       $('#galOpen').onclick=()=>{ S.modal={type:'gallery', id:cur.id, q:cur.q, picked:new Set()}; render(); };
+      /* 직접 선택 → 짐 정보 직접 입력 시트(8577:42566) */
+      $('#cgOpen').onclick=()=>{ S.modal={type:'cargo', id:cur.id, q:cur.q, picked:new Set(), boxes:1, memo:''}; render(); };
       $('#galSkip').onclick=()=>{ S.ans[cur.id]=['건너뛰기']; rec(cur.q,'건너뛰기'); render(); };
 
     } else {                            /* 기본 chip. '직접 입력' → 텍스트 모달 */
@@ -2256,6 +2319,26 @@ VIEW.form = ()=>{
       const submit=()=>{ const v=(inp.value||'').trim(); if(!v)return; S.ans[m.id]=[v]; S.modal=null; rec(m.q, v); render(); };
       const ok=$('#fmOk'); if(ok) ok.onclick=submit;
       if(inp) inp.onkeydown=e=>{ if(e.key==='Enter') submit(); };
+    } else if(m.type==='cargo'){
+      /* 타일 토글·수량 변경은 render() 없이 시트 DOM 만 갱신 → 시트 유지 */
+      const x=$('#cgX'); if(x) x.onclick=()=>{ S.modal=null; render(); };
+      const v=screen.querySelector('.cg-v'), minus=$('#cgMinus');
+      const setBoxes=n=>{ m.boxes=Math.min(99,Math.max(1,n)); if(v) v.textContent=m.boxes;
+        if(minus) minus.toggleAttribute('disabled', m.boxes<=1); };
+      if(minus) minus.onclick=()=>setBoxes(m.boxes-1);
+      const plus=$('#cgPlus'); if(plus) plus.onclick=()=>setBoxes(m.boxes+1);
+      screen.querySelectorAll('[data-cg]').forEach(b=> b.onclick=()=>{
+        const k=b.dataset.cg;
+        if(m.picked.has(k)) m.picked.delete(k); else m.picked.add(k);
+        b.setAttribute('aria-pressed', m.picked.has(k));
+      });
+      const ta=$('#cgMemo'); if(ta) ta.oninput=()=>{ m.memo=ta.value; };
+      const ok=$('#cgOk'); if(ok) ok.onclick=()=>{
+        const list=[...m.picked];
+        const items = list.length ? `${list.slice(0,2).join(', ')}${list.length>2?` 외 ${list.length-2}개`:''}` : '';
+        const v2 = [items, `잔 짐 ${m.boxes}박스`, (m.memo||'').trim()].filter(Boolean).join(' · ');
+        S.ans[m.id]=[v2]; S.modal=null; rec(m.q, v2); render();
+      };
     } else if(m.type==='gallery'){
       /* 선택 시 render() 하지 않고 시트 DOM만 갱신 → 시트가 닫혔다 다시 열리지 않게 함 */
       const ok=$('#fmGalOk'), cnt=screen.querySelector('.fm-cnt');
@@ -2312,6 +2395,55 @@ function formModal(){
       <div class="fm-h t-body16L20 w-bold">다른 번호 입력</div>
       <div class="fm-body"><input class="fm-input t-body16L20" id="fmPhone" inputmode="numeric" placeholder="숫자만 입력 (예: 010 1234 5678)" autocomplete="off"></div>
       <div class="bs-foot">${boxButton({label:'이 번호로 받기', size:'large', variant:'brand-solid', id:'fmPhoneOk', full:true, disabled:true})}</div>
+    </div>`;
+  /* 짐 정보 직접 입력 시트 (Figma 8577:42566) — 품목 타일 3섹션 + 잔 짐 박스 수량 + 추가 설명 */
+  if(m.type==='cargo') return `<div class="bs-overlay"></div>
+    <div class="bsheet cargo-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-head">
+        <b class="bs-title t-body16L20 w-bold">짐 정보 직접 입력</b>
+        <button class="ods-iconbtn" id="cgX" aria-label="닫기">${ic('IconX',24)}</button>
+      </div>
+      <div class="bs-body">
+        ${CARGO_SECTIONS.map(sec=>`
+          <div class="cg-sec">
+            <div class="cg-sub t-body15L24 w-semibold">${sec.t}</div>
+            <div class="cg-grid">
+              ${sec.items.map(([label,slug])=>`
+                <button class="cg-tile" data-cg="${label}" aria-pressed="${m.picked.has(label)}">
+                  <img src="assets/moving/${slug}.png" alt="">
+                  <span class="t-detail13L18 w-regular">${label}</span>
+                </button>`).join('')}
+            </div>
+          </div>`).join('')}
+        <div class="cg-div"></div>
+        <div class="cg-sec">
+          <div class="cg-sub t-body15L24 w-semibold">잔 짐 박스 예상 수량
+            <span class="cg-desc t-body14L20 w-regular">5호 박스 기준으로 예상 수량을 입력해주세요.<br>박스 당 차렵 이불 1~2개 정도를 담을 수 있어요.</span>
+          </div>
+          <div class="cg-box">
+            <img src="assets/moving/box.png" alt="">
+            <div class="cg-cnt">
+              <span class="cg-unit t-body14L20 w-semibold">5호 박스 기준</span>
+              <div class="cg-num">
+                <button id="cgMinus" aria-label="수량 줄이기" ${m.boxes<=1?'disabled':''}>${ic('IconMinus',16)}</button>
+                <span class="cg-v t-body16L28 w-semibold">${m.boxes}</span>
+                <button id="cgPlus" aria-label="수량 늘리기">${ic('IconPlus',16)}</button>
+              </div>
+            </div>
+          </div>
+          <div class="cg-notes">
+            <div class="cg-note t-body14L18"><i></i><span>식기, 의류, 주방용품, 책과 같이 수납된 짐들은 모두 꺼내서 포장해야 해요.</span></div>
+            <div class="cg-note t-body14L18"><i></i><span>실제 포장 시 잔 짐이 예상보다 많은 경우가 많아요. 예상 수량을 넉넉하게 잡아주세요.</span></div>
+          </div>
+        </div>
+        <div class="cg-div"></div>
+        <div class="cg-sec">
+          <div class="cg-sub t-body15L24 w-semibold">추가 설명</div>
+          <textarea class="cg-ta" id="cgMemo" rows="3" placeholder="침대와 매트리스는 버릴 예정이에요.&#10;벽걸이 TV 분리 운반 및 설치가 필요해요&#10;장롱 분해가 필요해요">${m.memo||''}</textarea>
+        </div>
+      </div>
+      <div class="bs-foot">${boxButton({label:'다음', size:'large', variant:'brand-solid', id:'cgOk', full:true})}</div>
     </div>`;
   if(m.type==='gallery'){ const c=m.picked.size;
     return `<div class="bs-overlay"></div>

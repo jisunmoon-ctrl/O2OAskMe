@@ -640,8 +640,13 @@ body{
 .fbar .fb-spin{flex:0 0 auto;display:grid;place-items:center}
 .fbar .fb-count{flex:0 0 auto;color:var(--ods-foreground-weak)}
 /* 채팅 안 인라인 견적 price 버블 (Figma type=price) */
-.chat-price{align-self:flex-start;max-width:300px;width:300px;background:var(--ods-background);
+.chat-price{align-self:flex-start;max-width:320px;width:320px;background:var(--ods-background);
   border-radius:12px;padding:12px;box-shadow:2px 2px 10px 0 rgba(194,200,204,.2);animation:pop .26s ease both}
+/* 접힘: 카드 목록을 220px 로 클립 + 하단 shade fade + 펼쳐보기. 펼침(.open): 전체 노출 */
+.chat-price .cp-clip{position:relative;max-height:220px;overflow:hidden;border-radius:8px;margin-top:12px}
+.chat-price .cp-clip.open{max-height:none;overflow:visible}
+.chat-price .cp-shade{position:absolute;left:0;right:0;bottom:0;padding:32px 0 0;display:flex;justify-content:center;
+  background:linear-gradient(180deg, rgba(255,255,255,0) 0%, var(--ods-background) 45%)}
 .chat-price .cp-lb{color:var(--ods-foreground)}
 .chat-price .cp-val{color:var(--ods-foreground-brand)}
 .chat-price .cp-sub{color:var(--ods-foreground);margin:2px 0 12px}
@@ -1681,7 +1686,7 @@ VIEW.select = ()=>{
   const nx=$('#next'); if(nx) nx.onclick = ()=>{
     /* 새 폼 챗봇 플로우 상태 초기화 (문항 답변·크로스셀·견적/제안/연락처 플래그) */
     S.log=[]; S.qi=0; S.step=0; S.ans={}; S.dismiss={};
-    S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null; S.confirmed=new Set();
+    S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null; S.confirmed=new Set(); S.priceOpen=false;
     go('loading');
   };
 };
@@ -1803,28 +1808,37 @@ function floatingBar(st){
     ${boxButton({label:st.action, size:'small', variant:'normal', id:'fbGo', disabled:!!st.disabled})}</div>`;
   return `<div class="fbar-wrap">${inner}</div>`;
 }
-/* 인라인 견적 price 버블 (Figma type=price) */
+/* 서비스별 견적 정보 항목 (Figma 178:24099 · 124:53972 — type=price / price-dropdown) */
+function priceRows(k){
+  const size=(S.ans.size||['30평대'])[0], caddr=(S.ans.caddr||['서울'])[0];
+  const scope=(S.ans.scope||['도배','장판']).join('/')+' 포함, 상담 후 결정';
+  const cdate=(S.ans.cdate||['상담 후 결정'])[0];
+  if(k==='full') return [['예산',(S.ans.fbudget||['1,000만원대'])[0]],['범위',scope],['평수',size],['일정',cdate],['주소',caddr]];
+  if(k==='part') return [['예산',(S.ans.pbudget||['200만원대'])[0]],['범위',scope],['평수',size],['일정',cdate],['주소',caddr]];
+  if(k==='move') return [['종류',`${(S.ans.mtype||['가정이사'])[0]} · ${(S.ans.mpack||['포장이사'])[0]}`],['평수',size],['출발지',(S.ans.mfrom||['서울'])[0]],['일정',(S.ans.mdate||['2026.10.21'])[0]]];
+  if(k==='clean') return [['희망일',(S.ans.clday||['이사/시공 다음날'])[0]],['평수',size]];
+  if(k==='net')  return [['통신사',(S.ans.isp||['상관 없음'])[0]],['결합',(S.ans.tv||['TV 결합'])[0]]];
+  if(k==='rent') return [['품목',(S.ans.ritem||['정수기']).join(', ')]];
+  return [];
+}
+/* 인라인 견적 price 버블 — 접힘(type=price)/펼침(type=price-dropdown). S.priceOpen 로 토글 */
 function chatPrice(){
-  const rows = {
-    full:[['예상',`${(AREA_MAN[(S.ans.size||[])[0]]||2000).toLocaleString('ko-KR')}만원대`],['범위',(S.ans.scope||['도배','장판']).join(', ')+' 포함, 상담 후 결정'],['평수',(S.ans.size||['20평대'])[0]]],
-    part:[['예상','200만원대'],['범위',(S.ans.scope||['도배']).join(', ')],['평수',(S.ans.size||['20평대'])[0]]],
-    move:[['종류',(S.ans.mpack||['포장이사'])[0]],['평수',(S.ans.size||['20평대'])[0]]],
-    clean:[['방',(S.ans.rooms||['3룸'])[0]],['평수',(S.ans.size||['20평대'])[0]]],
-    net:[['결합',(S.ans.tv||['결합'])[0]],['금액','상담 후 확정']],
-    rent:[['품목',(S.ans.ritem||['정수기']).join(', ')],['금액','상담 후 확정']],
-  };
   const cards = FSVC_ORDER.filter(k=>S.picked.has(k)).map(k=>`
     <div class="cp-card"><span class="ec-img">${asset(PRICE_ART[k],36)}</span>
       <div class="cp-rows"><div class="t-body16L20 w-semibold" style="padding-bottom:9px">${label(k)}</div>
-      ${rows[k].map(([kk,vv])=>`<div class="cp-row"><span class="cp-k t-body14L18">${kk}</span><span class="cp-v t-body14L18">${vv}</span></div>`).join('')}</div>
+      ${priceRows(k).map(([kk,vv])=>`<div class="cp-row"><span class="cp-k t-body14L18">${kk}</span><span class="cp-v t-body14L18">${vv}</span></div>`).join('')}</div>
     </div>`).join('');
+  const open = !!S.priceOpen;
   return `<div class="chat-price">
     <div class="cp-done t-detail13L18 w-medium">${ic('IconCheckCircle',16)} 종합 예상 견적 계산 완료</div>
     <div class="cp-lb t-detail13L18 w-medium">총 예상 견적</div>
     <div class="cp-val t-heading24 w-semibold">${estText()}</div>
-    <div class="cp-sub t-detail13L18">예상 시작가예요. 정확한 금액은 상담에서 확정돼요.<br>인터넷·렌탈은 월 구독이라 상담 후 확정으로 안내돼요.</div>
+    <div class="cp-sub t-detail13L18">자세한 확정 견적은 파트너와 상담 후 확정되요.<br>이 내용으로 맞춤 상담을 받아보세요.</div>
     <hr class="ods-divider">
-    <div style="padding-top:12px">${cards}</div>
+    <div class="cp-clip${open?' open':''}">
+      <div class="cp-cards">${cards}</div>
+      ${open?'':`<div class="cp-shade">${boxButton({label:'펼쳐보기', size:'medium', variant:'normal', id:'cpToggle', full:true})}</div>`}
+    </div>
   </div>`;
 }
 
@@ -1932,6 +1946,8 @@ VIEW.form = ()=>{
     if(m.kind==='done'){ chat.insertAdjacentHTML('beforeend', doneCard(m.time||(S.ans.ctime||[])[0])); return; }
     chat.insertAdjacentHTML('beforeend', `<div class="bub ${m.who} t-body16L20">${m.text}</div>`);
   });
+  /* price 버블 '펼쳐보기' → 서비스 카드 전체 노출(price-dropdown). cur 없어도 동작하도록 조기 return 전에 배선 */
+  const cpt=$('#cpToggle'); if(cpt) cpt.onclick=()=>{ S.priceOpen=true; render(); };
 
   const quick=$('#quick');
   const rec = (bot,me)=>{ S.log=S.log||[]; S.log.push({who:'bot',text:bot}); if(me!=null) S.log.push({who:'me',text:me}); };

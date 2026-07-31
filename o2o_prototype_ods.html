@@ -179,6 +179,8 @@ body.preview-only .preview-exit{display:inline-flex;align-items:center;justify-c
   cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 8px 22px -8px rgba(0,0,0,.55)}
 body.preview-only .preview-exit:hover{background:rgba(20,20,20,.92)}
 body.preview-only .preview-exit svg{opacity:.9}
+/* 하단 GNB(88px)가 있는 화면에선 FAB 를 그 위로 올려 겹침 방지 */
+body.preview-only:has(.home-gnb) .preview-exit{bottom:100px}
 /* 엔트리 헤더(navi + 주소변경)는 스크롤 고정, 아래 block container 만 스크롤 */
 body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background:var(--ods-background)}
 
@@ -283,6 +285,7 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 .ods-chip[data-variant="subtle"]{background-color:var(--ods-background-weak);color:var(--ods-foreground)}
 .ods-chip[data-variant="subtle"]::before{border:1px solid var(--ods-transparent)}
 .ods-chip[data-disabled]{color:var(--ods-foreground-disabled);pointer-events:none}
+.ods-chip[data-variant="solid"][data-disabled]{background-color:var(--ods-background-disabled)}
 .ods-chip:hover:not([data-disabled])::before{border-color:var(--ods-palette-gray-200)}
 .ods-chip[data-variant="outlined"]:hover::before,
 .ods-chip[data-variant="solid"]:hover::before{border-color:var(--ods-transparent)}
@@ -597,6 +600,57 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
   border-radius:12px;overflow:hidden}
 .compact-item .ci-lb{min-width:100%;text-align:center;color:var(--ods-foreground)}
 
+/* ═══ 진입 하단 번들 (Figma 208:2387) — 추천업체/서비스숏컷/리뷰/시공사례 ═══
+   콘텐츠 사진은 ODS 미보유(콘텐츠 이미지)라 backgroundWeak placeholder 로 대체 */
+.bundle-div{height:10px;background:var(--ods-background-weak);width:100%;flex:0 0 auto}
+.bx{background:var(--ods-background);padding:20px 0;display:flex;flex-direction:column}
+.bx-t{padding:0 16px 16px;color:var(--ods-foreground);display:block}
+.bx-t .bx-sub{display:block;margin-top:4px;color:var(--ods-foreground)}
+.hscroll{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:0 16px}
+.hscroll::-webkit-scrollbar{display:none}
+.hscroll>*{flex:0 0 auto}
+/* 추천 시공업체 카드 */
+.pcard{width:280px;border:1px solid var(--ods-border);border-radius:8px;overflow:hidden;background:var(--ods-background)}
+.pc-thumb{height:150px;background:var(--ods-background-weak);position:relative}
+.pc-thumb .pc-tag{position:absolute;left:0;right:0;bottom:0;height:32px;display:flex;align-items:center;
+  justify-content:center;gap:4px;background:#2e3b5c;color:#fff}
+.pc-info{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.pc-nm{display:flex;align-items:center;gap:4px;color:var(--ods-foreground)}
+.pc-badge{border:1px solid var(--ods-palette-gray-100);border-radius:4px;padding:2px 6px;color:#12b667/*ODS positive 토큰 미보유*/}
+.pc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--ods-foreground)}
+.pc-star{display:inline-flex;align-items:center;gap:1px}
+.pc-star svg{color:var(--ods-foreground-brand)}
+.pc-star b{color:var(--ods-foreground-brand)}
+.pc-dot{color:var(--ods-palette-gray-200)}
+.c-fg-weakest{color:var(--ods-foreground-weak)}
+/* 서비스 숏컷 4열 */
+.svc-short{display:flex;justify-content:space-between;padding:0 16px;gap:8px}
+.ss-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer;font-family:inherit}
+.ss-ic{width:50px;height:50px;border-radius:16px;background:var(--ods-background-weak);display:flex;align-items:center;justify-content:center;color:var(--ods-foreground)}
+.ss-lb{color:var(--ods-foreground);text-align:center}
+/* 리뷰/시공사례 카드 */
+.rcard{width:159px;display:flex;flex-direction:column;gap:8px}
+.rc-thumb{width:159px;height:159px;border-radius:4px;background:var(--ods-background-weak)}
+.rc-nm{color:var(--ods-foreground)}
+.rc-txt{color:var(--ods-foreground);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rc-by{color:var(--ods-foreground-weak)}
+.rc-meta{display:flex;gap:3px;color:var(--ods-foreground-weak)}
+.pf-chips{display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none}
+.pf-chips::-webkit-scrollbar{display:none}
+.pf-chips>*{flex:0 0 auto}
+.more-btn{margin:16px 16px 0;height:44px;border:1px solid var(--ods-border);border-radius:4px;background:var(--ods-background);
+  display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
+.more-btn svg{color:var(--ods-foreground)}
+/* 하단 고정 GNB (Figma 208:2649) — GNB chrome, ODS 아이콘 규칙 제외 */
+.home-gnb{position:sticky;bottom:0;z-index:7;background:var(--ods-background);border-top:.5px solid var(--ods-border)}
+.gnb-row{display:flex}
+.gnb-item{flex:1;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:none;border:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
+.gnb-item .gnb-lb{font-size:10px;line-height:14px;letter-spacing:-.3px}
+.gnb-item.on .gnb-lb{font-weight:600}
+.gnb-ind{height:34px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px}
+.gnb-ind i{display:block;width:134px;height:5px;border-radius:100px;background:var(--ods-foreground)}
+
 .h-lead{padding:14px 16px 6px}
 .h-lead h2{margin:0}
 .h-lead p{color:var(--ods-foreground-weak);margin-top:9px}
@@ -695,10 +749,16 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 .cross-sheet .cross-body{padding:8px 20px 12px;text-align:center}
 .cross-sheet .cs-t{color:var(--ods-foreground);margin-bottom:8px}
 .cross-sheet .cs-d{color:var(--ods-foreground-weak);margin-bottom:16px}
-.cross-sheet .cs-card{border:1px solid var(--ods-border);border-radius:12px;padding:14px 16px;text-align:left;
-  background:var(--ods-background-brand-weak)}
-.cross-sheet .cs-card-h{display:flex;align-items:center;gap:4px;color:var(--ods-foreground-brand);margin-bottom:8px}
-.cross-sheet .cs-card-b{display:flex;align-items:center;justify-content:space-between}
+/* 견적서 도착 카드 — 뒤에 한 장 더 겹쳐진 스택 표현 */
+.cross-sheet .cs-stack{position:relative;padding-bottom:12px}
+.cross-sheet .cs-stack::after{content:'';position:absolute;left:12px;right:12px;bottom:0;height:24px;
+  border-radius:0 0 16px 16px;background:var(--ods-background-disabled);z-index:0}
+.cross-sheet .cs-card{position:relative;z-index:1;border-radius:16px;padding:16px;text-align:left;
+  background:var(--ods-background-weak)}
+.cross-sheet .cs-card-h{display:flex;align-items:center;gap:6px;color:var(--ods-foreground);margin-bottom:12px}
+.cross-sheet .cs-card-h .cs-card-ic{flex:0 0 auto;display:grid;place-items:center;color:var(--ods-foreground-weak)}
+.cross-sheet .cs-card-b{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:var(--ods-background);border-radius:12px;padding:14px 16px}
 .cross-sheet .cross-foot{display:flex;gap:8px}
 .cross-sheet .cross-foot .ods-btn:first-child{flex:0 0 96px}
 .cross-sheet .cross-foot .ods-btn:last-child{flex:1}
@@ -1164,9 +1224,9 @@ function boxButton({label, size='medium', variant='brand-solid', id='', attrs=''
 const textButton = ({label, size=14, variant='neutral-600', id='', attrs=''}) =>
   `<button class="ods-textbtn" data-size="${size}" data-variant="${variant}" ${id?`id="${id}"`:''} ${attrs}>${label}</button>`;
 /* Chip — size(sm|md) · variant(normal|outlined|solid|subtle) */
-const chip = ({label, size='md', variant='normal', attrs='', pressed}) =>
+const chip = ({label, size='md', variant='normal', attrs='', pressed, disabled}) =>
   `<button class="ods-chip" data-size="${size}" data-variant="${variant}"
-    ${pressed!==undefined?`aria-pressed="${pressed}"`:''} ${attrs}>
+    ${pressed!==undefined?`aria-pressed="${pressed}"`:''} ${disabled?'data-disabled disabled':''} ${attrs}>
     <span class="ods-chip-slot" data-side="center"><span class="ods-chip-label">${label}</span></span>
   </button>`;
 /* 선택 상태 chip — ODS 선택 표현은 outlined(borderStrong + semibold) */
@@ -1550,6 +1610,103 @@ const VIEW = {};
    글로벌 GNB(햄버거·통합검색·알림·북마크·장바구니)와 Bottom Navigation 은
    서비스 공통 chrome 이라 구현 범위에서 제외한다(CLAUDE.md §2).
    주소 행은 O2O 전용이라 feature 로 보고 포함한다. */
+/* 진입 하단 4개 번들 (Figma 208:2387) — 사진은 ODS 미보유 콘텐츠라 placeholder */
+function homeBundles(){
+  const partners = [
+    {tag:'투명하고 합리적인 시공 보장'},
+    {tag:''}
+  ];
+  const shortcuts = [
+    {l:'견적계산기', s:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8" y="6" width="8" height="3.5" rx="1"/><path d="M8 13h0M12 13h0M16 13h0M8 17h0M12 17h0M16 17h0"/></svg>`},
+    {l:'아파트 사례', s:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2M10 21v-3h4v3"/></svg>`},
+    {l:'자재랭킹', s:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5zM3 13l9 5 9-5M3 18l9 5 9-5"/></svg>`},
+    {l:'전체서비스', s:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>`},
+  ];
+  const reviews = [
+    {size:'42평 · 시화청솔아파트', txt:'예약하고 첫 미팅때부터 기본적인 도면이며 시공사례 등 미리 준비해주셔서 믿음이 갔습니다. 현장 하나하나 신경 쓰는 업체 분위기가 맘에 들었어요.', by:'토니인테리어'},
+    {size:'12평 · 원룸&오피스텔', txt:'생애 첫 인테리어라 5군데 넘게 상담하고 결정했어요. 상담 때부터 모델링을 보여주시며 열정을 다해주셨습니다.', by:'보운디자인 인테리어'},
+    {size:'24평', txt:'다섯 군데 견적을 받았는데 남는 게 있을까 싶을 정도로 저렴하고 상세히 뽑아주셨어요.', by:'스타크'},
+  ];
+  const chips = ['전체','모던','미니멀·심플','내추럴'];
+  const portfolios = [
+    {t:'예설이 추구하는 철학이 담긴 디자인의 정석', m:'21평 · 내추럴스타일'},
+    {t:'화이트 베이스의 수납 가득 인테리어', m:'32평 · 모던스타일'},
+    {t:'아이가 있는 집, 거실은 넓게! 각 방은 실용적으로', m:'32평 · 북유럽스타일'},
+  ];
+  return `
+    <div class="bundle-div"></div>
+    <section class="bx">
+      <b class="bx-t t-body16L20 w-bold">송파구 주변 추천 시공업체</b>
+      <div class="hscroll">
+        ${partners.map(p=>`<div class="pcard">
+          <div class="pc-thumb">${p.tag?`<div class="pc-tag t-detail12L16"><b class="w-bold">오늘의집</b> ${p.tag}</div>`:''}</div>
+          <div class="pc-info">
+            <div class="pc-nm"><b class="t-body16L20 w-bold">업체명</b><span class="pc-badge t-detail10L14 w-bold">책임보장</span></div>
+            <div class="pc-meta t-detail12L16">
+              <span class="pc-star">${ic('IconStarFilled',12)}<b class="w-bold">5.0</b></span>
+              <span>계약자리뷰 <b class="w-bold">24</b></span><span class="pc-dot">·</span>
+              <span>최근계약 <b class="w-bold">8</b></span>
+            </div>
+          </div>
+        </div>`).join('')}
+      </div>
+      <button class="more-btn t-body14L18 w-bold" data-svc="full">더보기 ${ic('IconChevronRight',12)}</button>
+    </section>
+
+    <div class="bundle-div"></div>
+    <section class="bx">
+      <b class="bx-t t-body16L20 w-bold">이런 시공 서비스는 어떠세요?</b>
+      <div class="svc-short">
+        ${shortcuts.map(s=>`<button class="ss-item" data-svc="full"><span class="ss-ic">${s.s}</span><span class="ss-lb t-detail12L16">${s.l}</span></button>`).join('')}
+      </div>
+    </section>
+
+    <div class="bundle-div"></div>
+    <section class="bx">
+      <b class="bx-t t-body16L20 w-bold">최신 송파구 주변 리뷰<span class="bx-sub t-body14L20 w-regular">설정된 주소지 반경 4km 내 리뷰를 보여드려요.</span></b>
+      <div class="hscroll">
+        ${reviews.map(r=>`<div class="rcard">
+          <div class="rc-thumb"></div>
+          <b class="rc-nm t-detail13L18 w-bold">${r.size}</b>
+          <p class="rc-txt t-body14L20">${r.txt}</p>
+          <span class="rc-by t-detail12L16">${r.by}</span>
+        </div>`).join('')}
+      </div>
+    </section>
+
+    <div class="bundle-div"></div>
+    <section class="bx">
+      <b class="bx-t t-body16L20 w-bold">강남구 주변 인기 시공사례</b>
+      <div class="pf-chips">
+        ${chips.map((c,i)=>chip({label:c, size:'md', variant:i?'subtle':'solid', pressed:i===0})).join('')}
+      </div>
+      <div class="hscroll">
+        ${portfolios.map(p=>`<div class="rcard">
+          <div class="rc-thumb"></div>
+          <b class="rc-nm t-body14L20 w-bold">${p.t}</b>
+          <div class="rc-meta t-detail12L16"><span>${p.m}</span></div>
+        </div>`).join('')}
+      </div>
+      <button class="more-btn t-body14L18 w-bold" data-svc="full">더보기 ${ic('IconChevronRight',12)}</button>
+    </section>`;
+}
+/* 하단 고정 GNB (Figma 208:2649) — GNB chrome (ODS 아이콘/QA 제외). 아이콘은 nav 글리프 인라인 */
+function bottomGnb(){
+  const G=`stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+  const tabs = [
+    {l:'홈', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/></svg>`},
+    {l:'커뮤니티', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><path d="M20 12a8 8 0 0 1-11.5 7.2L4 20l.8-4.5A8 8 0 1 1 20 12z"/></svg>`},
+    {l:'쇼핑', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><path d="M5 8h14l-1 12H6zM8.5 8a3.5 3.5 0 0 1 7 0"/></svg>`},
+    {l:'인테리어/생활', on:true, s:`<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4a7 7 0 0 0-7 7v1.5h14V11a7 7 0 0 0-7-7z"/><rect x="3.5" y="13.5" width="17" height="3" rx="1.5" fill="currentColor"/></svg>`},
+    {l:'마이페이지', s:`<svg width="24" height="24" viewBox="0 0 24 24" ${G}><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>`},
+  ];
+  return `<nav class="home-gnb" role="navigation" aria-label="하단 내비게이션">
+    <div class="gnb-row">
+      ${tabs.map(t=>`<button class="gnb-item${t.on?' on':''}"${t.on?' aria-current="page"':''}>${t.s}<span class="gnb-lb">${t.l}</span></button>`).join('')}
+    </div>
+    <div class="gnb-ind" aria-hidden="true"><i></i></div>
+  </nav>`;
+}
 VIEW.entry = ()=>{
   screen.innerHTML = `
     <div class="o2o-home">
@@ -1645,7 +1802,9 @@ VIEW.entry = ()=>{
           </div>
         </section>
       </div>
-    </div>`;
+      ${homeBundles()}
+    </div>
+    ${bottomGnb()}`;
   const enter = (pre)=>{ if(pre){S.picked=new Set([pre]);} go('select'); };
   $('#hook').onclick = ()=>enter(null);
   $('#hook').onkeydown = e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();enter(null);} };
@@ -2007,7 +2166,7 @@ VIEW.form = ()=>{
 
     } else {                            /* 기본 chip. '직접 입력' → 텍스트 모달 */
       quick.innerHTML = optsOf(cur).map(o=>selChip(o, sel.includes(o), `data-o="${o}"`)).join('')
-        + (cur.multi?boxButton({label:'고른 걸로 할게요', size:'small', variant:'solid', id:'mok', disabled:!sel.length}):'');
+        + (cur.multi?chip({label:'고른 걸로 할게요', size:'md', variant:'solid', attrs:'id="mok"', disabled:!sel.length}):'');
       quick.querySelectorAll('[data-o]').forEach(b=> b.onclick=()=>{
         const o=b.dataset.o;
         if(o==='직접 입력'){ S.modal={type:'text', id:cur.id, q:cur.q, num:false}; render(); return; }
@@ -2502,9 +2661,11 @@ function crossSheet(){
       <div class="bs-body cross-body">
         <div class="cs-t t-heading20 w-bold"><span class="c-fg-brand">${names}</span><br>비교 견적을 받으시겠어요?</div>
         <p class="cs-d t-body14L20">최대 5개 파트너로부터 견적을 받을 수 있어요.</p>
-        <div class="cs-card">
-          <div class="cs-card-h t-detail13L18 w-semibold">${ic('IconCheckSeal',16)} 이사 파트너로부터 견적이 도착했어요!</div>
-          <div class="cs-card-b"><span class="t-body14L18 c-fg-weak">받은 견적</span><b class="t-body16L20 w-bold c-fg-brand">550,000원 부터~</b></div>
+        <div class="cs-stack">
+          <div class="cs-card">
+            <div class="cs-card-h t-body16L20 w-bold"><span class="cs-card-ic">${ic('IconTextDocument',20)}</span>파트너로부터 견적서가 도착했어요!</div>
+            <div class="cs-card-b"><span class="t-body14L18 c-fg-weak">받은 견적</span><b class="t-heading18 w-bold c-fg">550,000원 부터~</b></div>
+          </div>
         </div>
       </div>
       <div class="bs-foot cross-foot">

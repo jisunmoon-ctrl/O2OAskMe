@@ -611,7 +611,11 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 .hscroll>*{flex:0 0 auto}
 /* 추천 시공업체 카드 */
 .pcard{width:280px;border:1px solid var(--ods-border);border-radius:8px;overflow:hidden;background:var(--ods-background)}
-.pc-thumb{height:150px;background:var(--ods-background-weak);position:relative}
+/* 썸네일(208:2478) — 좌 1장 + 우 2장 모자이크, 사이 seam 1.5/3px */
+.pc-thumb{height:150px;background:var(--ods-background);position:relative;
+  display:grid;grid-template-columns:3fr 1fr;grid-template-rows:1fr 1fr;gap:3px 1.5px}
+.pc-thumb .pc-im{width:100%;height:100%;object-fit:cover;display:block}
+.pc-thumb .pc-main{grid-row:1/3}
 .pc-thumb .pc-tag{position:absolute;left:0;right:0;bottom:0;height:32px;display:flex;align-items:center;
   justify-content:center;gap:4px;background:#2e3b5c;color:#fff}
 .pc-info{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
@@ -630,7 +634,10 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 .ss-lb{color:var(--ods-foreground);text-align:center}
 /* 리뷰/시공사례 카드 */
 .rcard{width:159px;display:flex;flex-direction:column;gap:8px}
-.rc-thumb{width:159px;height:159px;border-radius:4px;background:var(--ods-background-weak)}
+.rc-thumb{width:159px;height:159px;border-radius:4px;background:var(--ods-background-weak);position:relative;overflow:hidden}
+.rc-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* IMG_3891 1(208:2616) — Figma 크롭 프레임 그대로 */
+.rc-thumb img.rc-crop{inset:auto;left:-63.75%;top:-177.02%;width:371.41%;height:864.76%;object-fit:fill;max-width:none}
 .rc-nm{color:var(--ods-foreground)}
 .rc-txt{color:var(--ods-foreground);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .rc-by{color:var(--ods-foreground-weak)}
@@ -694,7 +701,7 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 /* ═══ 상단 floatingProgress 바 (Figma 178:23717/23769/23928) ═══════════
    폼 챗봇 상단 고정 — 입력중 progress(n/총) / 견적후 confirm(총 예상 견적+상담신청) */
 /* floatingProgress 래퍼 — 스크롤 무관, 상단 네비게이션(44px) 하단에 sticky 고정 */
-.fbar-wrap{position:sticky;top:44px;z-index:3;background:var(--ods-background-weak);padding:4px 16px}
+.fbar-wrap{position:sticky;top:44px;z-index:3;background:var(--ods-background-weak);padding:4px}
 .fbar{padding:8px 12px;background:var(--ods-background);border-radius:4px;
   box-shadow:2px 2px 10px 0 rgba(194,200,204,.2);display:flex;align-items:center;gap:8px}
 .fbar .fb-t{flex:1;min-width:0;display:flex;align-items:center;gap:7px;color:var(--ods-foreground);overflow:hidden}
@@ -1631,23 +1638,27 @@ function homeBundles(){
     {l:'전체서비스', s:`<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>`},
   ];
   const reviews = [
-    {size:'42평 · 시화청솔아파트', txt:'예약하고 첫 미팅때부터 기본적인 도면이며 시공사례 등 미리 준비해주셔서 믿음이 갔습니다. 현장 하나하나 신경 쓰는 업체 분위기가 맘에 들었어요.', by:'토니인테리어'},
-    {size:'12평 · 원룸&오피스텔', txt:'생애 첫 인테리어라 5군데 넘게 상담하고 결정했어요. 상담 때부터 모델링을 보여주시며 열정을 다해주셨습니다.', by:'보운디자인 인테리어'},
-    {size:'24평', txt:'다섯 군데 견적을 받았는데 남는 게 있을까 싶을 정도로 저렴하고 상세히 뽑아주셨어요.', by:'스타크'},
+    {size:'42평 · 시화청솔아파트', txt:'예약하고 첫 미팅때부터 기본적인 도면이며 시공사례 등 미리 준비해주셔서 믿음이 갔습니다. 현장 하나하나 신경 쓰는 업체 분위기가 맘에 들었어요.', by:'토니인테리어', img:'assets/home/review-1.jpg'},
+    {size:'12평 · 원룸&오피스텔', txt:'생애 첫 인테리어라 5군데 넘게 상담하고 결정했어요. 상담 때부터 모델링을 보여주시며 열정을 다해주셨습니다.', by:'보운디자인 인테리어', img:'assets/home/review-2.jpg'},
+    {size:'24평', txt:'다섯 군데 견적을 받았는데 남는 게 있을까 싶을 정도로 저렴하고 상세히 뽑아주셨어요.', by:'스타크', img:'assets/home/review-3.jpg'},
   ];
   const chips = ['전체','모던','미니멀·심플','내추럴'];
   const portfolios = [
-    {t:'예설이 추구하는 철학이 담긴 디자인의 정석', m:'21평 · 내추럴스타일'},
-    {t:'화이트 베이스의 수납 가득 인테리어', m:'32평 · 모던스타일'},
-    {t:'아이가 있는 집, 거실은 넓게! 각 방은 실용적으로', m:'32평 · 북유럽스타일'},
+    {t:'예설이 추구하는 철학이 담긴 디자인의 정석', m:'21평 · 내추럴스타일', img:'assets/home/pf-1.jpg', crop:true},
+    {t:'화이트 베이스의 수납 가득 인테리어', m:'32평 · 모던스타일', img:'assets/home/pf-2.jpg'},
+    {t:'아이가 있는 집, 거실은 넓게! 각 방은 실용적으로', m:'32평 · 북유럽스타일', img:'assets/home/pf-3.jpg'},
   ];
+  /* 파트너 카드 썸네일(208:2478) — 좌 1 + 우 2 모자이크, 두 카드 공통 */
+  const pcThumb = `<img class="pc-im pc-main" src="assets/home/partner-1a.jpg" alt="">
+          <img class="pc-im" src="assets/home/partner-1b.jpg" alt="">
+          <img class="pc-im" src="assets/home/partner-1c.jpg" alt="">`;
   return `
     <div class="bundle-div"></div>
     <section class="bx">
       <b class="bx-t t-body16L20 w-bold">송파구 주변 추천 시공업체</b>
       <div class="hscroll">
         ${partners.map(p=>`<div class="pcard">
-          <div class="pc-thumb">${p.tag?`<div class="pc-tag t-detail12L16"><b class="w-bold">오늘의집</b> ${p.tag}</div>`:''}</div>
+          <div class="pc-thumb">${pcThumb}${p.tag?`<div class="pc-tag t-detail12L16"><b class="w-bold">오늘의집</b> ${p.tag}</div>`:''}</div>
           <div class="pc-info">
             <div class="pc-nm"><b class="t-body16L20 w-bold">업체명</b><span class="pc-badge t-detail10L14 w-bold">책임보장</span></div>
             <div class="pc-meta t-detail12L16">
@@ -1674,7 +1685,7 @@ function homeBundles(){
       <b class="bx-t t-body16L20 w-bold">최신 송파구 주변 리뷰<span class="bx-sub t-body14L20 w-regular">설정된 주소지 반경 4km 내 리뷰를 보여드려요.</span></b>
       <div class="hscroll">
         ${reviews.map(r=>`<div class="rcard">
-          <div class="rc-thumb"></div>
+          <div class="rc-thumb"><img src="${r.img}" alt=""></div>
           <b class="rc-nm t-detail13L18 w-bold">${r.size}</b>
           <p class="rc-txt t-body14L20">${r.txt}</p>
           <span class="rc-by t-detail12L16">${r.by}</span>
@@ -1690,7 +1701,7 @@ function homeBundles(){
       </div>
       <div class="hscroll">
         ${portfolios.map(p=>`<div class="rcard">
-          <div class="rc-thumb"></div>
+          <div class="rc-thumb"><img class="${p.crop?'rc-crop':''}" src="${p.img}" alt=""></div>
           <b class="rc-nm t-body14L20 w-bold">${p.t}</b>
           <div class="rc-meta t-detail12L16"><span>${p.m}</span></div>
         </div>`).join('')}

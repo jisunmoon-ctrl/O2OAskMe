@@ -127,16 +127,31 @@ body{
 .panel h3{font-family:var(--hz-mono);font-size:10px;letter-spacing:.2em;color:var(--hz-mint);font-weight:400;margin-bottom:14px}
 .panel ul,.panel ol{list-style:none}
 
-#caseMenu li{margin-bottom:1px}
-#caseMenu button{
+.panel-menu li{margin-bottom:1px}
+.panel-menu button{
   width:100%;text-align:left;background:none;border:0;cursor:pointer;font-family:inherit;
   font-size:12px;letter-spacing:-.02em;color:var(--hz-chalk-dim);padding:7px 9px;border-radius:6px;
   display:flex;gap:9px;align-items:baseline;transition:.14s;
 }
-#caseMenu button i{font-style:normal;font-family:var(--hz-mono);font-size:9.5px;opacity:.6;flex:0 0 22px}
-#caseMenu button:hover{background:var(--hz-hover);color:var(--hz-chalk)}
-#caseMenu button[aria-current="true"]{background:var(--hz-accent-weak);color:var(--hz-chalk);font-weight:700}
-#caseMenu button[aria-current="true"] i{color:var(--hz-mint);opacity:1}
+.panel-menu button i{font-style:normal;font-family:var(--hz-mono);font-size:9.5px;opacity:.6;flex:0 0 22px}
+.panel-menu button:hover{background:var(--hz-hover);color:var(--hz-chalk)}
+.panel-menu button[aria-current="true"]{background:var(--hz-accent-weak);color:var(--hz-chalk);font-weight:700}
+.panel-menu button[aria-current="true"] i{color:var(--hz-mint);opacity:1}
+.branch-group{margin-bottom:14px}
+.branch-group .branch-cap{display:block;font-family:var(--hz-mono);font-size:9px;letter-spacing:.12em;
+  color:var(--hz-chalk-dim);padding:2px 9px 7px}
+.branch-group ul{list-style:none;padding-left:2px}
+.panel-section.hidden{display:none}
+/* Flow A/B 토글 + 화면 보기 서브 옵션 */
+.flow-panel{display:flex;flex-direction:column;gap:10px;align-self:stretch}
+.flow-tabs{display:flex;gap:4px;padding:3px;border:1px solid var(--hz-line);border-radius:10px;background:var(--hz-hover)}
+.flow-tab{flex:1;padding:7px 6px;border:0;border-radius:7px;background:transparent;color:var(--hz-chalk-dim);
+  font-family:var(--hz-mono);font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:.14s}
+.flow-tab:hover{color:var(--hz-chalk)}
+.flow-tab[aria-pressed="true"]{background:var(--hz-canvas);color:var(--hz-chalk);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.flow-views{display:flex;gap:6px;flex-wrap:wrap}
+.flow-views.hidden{display:none}
+.flow-views .preview-toggle{margin:0}
 
 #rail{position:relative}
 #rail::before{content:"";position:absolute;left:5px;top:8px;bottom:12px;width:1px;background:var(--hz-line)}
@@ -190,6 +205,195 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
 /* ═══ 화면 보기-2 진입점 — 홈 하단 플로팅 CTA (Figma 90:34954 · 90:35959/35960) ═══
    90:35960 에서 상단 totalConsulting(종합 상담 인풋) 은 hidden 이고, 진입점이 이 버튼으로 대체된다. */
 body.view2 .offering{display:none}
+body.view3 .offering{display:none}
+
+/* ═══ 화면 보기-3 · O2H 통합 비교견적 플로우 (Figma 340:39827 · 홈 402:34413 · 430:93197) ═══ */
+body.view3 .o2o-home{padding-bottom:120px}
+.o2h-banner{margin:16px 16px 0;border-radius:12px;overflow:hidden;height:82px;position:relative;
+  background:var(--ods-background-brand-weak)}
+.o2h-banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.o2h-banner-cap{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:0 16px;background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.55) 55%,transparent 100%)}
+.o2h-banner-cap b{display:block;color:var(--ods-foreground)}
+.o2h-banner-cap span{color:var(--ods-foreground-weak)}
+.o2h-banner-ind{position:absolute;right:12px;bottom:8px;padding:2px 8px;border-radius:100px;
+  background:rgba(0,0,0,.45);color:#fff;line-height:14px}
+.o2h-menu-wrap{background:var(--ods-background-weak);padding:16px}
+.o2h-menu-stack{display:flex;flex-direction:column;gap:6px}
+.o2h-feat-card{display:flex;align-items:center;gap:10px;width:100%;min-height:80px;padding:18px 16px;
+  border:0;border-radius:12px;background:var(--ods-background);cursor:pointer;font-family:inherit;text-align:left;
+  box-shadow:2px 2px 20px rgba(194,200,204,.2)}
+.o2h-feat-body{flex:1;min-width:0}
+.o2h-feat-body b{display:block;color:var(--ods-foreground)}
+.o2h-feat-body span{display:block;color:var(--ods-foreground-weak);margin-top:2px}
+.o2h-feat-ic,.o2h-feat-chev{flex:0 0 auto;color:var(--ods-foreground-weak)}
+.o2h-sec-card{padding:16px;border-radius:12px;background:var(--ods-background);
+  box-shadow:2px 2px 20px rgba(194,200,204,.2)}
+.o2h-sec-t{display:block;margin-bottom:12px;color:var(--ods-foreground)}
+.o2h-part-row{display:flex;gap:8px;align-items:flex-start}
+.o2h-part-left{display:flex;gap:12px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.o2h-part-left::-webkit-scrollbar{display:none}
+.o2h-part-item{flex:0 0 56px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:none;border:0;cursor:pointer;font-family:inherit;padding:0}
+.o2h-part-more{flex:0 0 41px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:none;border:0;cursor:pointer;font-family:inherit;padding:0;color:var(--ods-foreground)}
+.o2h-part-more-ic{width:28px;height:28px;border-radius:50%;background:var(--ods-background-weak);
+  display:grid;place-items:center;color:var(--ods-foreground-weak)}
+.o2h-menu-row{display:flex;align-items:center;gap:8px;padding:12px 4px;margin-top:8px;
+  border-top:1px solid var(--ods-border);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;
+  width:100%;font-family:inherit;text-align:left}
+.o2h-menu-row-ic{flex:0 0 24px}
+.o2h-menu-row-t{flex:1;color:var(--ods-foreground)}
+.o2h-compact{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.o2h-compact::-webkit-scrollbar{display:none}
+.o2h-compact-item{flex:0 0 56px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:none;border:0;cursor:pointer;font-family:inherit;padding:0}
+.o2h-compact-ic{width:56px;height:56px;border-radius:12px;background:var(--ods-background-brand-weak);
+  display:grid;place-items:center}
+.o2h-nudge{position:absolute;left:50%;bottom:16px;z-index:8;transform:translateX(-50%);
+  display:flex;align-items:center;gap:4px;padding:12px 16px;border-radius:100px;border:0;cursor:pointer;
+  font-family:inherit;white-space:nowrap;background:var(--ods-background-inverse);color:var(--ods-foreground-inverse);
+  box-shadow:0 -4px 2.5px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.06)}
+.o2h-nudge svg{flex:0 0 auto;opacity:.95}
+.phone:has(.home-gnb) .o2h-nudge{bottom:104px}
+body.preview-only .phone:has(.home-gnb) .o2h-nudge{bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+.o2h-inprogress{position:absolute;left:0;right:0;bottom:0;z-index:9;display:flex;align-items:center;
+  justify-content:space-between;gap:12px;padding:12px 12px 12px 16px;background:var(--ods-background);
+  box-shadow:0 -4px 2.5px rgba(0,0,0,.12), inset 0 1px 0 rgba(0,0,0,.06)}
+.phone:has(.home-gnb) .o2h-inprogress{bottom:70px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.o2h-inprogress-label{flex:1;min-width:0}
+.o2h-inprogress-label span{display:block;color:var(--ods-foreground-weak)}
+.o2h-inprogress-label b{display:block;color:var(--ods-foreground);margin-top:4px}
+/* 화면 = 세로 플렉스. dock 에 margin-top:auto 를 줘서 내용이 짧아도 CTA 는 항상 디바이스 하단에 붙는다 */
+.o2h-form-screen{background:var(--ods-background);min-height:100%;display:flex;flex-direction:column}
+.o2h-form-loading{padding:8px 16px 16px;min-height:240px}
+.o2h-form-head{padding:8px 16px 16px}
+.o2h-form-head p{margin:0}
+.o2h-form-head .sub{margin-top:10px;color:var(--ods-foreground-weak)}
+.o2h-form-head .accent{color:var(--ods-foreground-brand)}
+.o2h-detail-list{background:var(--ods-background)}
+.o2h-detail-row{display:flex;align-items:center;gap:8px;width:100%;padding:16px;border:0;border-bottom:1px solid var(--ods-border);
+  background:var(--ods-background);cursor:pointer;font-family:inherit;text-align:left}
+.o2h-detail-row:last-child{border-bottom:0}
+.o2h-detail-lb{flex:0 0 auto;min-width:72px;color:var(--ods-foreground)}
+.o2h-detail-val{flex:1;min-width:0;text-align:right;color:var(--ods-foreground-weak);line-height:18px}
+.o2h-detail-act{flex:0 0 24px;width:24px;height:24px;border-radius:50%;border:0;display:grid;place-items:center;
+  background:var(--ods-background-weak);color:var(--ods-foreground-weak)}
+.o2h-detail-act.is-add{background:var(--ods-background-brand-weak);color:var(--ods-foreground-brand)}
+.o2h-detail-edit{padding:0 16px 16px;background:var(--ods-background-weak)}
+.o2h-detail-edit .opts{display:flex;flex-wrap:wrap;gap:6px}
+.o2h-sticky-cta{position:sticky;bottom:0;margin-top:auto;z-index:5;background:var(--ods-background);
+  border-top:1px solid rgba(0,0,0,.05);border-radius:16px 16px 0 0;
+  box-shadow:2px 2px 20px rgba(194,200,204,.2);padding:6px 16px calc(6px + env(safe-area-inset-bottom,0px))}
+.o2h-order-screen{background:var(--ods-background-weak);min-height:100%;display:flex;flex-direction:column}
+.o2h-order-head{background:var(--ods-background);position:sticky;top:0;z-index:4}
+.o2h-nav-chat{position:relative}
+.o2h-nav-badge{position:absolute;top:-2px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:100px;
+  background:#FF7777;color:#fff;font-size:10px;line-height:16px;font-weight:600;text-align:center;pointer-events:none}
+.o2h-order-tabs{display:flex;border-bottom:1px solid var(--ods-border);background:var(--ods-background)}
+.o2h-order-tab{flex:1;padding:12px 0 10px;border:0;background:none;cursor:pointer;font-family:inherit;
+  color:var(--ods-foreground-weak);position:relative;display:flex;align-items:center;justify-content:center;gap:4px}
+.o2h-order-tab.on{color:var(--ods-foreground)}
+.o2h-order-tab.on::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ods-foreground)}
+.o2h-tab-dot{width:6px;height:6px;border-radius:50%;background:#FF7777;flex:0 0 auto}
+.o2h-order-body{padding:0 16px 16px}
+.o2h-order-stack{display:flex;flex-direction:column;gap:8px}
+.o2h-order-meta{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.o2h-order-count{color:var(--ods-foreground-weak)}
+.o2h-filter-btn{display:inline-flex;align-items:center;gap:4px;padding:0 4px;border:0;background:none;
+  font-family:inherit;color:var(--ods-foreground);cursor:pointer}
+.o2h-order-card{margin:0;padding:16px;border-radius:12px;background:var(--ods-background);
+  border:1px solid var(--ods-border);box-shadow:0 2px 2.5px rgba(63,71,77,.05);transition:opacity .15s}
+.o2h-order-card.is-off{opacity:.48}
+.o2h-order-card.is-off .o2h-order-check b,.o2h-order-card.is-off .price-label{color:var(--ods-foreground-weak)}
+.o2h-order-card.is-off .price-val{color:var(--ods-foreground-disabled)}
+.o2h-order-card.is-off .o2h-order-field-row{pointer-events:none}
+.o2h-order-card-h{display:flex;align-items:center;gap:6px;padding-bottom:12px}
+.o2h-order-check{display:flex;align-items:center;gap:8px;cursor:pointer;flex:1;min-width:0}
+.o2h-order-check b{color:#2F3438}
+.o2h-order-field-row{display:flex;align-items:center;gap:4px;width:100%;padding:0 0 8px;border:0;background:none;
+  cursor:pointer;font-family:inherit;text-align:left}
+.o2h-order-field-row .field-label{display:flex;align-items:center;gap:4px;color:var(--ods-foreground);flex:0 0 auto}
+.o2h-order-field-row .field-val{flex:1;min-width:0;text-align:right}
+.o2h-order-field-row .field-chev{flex:0 0 auto;display:grid;place-items:center}
+.o2h-pending-check{width:16px;height:16px;border-radius:50%;border:1.5px dashed var(--ods-border);box-sizing:border-box;flex:0 0 auto}
+.o2h-empty-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--ods-border);box-sizing:border-box;flex:0 0 auto}
+.o2h-svc-card{display:flex;gap:12px;align-items:center;padding:16px 12px;margin:0 16px 8px;
+  border:1px solid var(--ods-border);border-radius:12px;background:var(--ods-background);cursor:pointer;
+  font-family:inherit;text-align:left;width:calc(100% - 32px)}
+.o2h-svc-card.on{border-color:var(--ods-border-brand);background:var(--ods-background-brand-weak)}
+.o2h-svc-card .pk-t{flex:1;min-width:0}
+.o2h-svc-card .pk-t b{display:block;color:var(--ods-foreground)}
+.o2h-svc-card .pk-t span{display:block;color:var(--ods-foreground-weak);margin-top:4px}
+.o2h-order-divider{padding-bottom:12px}
+.o2h-order-divider .ods-divider{margin:0}
+.o2h-order-price-row{display:flex;align-items:center;justify-content:space-between;padding:0 0 12px;margin:0}
+.o2h-order-price-row .price-label{display:flex;align-items:center;gap:4px;color:var(--ods-foreground)}
+.o2h-order-price-row .price-val{color:var(--ods-foreground)}
+.o2h-order-done-card .o2h-order-done-h{display:flex;align-items:center;gap:6px;padding-bottom:12px}
+.o2h-order-done-card .o2h-order-done-h b{flex:1;min-width:0;color:#2F3438}
+.o2h-order-done-date{flex:0 0 auto;white-space:nowrap;color:var(--ods-foreground-weak)}
+.o2h-order-done-card .o2h-order-divider{padding-bottom:16px}
+.o2h-order-done-quotes{padding-bottom:12px}
+.o2h-order-quote-h{color:var(--ods-foreground);padding-bottom:8px;margin:0}
+.o2h-order-quote-row{display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;background:none;
+  font-family:inherit;text-align:left;width:100%;cursor:pointer;padding:0 0 8px}
+.o2h-order-quote-row.is-empty{padding:8px 0;cursor:default}
+.o2h-order-count-done{color:#2F3438}
+.o2h-order-quote-row .partner{color:var(--ods-foreground-weak);flex:1;min-width:0}
+.o2h-order-quote-row .quote{color:var(--ods-foreground-brand);display:flex;align-items:center;gap:4px}
+.o2h-upsell-card{display:flex;align-items:center;gap:6px;width:100%;padding:16px;margin:0;
+  border:1px solid var(--ods-border);border-radius:12px;background:var(--ods-background);cursor:pointer;
+  font-family:inherit;text-align:left;box-shadow:0 2px 2.5px rgba(63,71,77,.05)}
+.o2h-upsell-card b{flex:1;color:#2F3438}
+.o2h-net-nudge{display:flex;align-items:center;gap:10px;width:100%;padding:12px 12px 12px 16px;margin:0;
+  border:1.5px solid #70C4FF;border-radius:12px;background:var(--ods-background-brand-weak);cursor:pointer;
+  font-family:inherit;text-align:left;box-shadow:0 2px 2.5px rgba(63,71,77,.15)}
+.o2h-net-nudge .nudge-body{flex:1;min-width:0}
+.o2h-net-nudge .nudge-body span{display:block;color:var(--ods-foreground)}
+.o2h-net-nudge .nudge-body b{display:block;color:var(--ods-foreground-brand);margin-top:2px}
+.o2h-net-nudge .nudge-chev{flex:0 0 auto;display:grid;place-items:center;color:var(--ods-foreground-brand)}
+.o2h-net-done-note{margin:0;padding:4px 0 12px;color:var(--ods-foreground-weak)}
+.o2h-order-empty{margin:0;padding:40px 0;text-align:center;color:var(--ods-foreground-weak)}
+.o2h-period-sheet .bs-body{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+.o2h-order-dock{position:sticky;bottom:0;margin-top:auto;z-index:6;background:var(--ods-background);
+  border-radius:16px 16px 0 0;box-shadow:2px 2px 10px rgba(194,200,204,.2);
+  padding:6px 16px calc(6px + env(safe-area-inset-bottom,0px))}
+.o2h-apply-screen{background:var(--ods-background);min-height:100%;display:flex;flex-direction:column}
+.o2h-apply-head{padding:8px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.o2h-apply-head p{margin:0}
+.o2h-apply-head .lead{color:var(--ods-foreground-brand)}
+.o2h-apply-head .desc{color:var(--ods-foreground)}
+.o2h-apply-label{padding:16px;margin:0;color:var(--ods-foreground)}
+.o2h-apply-fields-block{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px}
+.o2h-apply-fields{display:flex;flex-direction:column;gap:8px}
+.o2h-apply-memo-block{padding:0 16px 16px}
+.o2h-phone-row{display:flex;align-items:center;gap:8px}
+.o2h-phone-row .o2h-phone-pre{flex:0 0 88px;width:88px;padding:0 8px;justify-content:space-between}
+.o2h-phone-row .o2h-phone-num{flex:1;min-width:0;color:var(--ods-foreground)}
+.o2h-textarea-wrap{display:flex;flex-direction:column;gap:8px}
+.o2h-textarea{width:100%;min-height:168px;padding:16px;border:1px solid var(--ods-border);border-radius:4px;
+  font-family:inherit;font-size:16px;line-height:24px;letter-spacing:-.3px;color:var(--ods-foreground);
+  resize:vertical;box-sizing:border-box}
+.o2h-textarea::placeholder{color:var(--ods-foreground-weak)}
+.o2h-textarea-help{color:var(--ods-foreground-weak)}
+.o2h-apply-dock{position:sticky;bottom:0;margin-top:auto;z-index:6;background:var(--ods-background);
+  border-top:1px solid rgba(0,0,0,.05);border-radius:16px 16px 0 0;
+  box-shadow:0 -2px 4px rgba(0,0,0,.05)}
+.o2h-apply-dock-hint{padding:12px 20px 4px;text-align:center;margin:0;color:var(--ods-foreground)}
+.o2h-apply-dock-cta{padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px))}
+.o2h-method-sheet .method-opt{display:flex;gap:12px;align-items:flex-start;width:100%;padding:16px;
+  margin-bottom:8px;border:1px solid var(--ods-border);border-radius:12px;background:var(--ods-background);
+  cursor:pointer;font-family:inherit;text-align:left}
+.o2h-method-sheet .method-opt.on{border-color:var(--ods-border-strong)}
+.o2h-method-sheet .method-opt .mo-body{flex:1}
+.o2h-method-sheet .method-opt .mo-body b{display:block;color:var(--ods-foreground)}
+.o2h-method-sheet .method-opt .mo-body span{display:block;color:var(--ods-foreground-weak);margin-top:4px}
+.o2h-method-sheet .method-radio{flex:0 0 20px;width:20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--ods-border);box-sizing:border-box;margin-top:2px}
+.o2h-method-sheet .method-opt.on .method-radio{border-color:var(--ods-foreground);box-shadow:inset 0 0 0 4px var(--ods-foreground)}
+.o2h-nudge-slot{margin:12px 16px;padding:16px;border-radius:12px;background:var(--ods-background-brand-weak);
+  border:1px solid var(--ods-border-brand);display:flex;align-items:center;justify-content:space-between;gap:12px}
 /* --- (90:34954) r100 · border 1.5 borderEmphasis(=borderBrand) · 좌우 16 · 상하 12 · Depth20
    (아이콘은 미노출, 라벨만)
    stroke 는 홈 인풋(.offering .pillinput)과 같은 기법 — padding-box(배경) + border-box(conic)
@@ -986,6 +1190,38 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   color:var(--ods-foreground);font-family:inherit;font-size:16px;line-height:24px;letter-spacing:-.3px;outline:none}
 .cg-ta:focus{border-color:var(--ods-border-strong)}
 .cg-ta::placeholder{color:var(--ods-foreground-weak)}
+/* ═══ 세부 항목 추가 입력 시트 (가견적 신청 전 서비스별 4문항) ══════════════
+   ODS BottomSheet 골격(.bsheet)·RadioGroup(.ods-radio)·Chip·Calendar 를 그대로 재사용한다.
+   신규 컴포넌트를 만들지 않고 질문 헤더 레이아웃만 조합한다. */
+.x-sheet{max-height:88%}
+.x-sheet .x-q{padding:0 16px 14px}
+.x-sheet .x-step{display:inline-block;margin-bottom:6px;color:var(--ods-foreground-brand)}
+.x-sheet .x-q b{display:block;color:var(--ods-foreground)}
+.x-sheet .x-desc{margin-top:6px;color:var(--ods-foreground-weak)}
+.x-sheet .bs-body{padding-bottom:8px}
+/* 인터넷 상담 신청 — 연락처 확인·완료 단계 */
+.x-summary{padding:0 16px}
+.x-contact{margin:8px 16px 0;padding:12px 16px;border-radius:12px;background:var(--ods-background-weak);
+  display:flex;flex-direction:column;gap:2px}
+.x-contact span{color:var(--ods-foreground-weak)}
+.x-contact b{color:var(--ods-foreground)}
+.x-sheet .x-done{padding:24px 24px 12px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.x-sheet .x-done .cd-check{width:60px;height:60px;border-radius:50%;background:var(--ods-background-brand);
+  color:var(--ods-foreground-inverse);display:grid;place-items:center;margin-bottom:20px}
+.x-sheet .x-done .cd-t{color:var(--ods-foreground);margin-bottom:8px}
+.x-sheet .x-done .cd-d{color:var(--ods-foreground-weak)}
+.x-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px}
+.x-cal{padding:0 16px}
+.x-cal-nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:0 0 12px;
+  color:var(--ods-foreground)}
+.x-cal-nav button{border:0;background:none;padding:4px;cursor:pointer;color:var(--ods-foreground);
+  display:grid;place-items:center}
+.x-cal-nav button[disabled]{color:var(--ods-foreground-disabled);cursor:not-allowed}
+.fm-cal .fc-day[disabled]{color:var(--ods-foreground-disabled);cursor:not-allowed}
+.fm-cal .fc-day[disabled]:hover{background:none}
+.x-cal-none{padding:14px 16px 0;display:flex;justify-content:center}
+/* 남은 문항 안내 — 예상 견적 행 아래 caption */
+.o2h-order-hint{padding:2px 0 8px;color:var(--ods-foreground-weak);text-align:right}
 /* 리스트 셀렉 (포장종류 등) — 하단 액션 리스트 */
 .q-list{width:100%;display:flex;flex-direction:column;gap:8px}
 .q-li{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;width:100%;
@@ -1183,27 +1419,49 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 }
 </style>
 </head>
-<body>
+<body class="view3">
 
 <div class="stage">
   <nav class="panel">
-    <div class="preview-toggles">
-      <button class="preview-toggle" id="previewToggle1" type="button" title="기본 진입(상단 종합 상담 인풋)으로 전체화면 보기">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-        화면 보기 - 1
-      </button>
-      <button class="preview-toggle" id="previewToggle2" type="button" title="하단 플로팅 CTA 진입점으로 전체화면 보기">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-        화면 보기 - 2
-      </button>
+    <div class="flow-panel">
+      <div class="flow-tabs" role="tablist" aria-label="플로우 그룹">
+        <button class="flow-tab" id="flowTabA" type="button" role="tab" data-flow="A" aria-pressed="false">Flow A</button>
+        <button class="flow-tab" id="flowTabB" type="button" role="tab" data-flow="B" aria-pressed="true">Flow B</button>
+      </div>
+      <div class="flow-views hidden" id="flowViewsA">
+        <button class="preview-toggle" id="previewToggle1" type="button" title="Flow A · 기본 진입(상단 종합 상담 인풋)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          화면 보기 - 1
+        </button>
+        <button class="preview-toggle" id="previewToggle2" type="button" title="Flow A · 하단 플로팅 CTA 진입점">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          화면 보기 - 2
+        </button>
+      </div>
+      <div class="flow-views" id="flowViewsB">
+        <button class="preview-toggle" id="previewToggle3" type="button" title="Flow B · O2H 통합 비교견적 (Figma 8/6)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          화면 보기 - 3
+        </button>
+        <button class="preview-toggle" id="o2hBarNudge" type="button" title="402:34413 · 넛징 CTA" aria-pressed="true">402 · 넛징</button>
+        <button class="preview-toggle" id="o2hBarProgress" type="button" title="430:93197 · 예상견적 바" aria-pressed="false">430 · 견적바</button>
+      </div>
     </div>
     <section>
-      <h3>FLOW</h3>
+      <h3 id="flowSectionTitle">FLOW B</h3>
       <ol id="rail"></ol>
     </section>
     <section>
       <h3>CASE</h3>
-      <ul id="caseMenu"></ul>
+      <ul id="caseMenu" class="panel-menu"></ul>
+    </section>
+    <section id="o2hFieldSection" class="panel-section">
+      <h3>정보 항목</h3>
+      <ul id="o2hFieldMenu" class="panel-menu"></ul>
+    </section>
+    <section id="o2hCardSection" class="panel-section">
+      <h3>카드 표기</h3>
+      <ul id="o2hCardMenu" class="panel-menu"></ul>
     </section>
   </nav>
 
@@ -1222,6 +1480,8 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
     <div class="screen" id="screen"></div>
     <!-- 화면 보기-2 진입점 플로팅 CTA (Figma 90:34954) — 홈에서만 노출 -->
     <div id="fabSlot"></div>
+    <!-- Flow B O2H 홈 하단 — 넛징(402:34413) / 예상견적 바(430:93197) -->
+    <div id="o2hBottomSlot"></div>
     <button class="preview-exit" id="previewExit" type="button" title="메뉴 보기" aria-label="메뉴 보기">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>
     </button>
@@ -1252,6 +1512,7 @@ const ODS_ICON = {
  "IconCheck": "<path d=\"M398.651 120.354c6.229-6.267 16.359-6.299 22.627-.07 6.267 6.228 6.299 16.359.071 22.627L205.97 359.644a16 16 0 0 1-22.663.035L58.687 235.057c-6.249-6.248-6.25-16.379 0-22.627 6.247-6.248 16.378-6.248 22.626 0l113.272 113.272z\"></path>",
  "IconChevronLeft": "<path d=\"M312.221 63.176c6.53-5.953 16.65-5.485 22.603 1.045s5.485 16.65-1.045 22.603L165.75 240l168.029 153.176c6.53 5.953 6.998 16.073 1.045 22.603s-16.073 6.998-22.603 1.045l-181-165-.308-.288a16 16 0 0 1 .308-23.36z\"></path>",
  "IconChevronRight": "<path d=\"M144.676 64.22c5.953-6.53 16.073-6.997 22.603-1.044l181 165a16 16 0 0 1 .308 23.36l-.308.288-181 165c-6.53 5.953-16.65 5.485-22.603-1.045s-5.485-16.65 1.045-22.603L313.75 240 145.721 86.824c-6.53-5.953-6.998-16.073-1.045-22.603\"></path>",
+ "IconChevronDown": "<path transform=\"rotate(90 240 240)\" d=\"M144.676 64.22c5.953-6.53 16.073-6.997 22.603-1.044l181 165a16 16 0 0 1 .308 23.36l-.308.288-181 165c-6.53 5.953-16.65 5.485-22.603-1.045s-5.485-16.65 1.045-22.603L313.75 240 145.721 86.824c-6.53-5.953-6.998-16.073-1.045-22.603\"></path>",
  "IconArrowRight": "<path d=\"M254.717 89.905c6.265-6.23 16.396-6.203 22.628.062l138 138.75.286.296c5.919 6.26 5.824 16.126-.286 22.27l-138 138.75c-6.232 6.265-16.363 6.293-22.628.062-6.265-6.232-6.293-16.363-.062-22.628L365.521 256H76c-8.837 0-16-7.163-16-16s7.164-16 16-16h289.521L254.655 112.533c-6.231-6.265-6.203-16.396.062-22.628\"></path>",
  "IconMagnifyingGlass": "<path fill-rule=\"evenodd\" d=\"M99.661 100.661c54.283-54.282 142.293-54.282 196.576 0 50.4 50.4 54.003 129.873 10.813 184.433l87.722 87.722c6.249 6.249 6.249 16.38 0 22.628s-16.378 6.248-22.626 0l-87.685-87.685c-54.57 43.497-134.287 39.991-184.8-10.522-54.282-54.283-54.282-142.293 0-196.576m173.948 22.628c-41.786-41.786-109.535-41.786-151.321 0-41.785 41.786-41.785 109.534 0 151.32 41.786 41.786 109.535 41.786 151.321 0s41.786-109.534 0-151.32\" clip-rule=\"evenodd\"></path>",
  "IconCart": "<path d=\"M161 386c14.912 0 27 12.088 27 27s-12.088 27-27 27-27-12.088-27-27 12.088-27 27-27M310 386c14.912 0 27 12.088 27 27s-12.088 27-27 27-27-12.088-27-27 12.088-27 27-27\"></path><path fill-rule=\"evenodd\" d=\"M90.19 44c15.769 0 29.168 11.494 31.6 27.057l8.794 56.105H402c14.359 0 26 11.641 26 26v55.652c0 52.414-5.72 91.425-30.231 115.918-24.508 24.49-63.518 30.181-115.871 30.181H173.244c-22.655 0-41.936-16.495-45.444-38.877L101.212 146.42q-.154-.744-.237-1.512l-10.8-68.896v-.007L90.174 76H40c-8.837 0-16-7.163-16-16s7.163-16 16-16zm69.223 267.081a14 14 0 0 0 13.831 11.832h108.654c53.007 0 79.049-6.624 93.251-20.816C389.349 287.908 396 261.87 396 208.814v-49.652H135.601z\" clip-rule=\"evenodd\"></path>",
@@ -1570,11 +1831,16 @@ const isReserve = () => { const d=dday(); return d==null || d>45; };
 /* ══════════════ 상태 ══════════════ */
 const LABELS = {entry:'진입',select:'서비스 선택',loading:'정보 항목 구성',form:'정보 입력',
   branch:'견적서 확인',list:'상담 내역'};
+const O2H_LABELS = {o2hHome:'O2H 홈', o2hSelect:'서비스 선택', o2hForm:'입력폼', o2hOrder:'예상견적 확인', o2hApply:'비교견적 신청'};
 /* 02 서비스 선택 ~ 06 상담 내역. 견적서 확인 → 상담 신청 완료 → 상담 내역(매칭 리스트). */
 const PHASE1 = ['entry','select','loading','form','branch','list'];
-const flowKeys = () => [...PHASE1];
+const PHASE3 = ['o2hHome','o2hSelect','o2hForm','o2hOrder','o2hApply'];
+const isView3 = () => document.body.classList.contains('view3');
+const getFlowGroup = () => isView3() ? 'B' : 'A';
+const flowKeys = () => isView3() ? [...PHASE3] : [...PHASE1];
+const flowLabel = k => (isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'entry', picked:new Set(['full']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'info', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -1657,28 +1923,130 @@ const pickedList = () => [...S.picked];
 
 /* ══════════════ 렌더 ══════════════ */
 function go(next){
-  S.sheet = null;                       /* 화면을 옮기면 열린 시트는 닫는다 */
+  S.sheet = null; S.o2hSheet = null;    /* 화면을 옮기면 열린 시트는 닫는다 */
   if(hasDraft()) setStage('draft');
   S.screen=next; render(); screen.scrollTop=0;
 }
-function render(){ syncAuto(); renderRail(); renderCases();
-  screen.innerHTML=''; screen.classList.remove('has-sheet'); VIEW[S.screen](); renderFabEntry(); }
+function render(){ syncAuto(); renderFlowPanel(); renderRail(); renderCases(); renderO2hBranches();
+  screen.innerHTML=''; screen.classList.remove('has-sheet'); VIEW[S.screen](); renderFabEntry(); renderO2hBottomBar(); }
+
+function renderFlowPanel(){
+  const g = getFlowGroup();
+  const title = $('#flowSectionTitle');
+  if(title) title.textContent = g==='B' ? 'FLOW B' : 'FLOW A';
+  const tabA = $('#flowTabA'), tabB = $('#flowTabB');
+  if(tabA) tabA.setAttribute('aria-pressed', g==='A');
+  if(tabB) tabB.setAttribute('aria-pressed', g==='B');
+  $('#flowViewsA')?.classList.toggle('hidden', g!=='A');
+  $('#flowViewsB')?.classList.toggle('hidden', g!=='B');
+}
 
 function renderRail(){
   const keys = flowKeys(), i = keys.indexOf(S.screen);
   $('#rail').innerHTML = keys.map((k,n)=>{
     const cls = n<i?'done':(n===i?'now':'');
-    return `<li class="${cls}"><button data-step="${k}"><span class="n">${String(n+1).padStart(2,'0')}</span>${LABELS[k]}</button></li>`;
+    return `<li class="${cls}"><button data-step="${k}"><span class="n">${String(n+1).padStart(2,'0')}</span>${flowLabel(k)}</button></li>`;
   }).join('');
-  $('#rail').querySelectorAll('[data-step]').forEach(b=> b.onclick=()=>go(b.dataset.step));
+  $('#rail').querySelectorAll('[data-step]').forEach(b=> b.onclick=()=>{
+    const step = b.dataset.step;
+    if(isView3()){
+      if(step==='o2hForm' && S.picked.size){ o2hPrefillAddrs(); S.o2hSub='info'; }
+      if(step==='o2hOrder') S.o2hProgress = true;
+    }
+    go(step);
+  });
 }
-/* 화면 보기 -1/-2 — 프리뷰(폰)만 전체화면. 하네스 컨트롤 (ODS 규칙 제외)
-   -1: 기본 진입(상단 종합 상담 인풋) / -2: 하단 플로팅 CTA 진입점 */
+/* 화면 보기 -1/-2/-3 — Flow A(1·2) / Flow B(3) 그룹 + 프리뷰 전체화면 */
+const O2H_FIELD_BRANCHES = {
+  full:  [{id:'F1', n:'공통 · 평수·시공주소', branch:'common'}, {id:'F2', n:'전체 · 예산·범위·공간·일정', branch:'full'}],
+  part:  [{id:'F3', n:'공통 · 평수·시공주소', branch:'common'}, {id:'F4', n:'전체 · 예산·범위·공간·일정', branch:'full'}],
+  move:  [{id:'F5', n:'공통 · 평수·출발·도착', branch:'common'}, {id:'F6', n:'전체 · 일정·유형·포장', branch:'full'}],
+  clean: [{id:'F7', n:'공통 · 평수·주소', branch:'common'}, {id:'F8', n:'전체 · 희망일·방·베란다·화장실', branch:'full'}],
+  net:   [{id:'F9', n:'통신사·TV결합', branch:'basic'}],
+  rent:  [{id:'F10', n:'렌탈 품목', branch:'basic'}]
+};
+const O2H_CARD_BRANCHES = {
+  full:  [{id:'K1', n:'작성중 · 공통만', branch:'draft'}, {id:'K2', n:'작성완료 · 전체 항목', branch:'ready'}, {id:'K3', n:'신청완료', branch:'applied'}],
+  part:  [{id:'K4', n:'작성중', branch:'draft'}, {id:'K5', n:'작성완료', branch:'ready'}],
+  move:  [{id:'K6', n:'작성중 · 공통만', branch:'draft'}, {id:'K7', n:'작성완료 · 전체 항목', branch:'ready'}, {id:'K8', n:'신청완료', branch:'applied'}],
+  clean: [{id:'K9', n:'작성중', branch:'draft'}, {id:'K10', n:'작성완료', branch:'ready'}],
+  net:   [{id:'K11', n:'상담 후 확정', branch:'consult'}, {id:'K12', n:'혜택 배너형', branch:'banner'}],
+  rent:  [{id:'K13', n:'상담 후 확정', branch:'consult'}, {id:'K14', n:'작성완료', branch:'ready'}]
+};
+const defaultO2hFieldBranch = svcs => Object.fromEntries(svcs.map(k=>[k, (O2H_FIELD_BRANCHES[k]||[])[0]?.branch||'common']));
+const defaultO2hCardBranch = svcs => Object.fromEntries(svcs.map(k=>[k, (O2H_CARD_BRANCHES[k]||[])[0]?.branch||'draft']));
+const o2hFieldBranch = k => S.o2hFieldBranch[k] || 'common';
+const o2hCardBranch = k => S.o2hCardBranch[k] || 'draft';
+/* 정책 A · 예상견적 카드 상세 항목 목업값 (작성완료 분기) */
+const O2H_DEMO = {
+  fbudget:'1000만원대', pbudget:'200만원대', scope:'도배·주방·욕실', space:'시공 시 공실 예정', cdate:'2-3개월 내',
+  mdate:'2026.10.21', mtime:'오후 (12-18시)', mtype:'가정이사', mpack:'포장이사',
+  clday:'이사/시공 다음날', cltime:'오전 (9-12시)', rooms:'3룸', veranda:'2', toilet:'2',
+  isp:'KT', tv:'결합', ritem:'정수기'
+};
+function o2hAnsVal(key, demo){ return (S.ans[key]||[])[0] || demo || '입력하기'; }
+function o2hHasCon(){ return S.picked.has('full')||S.picked.has('part'); }
+function o2hHasLife(){ return pickedList().some(k=>['full','part','move','clean'].includes(k)); }
+function o2hPrefillAddrs(){
+  if(!S.ans.caddr?.length) S.ans.caddr = S.ans.addr?.length ? [...S.ans.addr] : ['서울/경기'];
+  if(!S.ans.addr?.length) S.ans.addr = S.ans.caddr?.length ? [...S.ans.caddr] : ['서울/경기'];
+  if(S.picked.has('move') && !S.ans['move.from']?.length) S.ans['move.from'] = ['서울/경기'];
+  if(S.picked.has('clean') && !S.ans.claddr?.length) S.ans.claddr = S.ans.caddr?.length ? [...S.ans.caddr] : [...S.ans.addr];
+}
+function o2hAnsForCase(svcs){
+  const ans = {size:['30평대'], caddr:['서울/경기'], addr:['서울/경기'], 'move.from':['부산']};
+  if(svcs.includes('clean')) ans.claddr = ['서울/경기'];
+  if(svcs.includes('net')) ans.isp = ['KT'];
+  if(svcs.includes('rent')) ans.ritem = ['정수기'];
+  return ans;
+}
+function resetO2h(caseSvcs){
+  const svcs = caseSvcs || ['full','move'];
+  S.picked = new Set(svcs);
+  S.ans = o2hAnsForCase(svcs);
+  S.o2hSub = 'info'; S.o2hMethod = 'chat'; S.o2hApplied = false; S.o2hProgress = false;
+  S.o2hNetApplied = false; S.o2hPeriod = '6m'; S.o2hPeriodOpen = false;
+  S.o2hOrderTab = 'draft'; S.o2hChecked = new Set(svcs.filter(k=> O2H_ORDER_FIELDS[k])); S.o2hEditField = null;
+  S.step = 0; S.sheet = null;
+  S.o2hExtra = {}; S.o2hSheet = null;
+  S.o2hFieldBranch = defaultO2hFieldBranch(svcs);
+  S.o2hCardBranch = defaultO2hCardBranch(svcs);
+}
+function setFlowGroup(g, opts={}){
+  const b = document.body;
+  if(g==='B'){
+    b.classList.remove('view2');
+    b.classList.add('view3');
+    if(!opts.keepState){
+      const svcs = [...S.picked];
+      const match = O2H_CASES.find(c=> c.s.length===svcs.length && c.s.every(k=>svcs.includes(k)));
+      resetO2h(match ? match.s : ['full','move']);
+    }
+    if(!PHASE3.includes(S.screen)) go('o2hHome');
+    else render();
+  }else{
+    b.classList.remove('view3');
+    if(PHASE3.includes(S.screen)){ S.screen='entry'; b.classList.remove('preview-only'); }
+    render();
+  }
+}
 function initPreviewToggle(){
   const b=document.body;
-  const on1=$('#previewToggle1'), on2=$('#previewToggle2'), off=$('#previewExit');
-  if(on1) on1.onclick=()=>{ b.classList.remove('view2'); b.classList.add('preview-only'); render(); };
-  if(on2) on2.onclick=()=>{ b.classList.add('view2','preview-only'); render(); };
+  const on1=$('#previewToggle1'), on2=$('#previewToggle2'), on3=$('#previewToggle3'), off=$('#previewExit');
+  const tabA=$('#flowTabA'), tabB=$('#flowTabB');
+  if(tabA) tabA.onclick=()=>{ setFlowGroup('A'); };
+  if(tabB) tabB.onclick=()=>{ setFlowGroup('B'); };
+  if(on1) on1.onclick=()=>{ setFlowGroup('A'); b.classList.remove('view2'); b.classList.add('preview-only'); S.screen='entry'; render(); };
+  if(on2) on2.onclick=()=>{ setFlowGroup('A'); b.classList.add('view2','preview-only'); S.screen='entry'; render(); };
+  if(on3) on3.onclick=()=>{ setFlowGroup('B'); b.classList.add('preview-only'); resetO2h(); go('o2hHome'); };
+  const barN=$('#o2hBarNudge'), barP=$('#o2hBarProgress');
+  const syncO2hBarBtns=()=>{
+    if(barN) barN.setAttribute('aria-pressed', !S.o2hProgress);
+    if(barP) barP.setAttribute('aria-pressed', !!S.o2hProgress);
+  };
+  if(barN) barN.onclick=()=>{ S.o2hProgress=false; syncO2hBarBtns(); if(S.screen!=='o2hHome') go('o2hHome'); else renderO2hBottomBar(); };
+  if(barP) barP.onclick=()=>{ S.o2hProgress=true; syncO2hBarBtns(); if(S.screen!=='o2hHome') go('o2hHome'); else renderO2hBottomBar(); };
+  syncO2hBarBtns();
   if(off) off.onclick=()=>{ b.classList.remove('preview-only'); render(); };
 }
 
@@ -1695,7 +2063,7 @@ let fabTimer=null, fabLastY=0;
 function renderFabEntry(){
   const slot=$('#fabSlot'); if(!slot) return;
   clearTimeout(fabTimer);
-  if(!(document.body.classList.contains('view2') && S.screen==='entry')){ slot.innerHTML=''; return; }
+  if(isView3() || !(document.body.classList.contains('view2') && S.screen==='entry')){ slot.innerHTML=''; return; }
   slot.innerHTML = `<button class="fab-entry" id="fabEntry" type="button" aria-label="${FAB_ROLL[FAB_ROLL.length-1]}">
       <span class="fe-roll"><span class="fe-track">
         ${FAB_ROLL.map(t=>`<span class="fe-item t-body16L24 w-bold">${t}</span>`).join('')}
@@ -1726,15 +2094,86 @@ function renderFabEntry(){
     }, {passive:true});
   }
 }
+function renderO2hBottomBar(){
+  const slot=$('#o2hBottomSlot'); if(!slot) return;
+  if(!(isView3() && S.screen==='o2hHome')){ slot.innerHTML=''; return; }
+  const icCalc = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+  if(S.o2hProgress){
+    slot.innerHTML = `<div class="o2h-inprogress">
+      <div class="o2h-inprogress-label">
+        <span class="t-detail13L18 w-medium">${o2hProgressLabel()}</span>
+        <b class="t-body16L20 w-semibold">${o2hTotalText()}</b>
+      </div>
+      ${boxButton({label:'예상견적 보기', size:'medium', variant:'solid', id:'o2hGoOrder'})}
+    </div>`;
+    $('#o2hBarNudge')?.setAttribute('aria-pressed','false');
+    $('#o2hBarProgress')?.setAttribute('aria-pressed','true');
+    const goOrder=$('#o2hGoOrder'); if(goOrder) goOrder.onclick=()=> go('o2hOrder');
+    return;
+  }
+  slot.innerHTML = `<button class="o2h-nudge" id="o2hNudge" type="button" aria-label="비교 견적 한번에 받기">
+    <span class="t-body16L20 w-semibold">비교 견적 한번에 받기</span>${icCalc}
+  </button>`;
+  const btn=$('#o2hNudge'); if(btn) btn.onclick=()=> o2hEnterFunnel();
+  $('#o2hBarNudge')?.setAttribute('aria-pressed','true');
+  $('#o2hBarProgress')?.setAttribute('aria-pressed','false');
+}
 function renderCases(){
+  const menu = $('#caseMenu');
+  if(isView3()){
+    const pool = O2H_CASES;
+    const cur = pool.find(c=>c.s.length===S.picked.size && c.s.every(k=>S.picked.has(k)));
+    menu.innerHTML = pool.map(c=>{
+      const on = cur && cur.id===c.id;
+      return `<li><button data-case="${c.id}"${on?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`;
+    }).join('');
+    menu.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
+      const c = pool.find(x=>x.id===b.dataset.case);
+      resetO2h(c.s);
+      go('o2hSelect');
+    });
+    return;
+  }
   const cur = CASES.find(c=>c.s.length===S.picked.size && c.s.every(k=>S.picked.has(k)));
-  $('#caseMenu').innerHTML = CASES.map(c=>
-    `<li><button data-case="${c.id}" aria-current="${cur&&cur.id===c.id}"><i>${c.id}</i>${c.n}</button></li>`).join('');
-  $('#caseMenu').querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
+  menu.innerHTML = CASES.map(c=>{
+    const on = cur && cur.id===c.id;
+    return `<li><button data-case="${c.id}"${on?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`;
+  }).join('');
+  menu.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
     const c = CASES.find(x=>x.id===b.dataset.case);
     S.picked=new Set(c.s); S.ans={}; S.log=[]; S.qi=0; S.step=0; S.ringFrac=0;
     S.route=null; S.pick=null; S.prod={}; S.stage='none'; S.openPart=false; S.gen=false; S.rtab=null;
     go('select');
+  });
+}
+function renderO2hBranches(){
+  const fieldSec = $('#o2hFieldSection'), cardSec = $('#o2hCardSection');
+  if(!isView3()){
+    fieldSec?.classList.add('hidden'); cardSec?.classList.add('hidden');
+    return;
+  }
+  fieldSec?.classList.remove('hidden'); cardSec?.classList.remove('hidden');
+  const svcs = pickedList().filter(k=> O2H_FIELD_BRANCHES[k]);
+  $('#o2hFieldMenu').innerHTML = svcs.map(k=>`
+    <li class="branch-group"><span class="branch-cap">${label(k)}</span><ul>${
+      O2H_FIELD_BRANCHES[k].map(b=>{
+        const on = o2hFieldBranch(k)===b.branch;
+        return `<li><button data-svc="${k}" data-o2hfb="${b.branch}"${on?' aria-current="true"':''}><i>${b.id}</i>${b.n}</button></li>`;
+      }).join('')
+    }</ul></li>`).join('');
+  $('#o2hFieldMenu').querySelectorAll('[data-o2hfb]').forEach(b=> b.onclick=()=>{
+    S.o2hFieldBranch[b.dataset.svc]=b.dataset.o2hfb; render();
+  });
+  const cardSvcs = pickedList().filter(k=> O2H_CARD_BRANCHES[k]);
+  $('#o2hCardMenu').innerHTML = cardSvcs.map(k=>`
+    <li class="branch-group"><span class="branch-cap">${label(k)}</span><ul>${
+      O2H_CARD_BRANCHES[k].map(b=>{
+        const on = o2hCardBranch(k)===b.branch;
+        return `<li><button data-svc="${k}" data-o2hcb="${b.branch}"${on?' aria-current="true"':''}><i>${b.id}</i>${b.n}</button></li>`;
+      }).join('')
+    }</ul></li>`).join('');
+  $('#o2hCardMenu').querySelectorAll('[data-o2hcb]').forEach(b=> b.onclick=()=>{
+    S.o2hCardBranch[b.dataset.svc]=b.dataset.o2hcb; render();
   });
 }
 
@@ -1985,20 +2424,19 @@ VIEW.entry = ()=>{
   bindProgress();
 };
 
-VIEW.select = ()=>{
+function selectScreenHtml(title='견적 한번에 받기'){
   const n = S.picked.size;
   const partOn = S.picked.has('part');
   const area = S.ans['part.area']||[];
-  screen.innerHTML = `
+  return `
     <div class="sel-screen">
-    ${topNav({title:'견적 한번에 받기', backId:'bk'})}
+    ${topNav({title, backId:'bk'})}
     <hr class="ods-divider">
     <div class="sel-title">
       <span class="t-body16L20 w-semibold">어떤 서비스가 필요한가요?</span>
     </div>
     <div class="picks">
       ${SELECT_LIST.map(({k,title,desc})=>{
-        /* list 행(131:58537) — title(Body15L24 semibold) + sub(Detail13L18) + Checkbox 20 */
         const row = `
         <button class="pick" data-k="${k}" aria-pressed="${S.picked.has(k)}">
           <span class="pk-t">
@@ -2008,7 +2446,6 @@ VIEW.select = ()=>{
           ${cbxIndicator(S.picked.has(k))}
         </button>`;
         if(!(k==='part'&&partOn)) return row;
-        /* 부분시공 체크 상태(131:58526) — 행과 시공 범위 타일이 한 카드 안에 들어간다 */
         return `<div class="svccard">${row}
           <div class="svc-tiles">
             ${PART_TILES.map(t=>`
@@ -2025,7 +2462,9 @@ VIEW.select = ()=>{
         size:'large', variant:'solid', id:'next', full:true})}
     </div>`:''}
     </div>`;
-  $('#bk').onclick = ()=>go('entry');
+}
+function bindSelectScreen({onBack, onNext}){
+  $('#bk').onclick = onBack;
   screen.querySelectorAll('.pick').forEach(b=> b.onclick=()=>{
     const k=b.dataset.k;
     if(S.picked.has(k)){ S.picked.delete(k); if(k==='part') delete S.ans['part.area']; }
@@ -2037,12 +2476,36 @@ VIEW.select = ()=>{
     S.ans['part.area'] = arr.includes(o)?arr.filter(x=>x!==o):[...arr,o];
     render();
   });
-  const nx=$('#next'); if(nx) nx.onclick = ()=>{
-    /* 새 폼 챗봇 플로우 상태 초기화 (문항 답변·크로스셀·견적/제안/연락처 플래그) */
-    S.log=[]; S.qi=0; S.step=0; S.ans={}; S.dismiss={}; S.ringFrac=0;
-    S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null; S.confirmed=new Set(); S.priceOpen=false;
-    go('loading');
-  };
+  const nx=$('#next'); if(nx) nx.onclick = onNext;
+}
+
+VIEW.select = ()=>{
+  screen.innerHTML = selectScreenHtml();
+  bindSelectScreen({
+    onBack: ()=>go('entry'),
+    onNext: ()=>{
+      S.log=[]; S.qi=0; S.step=0; S.ans={}; S.dismiss={}; S.ringFrac=0;
+      S.genDone=S.genFired=S.offerDone=S.contactDone=S.timeDone=S.ffin=false; S.modal=null; S.confirmed=new Set(); S.priceOpen=false;
+      go('loading');
+    }
+  });
+};
+
+VIEW.o2hSelect = ()=>{
+  screen.innerHTML = selectScreenHtml();
+  bindSelectScreen({
+    onBack: ()=>go('o2hHome'),
+    onNext: ()=>{
+      if(!S.picked.size) return;
+      const svcs = pickedList();
+      S.o2hFieldBranch = {...S.o2hFieldBranch, ...defaultO2hFieldBranch(svcs)};
+      S.o2hCardBranch = {...S.o2hCardBranch, ...defaultO2hCardBranch(svcs)};
+      S.o2hChecked = new Set(svcs.filter(k=> O2H_ORDER_FIELDS[k]));
+      S.ans = {...o2hAnsForCase(svcs), ...S.ans};
+      o2hPrefillAddrs();
+      o2hStartForm();
+    }
+  });
 };
 
 /* 03 항목 조립(로딩) — Figma 121:47710
@@ -3001,7 +3464,1081 @@ VIEW.list = ()=>{
   $('#bk').onclick = ()=>go('entry');
 };
 
+/* ══════════ 화면 보기-3 · O2H 통합 비교견적 플로우 (Figma 340:39827) ══════════
+   O2H 홈 → 입력폼(서비스 선택·필수 정보) → 예상견적 확인 → 비교견적 신청 */
+/* ══════════ 세부 '추가 입력' — 서비스별 4문항 ══════════
+   출처: 가견적_신청전_최소입력항목_20260814
+   채택 기준 = ① 주소로 유추할 수 없다 ② 파트너가 상담에서 반드시 되묻는다.
+   층수·엘리베이터·방/욕실 개수·준공연도는 주소 프리필이라 묻지 않는다.
+   라벨은 '보관이사/짐 정보/시공 범위' 규칙에 맞춰 6자 이하로 정리했다.
+   band = 응답별 예상견적 상·하한 배율(문항이 범위를 얼마나 좁히는지 시연용). */
+const O2H_EXTRA = {
+  full: [
+    {key:'x.full.scope', label:'시공 범위', type:'multi',
+     q:'어디를 손보고 싶으세요?', desc:'대략이면 충분해요. 여러 개 고를 수 있어요.',
+     opts:['도배','바닥','주방','욕실','샷시','조명·전기','전체']},
+    {key:'x.full.floor', label:'현재 바닥', type:'single',
+     q:'지금 바닥은 어떤 자재인가요?', desc:'철거 범위가 달라져 견적 폭을 가르는 항목이에요.',
+     opts:['장판','마루','타일','모르겠어요'],
+     band:{'장판':[1,1.1],'마루':[1.05,1.3],'타일':[1,1.15],'모르겠어요':[1,1.35]}},
+    {key:'x.full.live', label:'거주 상태', type:'single',
+     q:'시공하는 동안 집에 계시나요?',
+     opts:['시공 시 공실 예정','현재 공실','거주하며 시공','모르겠어요'],
+     band:{'시공 시 공실 예정':[1,1.05],'현재 공실':[1,1.05],'거주하며 시공':[1.1,1.3],'모르겠어요':[1,1.3]}},
+    {key:'x.full.grade', label:'마감 수준', type:'single',
+     q:'자재 마감은 어느 정도로 생각하세요?', desc:'예산이 아니라 마감 등급으로 물어요. 금액은 견적이 답해요.',
+     opts:['실속','기본','고급','아직 모르겠어요'],
+     band:{'실속':[.8,.95],'기본':[.95,1.15],'고급':[1.2,1.6],'아직 모르겠어요':[.8,1.6]}}
+  ],
+  part: [
+    {key:'x.part.scope', label:'시공 범위', type:'multi',
+     q:'어디를 손보고 싶으세요?', desc:'대략이면 충분해요. 여러 개 고를 수 있어요.',
+     opts:['도배','바닥','주방','욕실','샷시','조명·전기']},
+    {key:'x.part.floor', label:'현재 바닥', type:'single',
+     q:'지금 바닥은 어떤 자재인가요?', desc:'철거 범위가 달라져 견적 폭을 가르는 항목이에요.',
+     opts:['장판','마루','타일','모르겠어요'],
+     band:{'장판':[1,1.1],'마루':[1.05,1.3],'타일':[1,1.15],'모르겠어요':[1,1.35]}},
+    {key:'x.part.live', label:'거주 상태', type:'single',
+     q:'시공하는 동안 집에 계시나요?',
+     opts:['시공 시 공실 예정','현재 공실','거주하며 부분시공','모르겠어요'],
+     band:{'시공 시 공실 예정':[1,1.05],'현재 공실':[1,1.05],'거주하며 부분시공':[1.1,1.3],'모르겠어요':[1,1.3]}},
+    {key:'x.part.grade', label:'마감 수준', type:'single',
+     q:'자재 마감은 어느 정도로 생각하세요?',
+     opts:['실속','기본','고급','아직 모르겠어요'],
+     band:{'실속':[.8,.95],'기본':[.95,1.15],'고급':[1.2,1.6],'아직 모르겠어요':[.8,1.6]}}
+  ],
+  move: [
+    {key:'x.move.big', label:'큰 짐', type:'single',
+     q:'큰 짐이 몇 개인가요?', desc:'장롱·침대·소파를 합쳐서 세어주세요. 톤수를 가르는 항목이에요.',
+     opts:['0개','1~2개','3~4개','5개 이상','모르겠어요'],
+     band:{'0개':[.6,.8],'1~2개':[.8,1],'3~4개':[1,1.25],'5개 이상':[1.25,1.6],'모르겠어요':[.8,1.6]}},
+    {key:'x.move.pack', label:'포장 범위', type:'single',
+     q:'포장은 어디까지 맡기시겠어요?',
+     opts:['짐 싸는 것까지 맡길게요','짐은 제가 쌀게요','옮기기만 해주세요'],
+     band:{'짐 싸는 것까지 맡길게요':[1,1.15],'짐은 제가 쌀게요':[.75,.9],'옮기기만 해주세요':[.58,.72]}},
+    {key:'x.move.date', label:'이사 날짜', type:'date',
+     q:'언제 이사하시나요?', desc:'손없는날·성수기·주말 가산은 날짜만 고르면 자동으로 반영돼요.'},
+    {key:'x.move.keep', label:'보관이사', type:'single',
+     q:'짐을 맡겨둘 기간이 필요한가요?', desc:'보관이사는 매칭 가능한 파트너 자체가 달라져요.',
+     opts:['아니요','며칠 필요해요','아직 모르겠어요'],
+     band:{'아니요':[1,1],'며칠 필요해요':[1.15,1.35],'아직 모르겠어요':[1,1.35]}}
+  ],
+  clean: [
+    {key:'x.clean.state', label:'집 상태', type:'single',
+     q:'청소할 때 집은 어떤 상태인가요?', desc:'짐 유무가 작업 시간과 인원을 가장 크게 가르는 항목이에요.',
+     opts:['입주 전 빈집','짐이 있는 상태','이사 당일','모르겠어요'],
+     band:{'입주 전 빈집':[.9,1],'짐이 있는 상태':[1.1,1.35],'이사 당일':[1,1.15],'모르겠어요':[.9,1.35]}},
+    {key:'x.clean.date', label:'청소 날짜', type:'date',
+     q:'언제 청소하시나요?', desc:'이사 당일·주말은 파트너 일정이 달라져요.'},
+    {key:'x.clean.opt', label:'추가 청소', type:'multi',
+     q:'따로 챙겨야 할 곳이 있나요?', desc:'여러 개 고를 수 있어요.',
+     opts:['베란다·확장','곰팡이 제거','줄눈 시공','새시·창틀','없어요']},
+    {key:'x.clean.pet', label:'반려동물', type:'single',
+     q:'반려동물과 함께 지내셨나요?', desc:'털·냄새 작업이 더해지면 시간이 늘어나요.',
+     opts:['있어요','없어요'],
+     band:{'있어요':[1.05,1.2],'없어요':[1,1]}}
+  ],
+  net: [
+    {key:'x.net.mobile', label:'휴대폰', type:'single',
+     q:'지금 쓰는 휴대폰은 어디인가요?', desc:'결합 할인이 월 납부액을 가장 크게 가르는 항목이에요.',
+     opts:['SKT','KT','LG U+','알뜰폰','모르겠어요']},
+    {key:'x.net.state', label:'가입 상태', type:'single',
+     q:'지금 인터넷은 어떤 상태인가요?', desc:'신규·재약정 여부가 확인돼야 상담이 시작돼요.',
+     opts:['처음 신청해요','약정이 끝나가요','약정이 남았어요','모르겠어요']},
+    {key:'x.net.usage', label:'사용 환경', type:'single',
+     q:'집에서 인터넷을 어떻게 쓰시나요?', desc:'속도(100M·500M·1G)는 이 답으로 정해드려요.',
+     opts:['혼자 가볍게','두세 명이 함께','게임·영상을 많이 봐요']},
+    {key:'x.net.tv', label:'TV 시청', type:'single',
+     q:'TV도 함께 신청하시겠어요?',
+     opts:['TV도 함께','인터넷만','모르겠어요']}
+  ],
+  rent: [
+    {key:'x.rent.item', label:'관심 품목', type:'multi',
+     q:'어떤 걸 알아보고 계신가요?', desc:'품목이 정해져야 모델·정가 계산이 시작돼요.',
+     opts:['정수기','공기청정기','비데','안마의자']},
+    {key:'x.rent.feat', label:'필요 기능', type:'multi',
+     q:'꼭 필요한 기능이 있나요?', desc:'모델을 좁히는 문항이에요. 여러 개 고를 수 있어요.',
+     opts:['얼음 필요','냉·온수','정수만','방수','리모컨','어린이 모드','상관 없어요']},
+    {key:'x.rent.term', label:'사용 기간', type:'single',
+     q:'얼마나 오래 쓰실 예정인가요?', desc:'의무 사용 기간과 계약 기간은 결과 화면에서 나눠 안내해요.',
+     opts:['3년','5년','6년 이상','아직 모르겠어요']},
+    {key:'x.rent.people', label:'사용 인원', type:'single',
+     q:'몇 분이 함께 사용하시나요?', desc:'용량·설치 형태 추천에 쓰여요.',
+     opts:['1인','2~3인','4인 이상']}
+  ]
+};
+const o2hExtraFields = k => O2H_EXTRA[k] || [];
+const o2hExtraField = (k, key) => o2hExtraFields(k).find(f=>f.key===key);
+function o2hExtraRaw(key){ return (S.o2hExtra||{})[key]; }
+/* 카드 행에 보여줄 짧은 값 — 다중 선택은 '도배 외 2' 로 줄인다 */
+function o2hExtraVal(f){
+  const v = o2hExtraRaw(f.key);
+  if(!v || (Array.isArray(v) && !v.length)) return null;
+  if(Array.isArray(v)) return v.length>1 ? `${v[0]} 외 ${v.length-1}` : v[0];
+  return v;
+}
+const o2hExtraPending = k => o2hExtraFields(k).filter(f=>!o2hExtraVal(f));
+/* 작성완료·신청완료 카드에서는 추가 입력을 더 받지 않는다 */
+const o2hExtraOpen = k => !['ready','applied'].includes(o2hCardBranch(k));
+/* 4문항이 모두 채워지면 상·하한 배율을 곱해 견적 범위를 좁혀 보여준다 */
+function o2hExtraBand(k){
+  const base = o2hSvcMin(k), fs = o2hExtraFields(k);
+  if(!base || !fs.length || o2hExtraPending(k).length) return null;
+  let lo = 1, hi = 1;
+  fs.forEach(f=>{
+    const v = o2hExtraRaw(f.key);
+    const b = f.band && f.band[Array.isArray(v)?v[0]:v];
+    if(b){ lo *= b[0]; hi *= b[1]; } else { hi *= 1.05; }
+  });
+  const r = n => Math.max(10, Math.round(base*n/10)*10);
+  return r(hi) > r(lo) ? `${r(lo).toLocaleString('ko-KR')}~${r(hi).toLocaleString('ko-KR')}만원`
+                       : `${r(hi).toLocaleString('ko-KR')}만원부터`;
+}
+const O2H_ORDER_FIELDS = {
+  full: ()=>{
+    const rows = [
+      {label:'평수', done:()=>!!S.ans.size?.length, val:()=>g('size')},
+      {label:'시공 주소', done:()=>!!(S.ans.caddr||[]).length, val:()=>g('caddr')}
+    ];
+    if(o2hFieldBranch('full')==='full') rows.push(
+      {label:'예산', done:()=>!!(S.ans.fbudget||[]).length, val:()=>o2hAnsVal('fbudget',O2H_DEMO.fbudget)},
+      {label:'시공 희망범위', done:()=>!!(S.ans.scope||[]).length, val:()=>o2hAnsVal('scope',O2H_DEMO.scope)},
+      {label:'공간 상황', done:()=>!!(S.ans.space||[]).length, val:()=>o2hAnsVal('space',O2H_DEMO.space)},
+      {label:'시공 일정', done:()=>!!(S.ans.cdate||[]).length, val:()=>o2hAnsVal('cdate',O2H_DEMO.cdate)}
+    );
+    return rows;
+  },
+  part: ()=>{
+    const rows = [
+      {label:'평수', done:()=>!!S.ans.size?.length, val:()=>g('size')},
+      {label:'시공 주소', done:()=>!!(S.ans.caddr||[]).length, val:()=>g('caddr')}
+    ];
+    if(o2hFieldBranch('part')==='full') rows.push(
+      {label:'예산', done:()=>!!(S.ans.pbudget||[]).length, val:()=>o2hAnsVal('pbudget',O2H_DEMO.pbudget)},
+      {label:'시공 희망범위', done:()=>!!(S.ans.scope||[]).length, val:()=>o2hAnsVal('scope',O2H_DEMO.scope)},
+      {label:'공간 상황', done:()=>!!(S.ans.space||[]).length, val:()=>o2hAnsVal('space',O2H_DEMO.space)},
+      {label:'시공 일정', done:()=>!!(S.ans.cdate||[]).length, val:()=>o2hAnsVal('cdate',O2H_DEMO.cdate)}
+    );
+    return rows;
+  },
+  move: ()=>{
+    const rows = [
+      {label:'평수', done:()=>!!S.ans.size?.length, val:()=>g('size')},
+      {label:'출발지', done:()=>!!(S.ans['move.from']||[]).length, val:()=>g('move.from')},
+      {label:'도착지', done:()=>!!(S.ans.addr||[]).length, val:()=>g('addr')}
+    ];
+    if(o2hFieldBranch('move')==='full') rows.push(
+      {label:'이사 예정일', done:()=>!!(S.ans.mdate||[]).length, val:()=>o2hAnsVal('mdate',O2H_DEMO.mdate)},
+      {label:'선호 시간대', done:()=>!!(S.ans.mtime||[]).length, val:()=>o2hAnsVal('mtime',O2H_DEMO.mtime)},
+      {label:'이사 유형', done:()=>!!(S.ans.mtype||[]).length, val:()=>o2hAnsVal('mtype',O2H_DEMO.mtype)},
+      {label:'포장 종류', done:()=>!!(S.ans.mpack||[]).length, val:()=>o2hAnsVal('mpack',O2H_DEMO.mpack)}
+    );
+    return rows;
+  },
+  clean: ()=>{
+    const rows = [
+      {label:'평수', done:()=>!!S.ans.size?.length, val:()=>g('size')},
+      {label:'주소지', done:()=>!!(S.ans.claddr||S.ans.caddr||S.ans.addr||[]).length,
+        val:()=> (S.ans.claddr||S.ans.caddr||S.ans.addr||[])[0] || '입력하기'}
+    ];
+    if(o2hFieldBranch('clean')==='full') rows.push(
+      {label:'청소 희망일', done:()=>!!(S.ans.clday||[]).length, val:()=>o2hAnsVal('clday',O2H_DEMO.clday)},
+      {label:'선호 시간대', done:()=>!!(S.ans.cltime||[]).length, val:()=>o2hAnsVal('cltime',O2H_DEMO.cltime)},
+      {label:'방 개수', done:()=>!!(S.ans.rooms||[]).length, val:()=>o2hAnsVal('rooms',O2H_DEMO.rooms)},
+      {label:'베란다 개수', done:()=>!!(S.ans.veranda||[]).length, val:()=>o2hAnsVal('veranda',O2H_DEMO.veranda)},
+      {label:'화장실 개수', done:()=>!!(S.ans.toilet||[]).length, val:()=>o2hAnsVal('toilet',O2H_DEMO.toilet)}
+    );
+    return rows;
+  },
+  net: ()=>[
+    {label:'선호 통신사', done:()=>!!(S.ans.isp||[]).length, val:()=>o2hAnsVal('isp',O2H_DEMO.isp)},
+    {label:'TV 결합', done:()=>!!(S.ans.tv||[]).length, val:()=>o2hAnsVal('tv',O2H_DEMO.tv)}
+  ],
+  rent: ()=>[
+    {label:'렌탈 품목', done:()=>!!(S.ans.ritem||[]).length, val:()=>o2hAnsVal('ritem',O2H_DEMO.ritem)}
+  ]
+};
+function o2hOrderFields(k){ return (typeof O2H_ORDER_FIELDS[k]==='function' ? O2H_ORDER_FIELDS[k]() : O2H_ORDER_FIELDS[k]) || []; }
+function o2hSvcMin(k){
+  const area = {'10평 이하':500,'10평대':1000,'20평대':2000,'30평대':3000,'40평대':4000,'50평대':5000,'60평대 이상':6000,'60평 이상':6000};
+  const a = area[(S.ans.size||[])[0]] ?? 2000;
+  if(k==='full') return a;
+  if(k==='part') return Math.max(100, ((S.ans.scope||[]).length||2)*100);
+  if(k==='move') return 90;
+  if(k==='clean') return 20;
+  return null;
+}
+function o2hCardBadge(k){
+  const b = o2hCardBranch(k);
+  if(b==='applied') return sqBadge('신청완료','brand-weak','20');
+  if(b==='ready') return sqBadge('작성완료','brand-weak','20');
+  if(b==='consult') return sqBadge('상담 후 확정','neutral300','20');
+  if(b==='banner') return sqBadge('혜택','brand-weak','20');
+  return sqBadge('작성중','neutral300','20');
+}
+function o2hCardFieldDone(k, f){
+  const b = o2hCardBranch(k);
+  if(b==='draft') return f.done();
+  if(b==='ready' || b==='applied' || b==='consult' || b==='banner') return true;
+  return f.done();
+}
+function o2hCardFieldVal(k, f){
+  const b = o2hCardBranch(k);
+  if(b==='draft' && !f.done()) return '입력하기';
+  if((b==='ready'||b==='consult'||b==='banner') && !f.done()) return f.val();
+  return f.val();
+}
+function o2hCardPrice(k){
+  const b = o2hCardBranch(k);
+  if(k==='net'||k==='rent') return '상담 후 확정';
+  if(b==='draft') return o2hExtraBand(k) || '입력 후 확인';
+  const min = o2hSvcMin(k);
+  return min ? `${min.toLocaleString('ko-KR')}만원부터` : '상담 후 확정';
+}
+function o2hCardCta(k){
+  const b = o2hCardBranch(k);
+  if(b==='applied') return boxButton({label:'신청 완료', size:'medium', variant:'normal', attrs:'style="width:100%;margin-top:4px" disabled'});
+  if(b==='banner') return `<div class="o2h-net-banner t-detail13L18">최대 60만원 혜택 · 신규 가입 상담</div>`;
+  if(b==='consult') return `<div class="o2h-net-banner t-detail13L18">월 구독 · 상담 후 확정</div>`;
+  return boxButton({label:`${ic('IconTextDocument',18)} 견적 요청`, size:'medium', variant:'normal', attrs:'style="width:100%;margin-top:4px"'});
+}
+/* 세부 '추가 입력' 행 — 답이 있으면 값을, 없으면 '추가 입력' 을 보여준다 */
+function o2hExtraCardRows(k){
+  return o2hExtraFields(k).map(f=>{
+    const v = o2hExtraVal(f);
+    return {label:f.label, done:!!v, val:v || '추가 입력', pending:!v, svc:k, extra:f.key};
+  });
+}
+function o2hOrderCardFields(k){
+  const b = o2hCardBranch(k);
+  /* 작성 전 카드는 4문항을 모두 노출하고, 작성완료·신청완료에서는 이미 답한 항목만 덧붙인다 */
+  const extras = o2hExtraOpen(k) ? o2hExtraCardRows(k) : o2hExtraCardRows(k).filter(r=>r.done);
+  if(b==='draft' && k==='full'){
+    const min = o2hSvcMin('full') || 4000;
+    const sz = (S.ans.size||['30평대'])[0].replace('대','');
+    return [{label:'평수', done:true, val:`${sz} · ${min.toLocaleString('ko-KR')}만원`, pending:false}, ...extras];
+  }
+  if(b==='draft' && k==='move'){
+    const sz = o2hSizeDisplay().split('(')[0];
+    return [{label:'평수', done:true, val:`${sz} · 150만원부터`, pending:false}, ...extras];
+  }
+  return [...o2hOrderFields(k).map(f=>({
+    label:f.label,
+    done:o2hCardFieldDone(k,f),
+    val:o2hCardFieldVal(k,f),
+    pending:!o2hCardFieldDone(k,f) && (o2hCardFieldVal(k,f)==='입력하기' || o2hCardFieldVal(k,f)==='추가 입력')
+  })), ...extras];
+}
+function o2hFieldRow(f){
+  const {label, val:value, done, pending} = f;
+  const mark = done ? ic('IconCheckCircleFilled',16) : (pending ? '<span class="o2h-pending-check"></span>' : '<span class="o2h-empty-check"></span>');
+  const pendingVal = pending || value==='추가 입력' || value==='입력하기';
+  const valCls = pendingVal ? 'c-fg-brand' : 'c-fg-weak';
+  const chevCls = pendingVal ? 'c-fg-brand' : 'c-fg-weak';
+  const open = f.extra ? ` data-o2hx-open="${f.svc}|${f.extra}"` : '';
+  return `<button class="o2h-order-field-row" type="button"${open}>
+    <span class="field-label t-body15L24 w-medium">${mark}${label}</span>
+    <span class="field-val t-body14L18 ${valCls}">${value}</span>
+    <span class="field-chev ${chevCls}">${ic('IconChevronRight',12)}</span>
+  </button>`;
+}
+function o2hQuotablePicked(){ return pickedList().filter(k=> O2H_ORDER_FIELDS[k]); }
+function o2hActiveChecked(){
+  if(!S.o2hChecked) S.o2hChecked = new Set(o2hQuotablePicked());
+  return o2hQuotablePicked().filter(k=> S.o2hChecked.has(k));
+}
+function o2hEnterFunnel(){ go('o2hSelect'); }
+function o2hSvcOrderCard(k){
+  if(!S.o2hChecked) S.o2hChecked = new Set(o2hQuotablePicked());
+  const active = S.o2hChecked.has(k);
+  const fields = o2hOrderCardFields(k);
+  const rows = fields.map(o2hFieldRow).join('');
+  const price = o2hCardPrice(k);
+  const priceText = price.includes('입력') ? '—' : price;
+  const open = o2hExtraOpen(k);
+  const exFields = open ? o2hExtraFields(k) : [], exPending = open ? o2hExtraPending(k) : [];
+  /* 남은 문항 수를 CTA 라벨에 그대로 노출한다 (문서 §8 — 필수 문항은 0개) */
+  const cta = !exFields.length ? '세부 항목 추가하고 견적 보기'
+    : exPending.length ? `세부 항목 ${exPending.length}개 추가하고 견적 보기`
+    : '이 조건으로 비교 견적 신청';
+  const hint = exFields.length && exPending.length && exPending.length < exFields.length
+    ? `<p class="o2h-order-hint t-detail12L16">${exFields.length - exPending.length}/${exFields.length} 입력 · 남은 항목을 채우면 범위가 좁아져요</p>` : '';
+  return `<article class="o2h-order-card${active?'':' is-off'}">
+    <div class="o2h-order-card-h">
+      <label class="o2h-order-check" data-o2h-check="${k}">
+        ${cbxIndicator(active, 'small')}<b class="t-heading18 w-bold">${label(k)}</b>
+      </label>
+      <span class="o2h-order-done-date t-body14L18">${o2hCardDate('draft',k)} 작성</span>
+    </div>
+    ${rows}
+    <div class="o2h-order-divider"><hr class="ods-divider"></div>
+    <div class="o2h-order-price-row">
+      <span class="price-label t-body15L24 w-medium">예상 견적 ${ic('IconInfoCircle',16)}</span>
+      <b class="price-val t-heading17 w-semibold">${priceText}</b>
+    </div>
+    ${hint}
+    ${boxButton({label:cta, size:'medium', variant:'subtle', attrs:`data-o2h-cta="${k}" style="width:100%"${active?'':' disabled data-disabled'}`})}
+  </article>`;
+}
+/* ── 기간 필터 ────────────────────────────────────
+   상단 '최근 6개월' 은 드롭다운이고, 고른 기간이 곧바로 카드 목록에 적용된다.
+   카드마다 작성·요청 일자를 두고 오늘(8월 14일)로부터의 경과일로 걸러낸다. */
+const O2H_PERIODS = [
+  {k:'1m',  label:'최근 한 달', days:31},
+  {k:'6m',  label:'최근 6개월', days:186},
+  {k:'all', label:'전체',       days:Infinity}
+];
+const O2H_CARD_DATE = {
+  draft: {full:'8월12일', part:'8월12일', move:'7월3일', clean:'8월13일', net:'8월13일', rent:'8월13일'},
+  done:  {full:'6월14일', move:'6월14일', net:'8월14일'}
+};
+const o2hCardDate = (tab, k) => (O2H_CARD_DATE[tab]||{})[k] || '8월14일';
+const o2hPeriod = () => S.o2hPeriod || '6m';
+const o2hPeriodItem = () => O2H_PERIODS.find(p=>p.k===o2hPeriod()) || O2H_PERIODS[1];
+function o2hDaysAgo(md){
+  const m = String(md).match(/(\d+)월\s*(\d+)일/);
+  if(!m) return 0;
+  const today = new Date(O2H_CAL_Y, O2H_CAL_TODAY.m-1, O2H_CAL_TODAY.d);
+  return Math.round((today - new Date(O2H_CAL_Y, +m[1]-1, +m[2])) / 86400000);
+}
+const o2hInPeriod = md => o2hDaysAgo(md) <= o2hPeriodItem().days;
+function o2hFilterBtn(){
+  return `<button class="o2h-filter-btn t-body14L18 w-medium" type="button" data-o2h-period="1">
+    ${o2hPeriodItem().label} ${ic('IconChevronDown',14)}</button>`;
+}
+function o2hPeriodSheet(){
+  return `<div class="bs-overlay" id="o2hpOv"></div>
+    <section class="bsheet o2h-period-sheet" role="dialog" aria-label="기간 선택">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-head">
+        <b class="bs-title t-heading17 w-semibold">기간 선택</b>
+        <button class="ods-iconbtn" id="o2hpX" type="button" aria-label="닫기">${ic('IconX',24)}</button>
+      </div>
+      <div class="bs-body">${O2H_PERIODS.map(p=>`
+        <button class="bs-item" type="button" data-o2h-period-opt="${p.k}">
+          <span class="ods-radio" data-state="${o2hPeriod()===p.k?'checked':'unchecked'}"><i></i></span>
+          <span class="bs-txt"><b class="t-body16L20 w-medium">${p.label}</b></span>
+        </button>`).join('')}
+      </div>
+    </section>`;
+}
+function o2hOrderEmpty(){
+  return `<p class="o2h-order-empty t-body15L24 w-medium">${o2hPeriodItem().label} 안에 해당하는 내역이 없어요</p>`;
+}
+const O2H_DONE_LABELS = {full:'시공', part:'시공', move:'이사', clean:'이사청소', net:'인터넷', rent:'렌탈'};
+function o2hDoneLabel(k){ return O2H_DONE_LABELS[k] || label(k); }
+function o2hDoneOrderCard(k, quotes){
+  const empty = !quotes?.length;
+  const quoteRows = empty
+    ? `<p class="o2h-order-quote-row is-empty"><span class="partner t-body15L24 w-medium">아직 받은 견적이 없어요</span></p>`
+    : quotes.map(q=>`<button class="o2h-order-quote-row" type="button">
+        <span class="partner t-body15L24 w-medium">${q.name}</span>
+        <span class="quote t-body15L24 w-medium">${q.price} ${ic('IconChevronRight',12)}</span>
+      </button>`).join('');
+  return `<article class="o2h-order-card o2h-order-done-card">
+    <div class="o2h-order-done-h">
+      <b class="t-heading18 w-bold">${o2hDoneLabel(k)}</b>
+      <span class="o2h-order-done-date t-body14L18">${o2hCardDate('done',k)} 요청</span>
+    </div>
+    <div class="o2h-order-divider"><hr class="ods-divider"></div>
+    <div class="o2h-order-done-quotes">
+      <p class="o2h-order-quote-h t-body16L20 w-medium">받은 견적${empty?'':' 2'}</p>
+      ${quoteRows}
+    </div>
+    ${boxButton({label:'요청 내역 보기', size:'large', variant:'normal', attrs:'style="width:100%"'})}
+  </article>`;
+}
+function o2hNetNudge(){
+  return `<button class="o2h-net-nudge" type="button" data-o2h-net-apply="1">
+    <span class="nudge-body">
+      <span class="t-detail13L18 w-medium">인터넷 설치 함께 상담 받으면</span>
+      <b class="t-body15L24 w-semibold">최대 60만원 혜택</b>
+    </span>
+    <span class="nudge-chev">${ic('IconChevronRight',20)}</span>
+  </button>`;
+}
+/* 신청을 마치면 넛지 자리에 인터넷 신청 카드가 대신 놓인다 */
+function o2hNetDoneCard(){
+  const rows = o2hExtraFields('net').map(f=> o2hFieldRow({
+    label:f.label, val:o2hExtraVal(f) || '상담 시 확인', done:!!o2hExtraVal(f), pending:false
+  })).join('');
+  return `<article class="o2h-order-card o2h-order-done-card">
+    <div class="o2h-order-done-h">
+      <b class="t-heading18 w-bold">인터넷</b>
+      ${sqBadge('신청완료','brand-weak','20')}
+      <span class="o2h-order-done-date t-body14L18">${o2hCardDate('done','net')} 요청</span>
+    </div>
+    <div class="o2h-order-divider"><hr class="ods-divider"></div>
+    ${rows}
+    <p class="o2h-net-done-note t-detail12L16">상담원이 순차적으로 연락드릴 예정이에요</p>
+    ${boxButton({label:'신청 내역 보기', size:'large', variant:'normal', attrs:'style="width:100%"'})}
+  </article>`;
+}
+function o2hStartForm(){
+  o2hPrefillAddrs();
+  S.o2hSub = 'loading';
+  go('o2hForm');
+  setTimeout(()=>{
+    if(S.screen==='o2hForm' && S.o2hSub==='loading'){ S.o2hSub='info'; render(); }
+  }, 1200);
+}
+function o2hNavRight(){
+  return `<button class="ods-iconbtn" type="button" aria-label="내역">${ic('IconTextDocument',24)}</button>
+    <button class="ods-iconbtn o2h-nav-chat" type="button" aria-label="채팅">${ic('IconBubbleRight',24)}<span class="o2h-nav-badge">9</span></button>`;
+}
+function o2hOrderTabs(active){
+  const tab = active || S.o2hOrderTab || 'draft';
+  return `<div class="o2h-order-tabs">
+    <button class="o2h-order-tab${tab==='draft'?' on':''}" type="button" data-o2htab="draft"><span class="t-body15L24 ${tab==='draft'?'w-bold':'w-medium'}">작성중</span></button>
+    <button class="o2h-order-tab${tab==='done'?' on':''}" type="button" data-o2htab="done"><span class="t-body15L24 ${tab==='done'?'w-bold':'w-medium'}">신청 완료</span><i class="o2h-tab-dot"></i></button>
+  </div>`;
+}
+function o2hOrderHeader(activeTab){
+  return `<div class="o2h-order-head">
+    ${topNav({title:'시공/생활 상담 내역', backId:'bk', right:o2hNavRight()})}
+    ${o2hOrderTabs(activeTab)}
+  </div>`;
+}
+function o2hSizeDisplay(){
+  const map = {'10평 이하':'10평(33㎡)','10평대':'10평(33㎡)','20평대':'20평(66㎡)','30평대':'32평(84㎡)','40평대':'40평(132㎡)','50평대':'50평(165㎡)'};
+  return map[(S.ans.size||[])[0]] || '32평(84㎡)';
+}
+function o2hAddrDisplay(key){
+  const v = (S.ans[key]||[])[0];
+  if(v==='서울/경기' || !v) return '서울특별시 송파구 올림픽로 135\n잠실리센츠 2단지, 1501호';
+  return v;
+}
+function o2hDetailRows(){
+  const rows = [];
+  if(o2hHasLife()) rows.push({key:'size', label:'평수', value:o2hSizeDisplay(), filled:!!(S.ans.size||[]).length});
+  if(o2hHasCon()) rows.push({key:'caddr', label:'시공 주소', value:o2hAddrDisplay('caddr'), filled:!!(S.ans.caddr||[]).length});
+  if(S.picked.has('move')){
+    const same = o2hHasCon() && (S.ans.caddr||[]).length;
+    rows.push({key:'addr', label:'이사 도착지', value:same?'시공 주소와 동일':o2hAddrDisplay('addr'), filled:same||!!(S.ans.addr||[]).length});
+    rows.push({key:'move.from', label:'이사 출발지', value:(S.ans['move.from']||[]).length?'부산광역시 해운대구 센텀동':'출발지 정보 추가',
+      filled:!!(S.ans['move.from']||[]).length, add:true});
+  }
+  return rows;
+}
+function o2hDetailRow(r){
+  const actCls = r.add && !r.filled ? 'o2h-detail-act is-add' : 'o2h-detail-act';
+  const valCls = r.add && !r.filled ? 'c-fg-brand w-medium' : '';
+  return `<button class="o2h-detail-row" type="button" data-o2h-edit="${r.key}">
+    <span class="o2h-detail-lb t-body16L20 w-medium">${r.label}</span>
+    <span class="o2h-detail-val t-body14L18 ${valCls}">${String(r.value).replace(/\n/g,'<br>')}</span>
+    <span class="${actCls}">${r.add && !r.filled ? ic('IconPlus',12) : ic('IconPencil',12)}</span>
+  </button>`;
+}
+function o2hDetailEditor(key){
+  if(S.o2hEditField!==key) return '';
+  if(key==='size'){
+    return `<div class="o2h-detail-edit"><div class="opts">${['10평 이하','10평대','20평대','30평대','40평대','50평대'].map(o=>
+      selChip(o, (S.ans.size||[]).includes(o), `data-o2hf="size" data-o="${o}"`, 'sm')).join('')}</div></div>`;
+  }
+  if(['caddr','addr','move.from'].includes(key)){
+    return `<div class="o2h-detail-edit"><div class="opts">${REGION_SIDO.map(o=>
+      selChip(o, (S.ans[key]||[]).includes(o), `data-o2hf="${key}" data-o="${o}"`, 'sm')).join('')}</div></div>`;
+  }
+  return '';
+}
+const O2H_UPSELL = [
+  {k:'clean', title:'이사청소 추가', badge:'이사와 함께 신청하면 5만 포인트'},
+  {k:'net', title:'인터넷 설치', badge:'60만원 쇼핑지원금 이벤트 중'},
+  {k:'rent', title:'가전 렌탈', badge:'월 구독 요금 최저가 보상 혜택'}
+];
+function o2hUpsellCards(){
+  return O2H_UPSELL.filter(u=> !S.picked.has(u.k)).map(u=>`
+    <button class="o2h-upsell-card" type="button" data-o2h-add="${u.k}">
+      ${ic('IconPlus',16)}<b class="t-heading18 w-bold">${u.title}</b>
+      <span class="ods-sqbadge" data-size="20" data-variant="brand-weak">${u.badge}</span>
+    </button>`).join('');
+}
+function o2hApplyServiceLine(){ return o2hActiveChecked().map(label).join(', '); }
+function o2hTotalText(){
+  let t = 0;
+  pickedList().forEach(k=>{ const m = o2hSvcMin(k); if(m) t += m; });
+  return t ? `${t.toLocaleString('ko-KR')}만원부터~` : '상담 후 확정';
+}
+function o2hProgressLabel(){
+  const names = pickedList().filter(k=> o2hSvcMin(k)).map(label);
+  return names.length ? `${names.join(', ')} 총 예상 견적` : '총 예상 견적';
+}
+function o2hHomeBanner(){
+  return `<div class="o2h-banner">
+    <img class="o2h-banner-img" src="assets/home/pf-2.jpg" alt="">
+    <div class="o2h-banner-cap">
+      <b class="t-body16L20 w-semibold">판교라운지 그랜드 오픈 기념</b>
+      <span class="t-detail13L18">키친 계약 시 50만P 증정!</span>
+    </div>
+    <span class="o2h-banner-ind t-detail10L14">1/10</span>
+  </div>`;
+}
+function o2hHomeMenuStack(){
+  return `<div class="o2h-menu-wrap">
+    <div class="o2h-menu-stack">
+      <button class="o2h-feat-card" id="o2hFull" type="button">
+        <span class="o2h-feat-ic">${asset('houseDrill',44)}</span>
+        <span class="o2h-feat-body">
+          <b class="t-body15L24 w-semibold">집 전체 시공 업체 찾기</b>
+          <span class="t-detail12L16">오늘의집이 시공하자, A/S 보장</span>
+        </span>
+        <span class="o2h-feat-chev">${ic('IconChevronRight',12)}</span>
+      </button>
+      <div class="o2h-sec-card">
+        <b class="o2h-sec-t t-body15L24 w-semibold">오늘의집이 직접하는 부분 시공</b>
+        <div class="o2h-part-row">
+          <div class="o2h-part-left">
+            ${HOME_PART.map(p=>`
+              <button class="o2h-part-item" type="button">
+                ${asset(p.art,40)}
+                ${p.badge?`<span class="p-badge"><span class="ods-pillbadge">${p.badge}</span></span>`:''}
+                <span class="p-lb t-detail13L18 w-medium">${p.label}</span>
+              </button>`).join('')}
+          </div>
+          <button class="o2h-part-more" type="button">
+            <span class="o2h-part-more-ic">${ic('IconChevronRight',12)}</span>
+            <span class="t-detail13L18 w-medium">더보기</span>
+          </button>
+        </div>
+        <button class="o2h-menu-row" type="button">
+          <span class="o2h-menu-row-ic">${asset('helmetFace',24)}</span>
+          <span class="o2h-menu-row-t t-body15L20 w-medium">부분 시공 업체 찾기</span>
+          ${ic('IconChevronRight',12)}
+        </button>
+      </div>
+      <div class="o2h-sec-card">
+        <b class="o2h-sec-t t-body15L24 w-semibold">이사 계획 중이라면</b>
+        <div class="o2h-compact">
+          ${[{k:'move',l:'이사',a:'truck'},{k:'clean',l:'이사청소',a:'cleaningTool'},{k:'net',l:'인터넷',a:'wifiRouter'},{k:'rent',l:'렌탈',a:'waterPurifier'},{k:'fix',l:'제품설치',a:'movingBox'}].map(c=>`
+            <button class="o2h-compact-item" type="button">
+              <span class="o2h-compact-ic">${asset(c.a,46)}</span>
+              <span class="t-detail13L18 w-medium">${c.l}</span>
+            </button>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function o2hAddrField(label, key, why){
+  return `<div class="field">
+    <div class="lb t-detail13L18">${label} <span class="c-fg-brand t-detail11L14">필수</span></div>
+    ${why?`<p class="why t-detail11L14">${why}</p>`:''}
+    <div class="opts">${REGION_SIDO.map(o=>
+      selChip(o, (S.ans[key]||[]).includes(o), `data-o2hf="${key}" data-o="${o}"`, 'sm')).join('')}</div>
+  </div>`;
+}
+function o2hInfoFields(){
+  const blocks = [];
+  if(o2hHasLife()){
+    blocks.push(`<div class="field">
+      <div class="lb t-detail13L18">평수 <span class="c-fg-brand t-detail11L14">필수</span></div>
+      <div class="opts">${['10평 이하','10평대','20평대','30평대','40평대','50평대'].map(o=>
+        selChip(o, (S.ans.size||[]).includes(o), `data-o2hf="size" data-o="${o}"`, 'sm')).join('')}</div>
+    </div>`);
+  }
+  if(o2hHasCon()) blocks.push(o2hAddrField('시공 주소', 'caddr', '시공·청소·이사 도착지에 함께 사용돼요'));
+  if(S.picked.has('move')){
+    blocks.push(o2hAddrField('출발지', 'move.from'));
+    blocks.push(o2hAddrField('도착지', 'addr', o2hHasCon() ? '시공 주소를 도착지로 미리 채웠어요' : ''));
+  }
+  if(S.picked.has('clean') && !o2hHasCon()){
+    blocks.push(o2hAddrField('청소 주소', 'claddr'));
+  }else if(S.picked.has('clean') && o2hHasCon()){
+    blocks.push(`<div class="field">
+      <div class="lb t-detail13L18">청소 주소</div>
+      <p class="why t-detail11L14">시공 주소를 청소 주소로 함께 사용해요</p>
+      <div class="o2h-phone">${ic('IconLocationPinDot',18)} ${g('caddr')}</div>
+    </div>`);
+  }
+  if(S.picked.has('net')){
+    blocks.push(`<div class="field">
+      <div class="lb t-detail13L18">선호 통신사</div>
+      <div class="opts">${['KT','SKT','LG U+','상관 없음'].map(o=>
+        selChip(o, (S.ans.isp||[]).includes(o), `data-o2hf="isp" data-o="${o}"`, 'sm')).join('')}</div>
+    </div>`);
+  }
+  if(S.picked.has('rent')){
+    blocks.push(`<div class="field">
+      <div class="lb t-detail13L18">렌탈 품목</div>
+      <div class="opts">${['정수기','공기청정기','비데','매트리스'].map(o=>
+        selChip(o, (S.ans.ritem||[]).includes(o), `data-o2hf="ritem" data-o="${o}" data-multi="1"`, 'sm')).join('')}</div>
+    </div>`);
+  }
+  return blocks.join('');
+}
+function o2hInfoReady(){
+  if(!S.picked.size) return false;
+  if(o2hHasLife() && !(S.ans.size||[]).length) return false;
+  if(o2hHasCon() && !(S.ans.caddr||[]).length) return false;
+  if(S.picked.has('move') && (!(S.ans['move.from']||[]).length || !(S.ans.addr||[]).length)) return false;
+  if(S.picked.has('clean') && !o2hHasCon() && !(S.ans.claddr||[]).length) return false;
+  return true;
+}
+function o2hMethodSheet(){
+  return `<div class="bs-overlay" id="o2hOv"></div>
+    <div class="bsheet o2h-method-sheet">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-head"><span class="bs-title t-body16L20 w-bold">상담 방식 선택하기</span>
+        <button class="fp-x" id="o2hClose" aria-label="닫기">${ic('IconX',24)}</button></div>
+      <div class="bs-body" style="padding:8px 16px 16px">
+        <button class="method-opt${S.o2hMethod==='chat'?' on':''}" data-method="chat" type="button">
+          <span class="method-radio"></span>
+          <span class="mo-body">
+            <b class="t-body16L20 w-semibold">채팅 상담</b>
+            <span class="t-body14L18">메시지로 간편하게 상담할 수 있어요</span>
+          </span>
+        </button>
+        <button class="method-opt${S.o2hMethod==='phone'?' on':''}" data-method="phone" type="button">
+          <span class="method-radio"></span>
+          <span class="mo-body">
+            <b class="t-body16L20 w-semibold">바로 전화 상담</b>
+            <span class="t-body14L18">바로 상담 운영 시간 (평일 10:00-19:00)</span>
+          </span>
+        </button>
+      </div>
+      <div class="bs-foot">${boxButton({label:'상담 신청', size:'large', variant:'brand-solid', id:'o2hSubmit', full:true})}</div>
+    </div>`;
+}
+
+VIEW.o2hHome = ()=>{
+  screen.innerHTML = `
+    <div class="o2o-home">
+      <div class="home-top">
+        <div class="search-nav" role="navigation" aria-label="글로벌 내비게이션">
+          <button class="sn-icon" aria-label="메뉴">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3.5 7h17M3.5 12h17M3.5 17h17"/></svg>
+          </button>
+          <div class="sn-search">
+            <span class="sn-ic">${ic('IconMagnifyingGlass',18)}</span>
+            <span class="sn-ph t-body14L20 w-regular">오늘의집 통합검색</span>
+          </div>
+          <button class="sn-icon" aria-label="알림">${ic('IconBell',24)}</button>
+          <button class="sn-icon" aria-label="북마크">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M6.5 3.75h11a1 1 0 0 1 1 1V20l-6.5-4.6L5.5 20V4.75a1 1 0 0 1 1-1z"/></svg>
+          </button>
+          <button class="sn-icon" aria-label="장바구니">${ic('IconCart',24)}</button>
+        </div>
+        <div class="addrbar">
+          <div class="ab-label">
+            ${ic('IconLocationPinDot',18)}
+            <span class="a-txt t-body14L20 w-regular">서울특별시 송파구 올림픽로 135 (잠실새내로 245번길 12)</span>
+          </div>
+          ${textButton({label:'주소변경', size:14, variant:'primary'})}
+        </div>
+        <hr class="ods-divider">
+      </div>
+      ${o2hHomeBanner()}
+      ${o2hHomeMenuStack()}
+      ${homeBundles()}
+    </div>
+    ${bottomGnb()}`;
+  const enter = ()=> o2hEnterFunnel();
+  ['#o2hFull','.o2h-menu-row','.o2h-part-item','.o2h-compact-item'].forEach(sel=>{
+    screen.querySelectorAll(sel).forEach(b=> b.onclick=enter);
+  });
+};
+
+VIEW.o2hForm = ()=>{
+  if(S.o2hSub==='loading'){
+    screen.innerHTML = `
+      <div class="o2h-form-screen">
+        ${topNav({title:'', backId:'bk'})}
+        <div class="o2h-form-loading">
+          <div class="o2h-form-head">
+            <p class="t-heading20 w-semibold">예상 견적 계산에 필요한<br>정보를 구성 중이에요</p>
+            <p class="sub t-body14L18 w-medium">주소지 정보를 불러오고 있어요...</p>
+          </div>
+        </div>
+      </div>`;
+    $('#bk').onclick = ()=>go('o2hSelect');
+    return;
+  }
+  const rows = o2hDetailRows().map(r=> o2hDetailRow(r)).join('');
+  const editor = S.o2hEditField ? o2hDetailEditor(S.o2hEditField) : '';
+  screen.innerHTML = `
+    <div class="o2h-form-screen">
+      ${topNav({title:'', backId:'bk'})}
+      <div class="o2h-form-head">
+        <p class="t-heading20 w-semibold">아래 정보만 입력하면<br>예상 견적을 알 수 있어요</p>
+      </div>
+      <div class="o2h-detail-list">${rows}</div>
+      ${editor}
+      <div class="o2h-sticky-cta">
+        ${boxButton({label:'예상 견적 보기', size:'large', variant:'brand-solid', id:'o2hDone', full:true, disabled:!o2hInfoReady()})}
+      </div>
+    </div>`;
+  $('#bk').onclick = ()=>go('o2hSelect');
+  screen.querySelectorAll('[data-o2h-edit]').forEach(b=> b.onclick=()=>{
+    S.o2hEditField = S.o2hEditField===b.dataset.o2hEdit ? null : b.dataset.o2hEdit;
+    render();
+  });
+  screen.querySelectorAll('[data-o2hf]').forEach(b=> b.onclick=()=>{
+    const {o2hf:key,o}=b.dataset;
+    S.ans[key]=[o];
+    if(key==='caddr'){
+      if(S.picked.has('move')) S.ans.addr = [...S.ans.caddr];
+      if(S.picked.has('clean')) S.ans.claddr = [...S.ans.caddr];
+    }
+    render();
+  });
+  const done=$('#o2hDone'); if(done) done.onclick=()=>{
+    if(!o2hInfoReady())return;
+    S.o2hProgress=true;
+    if(!S.o2hChecked) S.o2hChecked = new Set(o2hQuotablePicked());
+    go('o2hOrder');
+  };
+};
+
+/* ── 세부 항목 추가 입력 BottomSheet ────────────────────
+   ODS BottomSheet(.bsheet) 골격에 RadioGroup·Chip·Calendar 를 얹어 구성한다.
+   pending 행에서 열면 같은 서비스의 남은 문항으로 이어지고(chain), 이미 답한 행은 단건 수정이다. */
+const O2H_CAL_Y = 2026, O2H_CAL_TODAY = {m:8, d:14};
+function o2hOpenExtra(svc, key, chain, flow){
+  const f = o2hExtraField(svc, key); if(!f) return;
+  const open = !!S.o2hSheet;   /* 이미 열려 있으면 다음 문항으로 내용만 바꾼다 */
+  const cur = o2hExtraRaw(key);
+  const m = typeof cur==='string' && cur.match(/(\d+)월/);
+  S.o2hSheet = {svc, key, chain:!!chain, flow: flow || null, step:'q',
+    draft: f.type==='multi' ? [...(cur||[])] : (cur||null),
+    month: m ? +m[1] : O2H_CAL_TODAY.m + (f.type==='date' ? 1 : 0)};
+  if(open){
+    const body = screen.querySelector('.x-sheet .bs-body'); if(body) body.scrollTop = 0;
+    o2hSyncExtraSheet();
+    const nb = screen.querySelector('.x-sheet .bs-body'); if(nb) nb.scrollTop = 0;
+  }else render();
+}
+function o2hExtraDraftFilled(){
+  const d = S.o2hSheet && S.o2hSheet.draft;
+  return Array.isArray(d) ? !!d.length : !!d;
+}
+/* 시트 내부만 그린다 — 선택할 때 <section> 을 다시 만들지 않아야
+   열림 애니메이션이 되풀이되지 않고 스크롤 위치도 유지된다 */
+function o2hExtraSheetInner(){
+  const s = S.o2hSheet; if(!s) return '';
+  if(s.flow==='net' && s.step && s.step!=='q') return o2hNetStepInner(s.step);
+  const fs = o2hExtraFields(s.svc), f = o2hExtraField(s.svc, s.key);
+  if(!f) return '';
+  const idx = fs.indexOf(f), draft = s.draft;
+  let body = '';
+  if(f.type==='multi'){
+    body = `<div class="x-chips">${f.opts.map(o=>
+      selChip(o, (draft||[]).includes(o), `data-o2hx-opt="${o}"`, 'md')).join('')}</div>`;
+  }else if(f.type==='date'){
+    const firstDay = new Date(O2H_CAL_Y, s.month-1, 1).getDay();
+    const days = new Date(O2H_CAL_Y, s.month, 0).getDate();
+    const cells = [...Array(firstDay).fill(0), ...Array.from({length:days},(_,i)=>i+1)];
+    const dm = typeof draft==='string' && draft.match(/(\d+)월 (\d+)일/);
+    const picked = dm && +dm[1]===s.month ? +dm[2] : 0;
+    body = `<div class="x-cal">
+      <div class="x-cal-nav">
+        <button type="button" id="o2hxPrev" aria-label="이전 달" ${s.month<=O2H_CAL_TODAY.m?'disabled':''}>${ic('IconChevronLeft',20)}</button>
+        <b class="t-body16L20 w-semibold">${O2H_CAL_Y}년 ${s.month}월</b>
+        <button type="button" id="o2hxNext" aria-label="다음 달" ${s.month>=12?'disabled':''}>${ic('IconChevronRight',20)}</button>
+      </div>
+      <div class="fm-cal">
+        <div class="fc-wk">${['일','월','화','수','목','금','토'].map(w=>`<span>${w}</span>`).join('')}</div>
+        <div class="fc-days">${cells.map(d=>{
+          if(!d) return '<span></span>';
+          const past = s.month===O2H_CAL_TODAY.m && d < O2H_CAL_TODAY.d;
+          return `<button class="fc-day${picked===d?' on':''}" type="button" data-o2hx-day="${d}"${past?' disabled':''}>${d}</button>`;
+        }).join('')}</div>
+      </div>
+      <div class="x-cal-none">${selChip('아직 날짜 미정', draft==='날짜 미정', 'data-o2hx-opt="날짜 미정"', 'sm')}</div>
+    </div>`;
+  }else{
+    body = f.opts.map(o=>`
+      <button class="bs-item" type="button" data-o2hx-opt="${o}">
+        <span class="ods-radio" data-state="${draft===o?'checked':'unchecked'}"><i></i></span>
+        <span class="bs-txt"><b class="t-body16L20 w-medium">${o}</b></span>
+      </button>`).join('');
+  }
+  const netFlow = s.flow==='net';
+  const more = (s.chain && o2hExtraPending(s.svc).filter(x=>x.key!==f.key).length) || netFlow;
+  /* 넛지에서 들어온 인터넷 상담은 마지막에 연락처 확인 단계가 한 번 더 붙는다 */
+  const total = netFlow ? fs.length + 1 : fs.length;
+  return `<div class="bs-grab"><i></i></div>
+    <div class="bs-head">
+      <b class="bs-title t-heading17 w-semibold">${netFlow ? '인터넷 상담 신청' : `${label(s.svc)} 세부 항목`}</b>
+      <button class="ods-iconbtn" id="o2hxX" type="button" aria-label="닫기">${ic('IconX',24)}</button>
+    </div>
+    <div class="x-q">
+      <span class="x-step t-detail12L16 w-semibold">${idx+1}/${total}</span>
+      <b class="t-heading18 w-bold">${f.q}</b>
+      ${f.desc?`<p class="x-desc t-body14L18">${f.desc}</p>`:''}
+    </div>
+    <div class="bs-body">${body}</div>
+    <div class="bs-foot">
+      ${boxButton({label: more?'다음':'확인', size:'large', variant:'brand-solid', id:'o2hxOk', full:true, disabled:!o2hExtraDraftFilled()})}
+    </div>`;
+}
+/* ── 인터넷 상담 신청 플로우 ──────────────────────────
+   done 탭의 혜택 넛지에서 시작해 같은 시트 안에서
+   4문항 입력 → 연락처 확인 → 신청 완료까지 이어진다. */
+function o2hNetApplyStart(){
+  const fs = o2hExtraFields('net');
+  const first = o2hExtraPending('net')[0] || fs[0];
+  if(!first) return;
+  o2hOpenExtra('net', first.key, true, 'net');
+}
+function o2hNetStep(step){
+  if(!S.o2hSheet) return;
+  S.o2hSheet.step = step;
+  o2hSyncExtraSheet();
+}
+function o2hNetStepInner(step){
+  const fs = o2hExtraFields('net');
+  if(step==='done') return `<div class="bs-grab"><i></i></div>
+    <div class="bs-body x-done">
+      <div class="cd-check">${ic('IconCheck',28)}</div>
+      <b class="cd-t t-heading20 w-bold">인터넷 상담 신청 완료!</b>
+      <p class="cd-d t-body14L20">최대 60만원 혜택 조건을 확인해 상담원이 연락드릴게요.<br>모르는 번호로 연락이 갈 수 있으니 확인해주세요.</p>
+    </div>
+    <div class="bs-foot">${boxButton({label:'신청 내역 보기', size:'large', variant:'outlined', id:'o2hNetDone', full:true})}</div>`;
+  const rows = fs.map(f=>`<button class="o2h-order-field-row" type="button" data-o2hnet-edit="${f.key}">
+      <span class="field-label t-body15L24 w-medium">${ic('IconCheckCircleFilled',16)}${f.label}</span>
+      <span class="field-val t-body14L18 c-fg-weak">${o2hExtraVal(f) || '입력하기'}</span>
+      <span class="field-chev c-fg-weak">${ic('IconChevronRight',12)}</span>
+    </button>`).join('');
+  return `<div class="bs-grab"><i></i></div>
+    <div class="bs-head">
+      <b class="bs-title t-heading17 w-semibold">인터넷 상담 신청</b>
+      <button class="ods-iconbtn" id="o2hxX" type="button" aria-label="닫기">${ic('IconX',24)}</button>
+    </div>
+    <div class="x-q">
+      <span class="x-step t-detail12L16 w-semibold">${fs.length+1}/${fs.length+1}</span>
+      <b class="t-heading18 w-bold">이 내용으로 상담 신청할까요?</b>
+      <p class="x-desc t-body14L18">입력한 내용이 상담원에게 그대로 전달돼요.</p>
+    </div>
+    <div class="bs-body">
+      <div class="x-summary">${rows}</div>
+      <div class="x-contact">
+        <span class="t-detail13L18">연락처</span>
+        <b class="t-body15L24 w-medium">${S.o2hName||'홍길동'} · 010-${S.o2hPhone||'9999-9999'}</b>
+      </div>
+    </div>
+    <div class="bs-foot">
+      ${boxButton({label:'상담 신청하기', size:'large', variant:'brand-solid', id:'o2hNetSubmit', full:true})}
+    </div>`;
+}
+function o2hBindNetStep(){
+  screen.querySelectorAll('[data-o2hnet-edit]').forEach(b=> b.onclick = ()=>
+    o2hOpenExtra('net', b.dataset.o2hnetEdit, false, 'net'));
+  const sub = $('#o2hNetSubmit');
+  if(sub) sub.onclick = ()=>{ S.o2hNetApplied = true; o2hNetStep('done'); };
+  const done = $('#o2hNetDone');
+  if(done) done.onclick = ()=>{ S.o2hSheet = null; S.o2hOrderTab = 'done'; render(); };
+}
+function o2hExtraSheet(){
+  const s = S.o2hSheet; if(!s) return '';
+  const f = o2hExtraField(s.svc, s.key);
+  if(!f && !(s.flow==='net' && s.step)) return '';
+  return `<div class="bs-overlay" id="o2hxOv"></div>
+  <section class="bsheet x-sheet" role="dialog" aria-label="${f ? f.label : '인터넷 상담'} 입력">${o2hExtraSheetInner()}</section>`;
+}
+/* 선택·달 이동·다음 문항은 시트 안쪽만 교체한다 (스크롤 위치 유지) */
+function o2hSyncExtraSheet(){
+  const sec = screen.querySelector('.x-sheet');
+  if(!sec) return render();
+  const top = sec.querySelector('.bs-body')?.scrollTop || 0;
+  sec.innerHTML = o2hExtraSheetInner();
+  const body = sec.querySelector('.bs-body'); if(body) body.scrollTop = top;
+  o2hBindExtraSheet();
+}
+/* 다중 선택에서 '없어요'류는 단독 선택으로 처리한다 */
+function o2hExtraToggleMulti(arr, o){
+  const solo = s => s.includes('없어요');
+  if(solo(o)) return arr.includes(o) ? [] : [o];
+  const next = arr.filter(x=>!solo(x));
+  return next.includes(o) ? next.filter(x=>x!==o) : [...next, o];
+}
+function o2hBindExtraSheet(){
+  const s = S.o2hSheet; if(!s) return;
+  const close = ()=>{ S.o2hSheet = null; render(); };
+  const ov = $('#o2hxOv'); if(ov) ov.onclick = close;
+  const x = $('#o2hxX'); if(x) x.onclick = close;
+  if(s.flow==='net' && s.step && s.step!=='q') return o2hBindNetStep();
+  const f = o2hExtraField(s.svc, s.key); if(!f) return;
+  /* 옵션을 눌러도 시트는 열린 채 선택 상태만 갱신된다 */
+  screen.querySelectorAll('[data-o2hx-opt]').forEach(b=> b.onclick = ()=>{
+    const o = b.dataset.o2hxOpt;
+    if(f.type==='multi') s.draft = o2hExtraToggleMulti(s.draft||[], o);
+    else s.draft = s.draft===o ? null : o;
+    o2hSyncExtraSheet();
+  });
+  screen.querySelectorAll('[data-o2hx-day]').forEach(b=> b.onclick = ()=>{
+    s.draft = `${s.month}월 ${b.dataset.o2hxDay}일`; o2hSyncExtraSheet();
+  });
+  const prev = $('#o2hxPrev'); if(prev) prev.onclick = ()=>{ s.month--; o2hSyncExtraSheet(); };
+  const next = $('#o2hxNext'); if(next) next.onclick = ()=>{ s.month++; o2hSyncExtraSheet(); };
+  const ok = $('#o2hxOk');
+  if(ok) ok.onclick = ()=>{
+    if(!o2hExtraDraftFilled()) return;
+    S.o2hExtra = {...(S.o2hExtra||{}), [s.key]: s.draft};
+    const rest = s.chain ? o2hExtraPending(s.svc) : [];
+    if(rest.length) o2hOpenExtra(s.svc, rest[0].key, true, s.flow);
+    else if(s.flow==='net') o2hNetStep('confirm');   /* 마지막 문항 뒤 연락처 확인으로 */
+    else { S.o2hSheet = null; render(); }
+  };
+}
+VIEW.o2hOrder = ()=>{
+  const tab = S.o2hOrderTab || 'draft';
+  const quotable = o2hQuotablePicked();
+  const activeCount = o2hActiveChecked().length;
+  let body = '';
+  if(tab==='draft'){
+    const shown = quotable.filter(k=> o2hInPeriod(o2hCardDate('draft', k)));
+    const cards = shown.length ? shown.map(o2hSvcOrderCard).join('') : o2hOrderEmpty();
+    body = `<div class="o2h-order-body">
+      <div class="o2h-order-meta">
+        <span class="o2h-order-count t-body14L18">견적 ${shown.length}건</span>
+        ${o2hFilterBtn()}
+      </div>
+      <div class="o2h-order-stack">${cards}${o2hUpsellCards()}</div>
+    </div>
+    <div class="o2h-order-dock">
+      ${boxButton({label:'비교 견적 신청하기', size:'large', variant:'brand-solid', id:'o2hGoApply', full:true, disabled:!activeCount})}
+    </div>`;
+  }else{
+    const done = [
+      S.o2hNetApplied ? {k:'net', html:o2hNetDoneCard()} : null,
+      {k:'move', html:o2hDoneOrderCard('move')},
+      {k:'full', html:o2hDoneOrderCard('full', [{name:'스타일인테리어', price:'4,200만원부터'},{name:'내일이사', price:'4,200만원부터'}])}
+    ].filter(Boolean).filter(c=> o2hInPeriod(o2hCardDate('done', c.k)));
+    /* 혜택 넛지는 신청 내역이 아니라 프로모션이라 기간과 무관하게 남는다 */
+    const cards = (S.o2hNetApplied ? '' : o2hNetNudge())
+      + (done.length ? done.map(c=>c.html).join('') : o2hOrderEmpty());
+    body = `<div class="o2h-order-body">
+      <div class="o2h-order-meta">
+        <span class="o2h-order-count o2h-order-count-done t-detail13L18">견적 ${done.length}건</span>
+        ${o2hFilterBtn()}
+      </div>
+      <div class="o2h-order-stack">${cards}</div>
+    </div>`;
+  }
+  const sheet = S.o2hSheet ? o2hExtraSheet() : (S.o2hPeriodOpen ? o2hPeriodSheet() : '');
+  screen.innerHTML = `<div class="o2h-order-screen">${o2hOrderHeader(tab)}${body}</div>${sheet}`;
+  screen.classList.toggle('has-sheet', !!sheet);
+  $('#bk').onclick = ()=>{ S.o2hSub='info'; go('o2hForm'); };
+  screen.querySelectorAll('[data-o2htab]').forEach(b=> b.onclick=()=>{ S.o2hOrderTab=b.dataset.o2htab; render(); });
+  screen.querySelectorAll('[data-o2h-check]').forEach(l=> l.onclick=()=>{
+    const k=l.dataset.o2hCheck;
+    if(!S.picked.has(k)) return;
+    if(S.o2hChecked.has(k)) S.o2hChecked.delete(k); else S.o2hChecked.add(k);
+    render();
+  });
+  screen.querySelectorAll('[data-o2h-add]').forEach(b=> b.onclick=()=>{
+    S.picked.add(b.dataset.o2hAdd);
+    S.o2hChecked.add(b.dataset.o2hAdd);
+    S.o2hFieldBranch = {...S.o2hFieldBranch, ...defaultO2hFieldBranch(pickedList())};
+    S.o2hCardBranch = {...S.o2hCardBranch, ...defaultO2hCardBranch(pickedList())};
+    render();
+  });
+  /* 기간 드롭다운 → 바텀시트, 고르는 즉시 목록에 반영된다 */
+  screen.querySelectorAll('[data-o2h-period]').forEach(b=> b.onclick=()=>{ S.o2hPeriodOpen = true; render(); });
+  if(S.o2hPeriodOpen && !S.o2hSheet){
+    const closeP = ()=>{ S.o2hPeriodOpen = false; render(); };
+    const pov = $('#o2hpOv'); if(pov) pov.onclick = closeP;
+    const px = $('#o2hpX'); if(px) px.onclick = closeP;
+    screen.querySelectorAll('[data-o2h-period-opt]').forEach(b=> b.onclick=()=>{
+      S.o2hPeriod = b.dataset.o2hPeriodOpt;
+      S.o2hPeriodOpen = false;
+      render();
+    });
+  }
+  /* 혜택 넛지 → 인터넷 상담 신청 바텀시트 */
+  screen.querySelectorAll('[data-o2h-net-apply]').forEach(b=> b.onclick=()=> o2hNetApplyStart());
+  /* 세부 '추가 입력' 행 → 바텀시트 */
+  screen.querySelectorAll('[data-o2hx-open]').forEach(b=> b.onclick=()=>{
+    const [svc,key] = b.dataset.o2hxOpen.split('|');
+    o2hOpenExtra(svc, key, !o2hExtraVal(o2hExtraField(svc,key)||{}));
+  });
+  /* 카드 CTA — 남은 문항이 있으면 첫 문항부터 이어서, 다 채웠으면 신청으로 */
+  screen.querySelectorAll('[data-o2h-cta]').forEach(b=> b.onclick=()=>{
+    const k = b.dataset.o2hCta;
+    if(!o2hExtraOpen(k) || !o2hExtraFields(k).length) return;
+    const rest = o2hExtraPending(k);
+    if(rest.length) return o2hOpenExtra(k, rest[0].key, true);
+    S.o2hChecked.add(k); go('o2hApply');
+  });
+  o2hBindExtraSheet();
+  const ap=$('#o2hGoApply'); if(ap) ap.onclick=()=>{ if(!o2hActiveChecked().length) return; go('o2hApply'); };
+};
+
+VIEW.o2hApply = ()=>{
+  const sheet = S.sheet==='method' ? o2hMethodSheet() : '';
+  const svcLine = o2hApplyServiceLine();
+  screen.innerHTML = `
+    <div class="o2h-apply-screen">
+      ${topNav({title:'', backId:'bk'})}
+      <div class="o2h-apply-head">
+        <p class="t-heading20 w-semibold"><span class="lead">${svcLine} 파트너로부터</span><br>견적을 받아보시겠어요?</p>
+        <p class="desc t-body15L24">파트너가 견적을 보내면 알림을 보내드릴게요.<br>확정 견적은 파트너와 상담 후 결정되요.</p>
+      </div>
+      <p class="o2h-apply-label t-body16L20 w-semibold">연락처 정보</p>
+      <div class="o2h-apply-fields-block">
+        <div class="o2h-apply-fields">
+          <label class="ods-input o2h-phone-num" style="width:100%;box-sizing:border-box">
+            <input type="text" value="${S.o2hName||'홍길동'}" data-o2h-name="1" aria-label="이름"
+              style="border:0;background:transparent;width:100%;font:inherit;color:inherit;outline:none">
+          </label>
+          <div class="o2h-phone-row">
+            <button class="ods-input o2h-phone-pre" type="button">010 ${ic('IconChevronRight',12)}</button>
+            <label class="ods-input o2h-phone-num" style="flex:1">
+              <input type="tel" value="${S.o2hPhone||'9999-9999'}" data-o2h-phone="1" aria-label="전화번호"
+                placeholder="'-' 제외하고 입력"
+                style="border:0;background:transparent;width:100%;font:inherit;color:inherit;outline:none">
+            </label>
+            ${boxButton({label:'인증', size:'medium', variant:'solid', disabled:true})}
+          </div>
+        </div>
+      </div>
+      <div class="o2h-apply-memo-block">
+        <div class="o2h-textarea-wrap">
+          <span class="t-body14L18 c-fg-weak">추가 요청 사항</span>
+          <textarea class="o2h-textarea" data-o2h-memo="1" placeholder="예시:&#10;보관이사는 10일 정도 필요해요.&#10;냉장고, TV 등 버리고 갈 짐이 있어요.&#10;반려동물이 있어요.">${S.o2hMemo||''}</textarea>
+          <span class="o2h-textarea-help t-detail12L16">${(S.o2hMemo||'').length}/100</span>
+        </div>
+      </div>
+      <div class="o2h-apply-dock">
+        <p class="o2h-apply-dock-hint t-body14L18">실제 견적은 파트너와 상담 후 확정돼요</p>
+        <div class="o2h-apply-dock-cta">
+          ${boxButton({label:'신청 완료', size:'large', variant:'brand-solid', id:'o2hOpenSheet', full:true})}
+        </div>
+      </div>
+      ${S.o2hApplied?`<div class="ml-snack t-detail13L18" style="position:relative;margin:16px">비교견적 신청 완료 · 매칭이 완료되면 알림으로 알려드릴게요.</div>`:''}
+    </div>
+    ${sheet}`;
+  screen.classList.toggle('has-sheet', S.sheet==='method');
+  $('#bk').onclick = ()=>go('o2hOrder');
+  const nameIn=screen.querySelector('[data-o2h-name]');
+  if(nameIn) nameIn.oninput=()=>{ S.o2hName=nameIn.value; };
+  const phoneIn=screen.querySelector('[data-o2h-phone]');
+  if(phoneIn) phoneIn.oninput=()=>{ S.o2hPhone=phoneIn.value; };
+  const memoIn=screen.querySelector('[data-o2h-memo]');
+  if(memoIn) memoIn.oninput=()=>{ S.o2hMemo=memoIn.value.slice(0,100); render(); };
+  const open=$('#o2hOpenSheet');
+  if(open) open.onclick=()=>{ S.sheet='method'; render(); };
+  if(S.sheet==='method'){
+    const close=()=>{ S.sheet=null; render(); };
+    const ov=$('#o2hOv'); if(ov) ov.onclick=close;
+    const x=$('#o2hClose'); if(x) x.onclick=close;
+    screen.querySelectorAll('[data-method]').forEach(b=> b.onclick=()=>{ S.o2hMethod=b.dataset.method; render(); });
+    const sub=$('#o2hSubmit');
+    if(sub) sub.onclick=()=>{ S.sheet=null; S.o2hApplied=true; S.o2hOrderTab='done'; S.o2hProgress=true; setStage('applied'); go('o2hOrder'); };
+  }
+};
+
 /* ══════════════ 케이스 시나리오 ══════════════ */
+const O2H_CASES = [
+  {id:'B1', n:'종합시공 단독',           s:['full']},
+  {id:'B2', n:'부분시공 단독',           s:['part']},
+  {id:'B3', n:'이사 단독',               s:['move']},
+  {id:'B4', n:'종합시공 + 이사',         s:['full','move']},
+  {id:'B5', n:'이사 + 청소',             s:['move','clean']},
+  {id:'B6', n:'종합 + 이사 + 청소',      s:['full','move','clean']},
+  {id:'B7', n:'이사 + 인터넷',           s:['move','net']},
+  {id:'B8', n:'종합 + 렌탈',             s:['full','rent']}
+];
 const CASES = [
   {id:'C1',  n:'종합시공 단독',           s:['full']},
   {id:'C2',  n:'부분시공 단독',           s:['part']},
@@ -3016,7 +4553,13 @@ const CASES = [
   {id:'C11', n:'이사 + 청소 + 인터넷',    s:['move','clean','net']},
   {id:'C12', n:'전체 선택',             s:['full','part','move','clean','net','rent','fix']}
 ];
+function bootFlowB(){
+  document.body.classList.add('view3');
+  resetO2h(['full','move']);
+  S.screen = 'o2hHome';
+}
 initPreviewToggle();
+bootFlowB();
 render();
 </script>
 </body>

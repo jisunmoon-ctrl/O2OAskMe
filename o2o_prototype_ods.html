@@ -280,8 +280,8 @@ body.preview-only .phone:has(.home-gnb) .o2h-nudge{bottom:calc(70px + env(safe-a
 .o2h-detail-act{flex:0 0 24px;width:24px;height:24px;border-radius:50%;border:0;display:grid;place-items:center;
   background:var(--ods-background-weak);color:var(--ods-foreground-weak)}
 .o2h-detail-act.is-add{background:var(--ods-background-brand-weak);color:var(--ods-foreground-brand)}
-.o2h-detail-edit{padding:0 16px 16px;background:var(--ods-background-weak)}
-.o2h-detail-edit .opts{display:flex;flex-wrap:wrap;gap:6px}
+.o2h-edit-sheet{max-height:88%}
+.o2h-edit-sheet .bs-body{padding-bottom:8px}
 .o2h-sticky-cta{position:sticky;bottom:0;margin-top:auto;z-index:5;background:var(--ods-background);
   border-top:1px solid rgba(0,0,0,.05);border-radius:16px 16px 0 0;
   box-shadow:2px 2px 20px rgba(194,200,204,.2);padding:6px 16px calc(6px + env(safe-area-inset-bottom,0px))}
@@ -3929,17 +3929,34 @@ function o2hDetailRow(r){
     <span class="${actCls}">${r.add && !r.filled ? ic('IconPlus',12) : ic('IconPencil',12)}</span>
   </button>`;
 }
-function o2hDetailEditor(key){
-  if(S.o2hEditField!==key) return '';
-  if(key==='size'){
-    return `<div class="o2h-detail-edit"><div class="opts">${['10평 이하','10평대','20평대','30평대','40평대','50평대'].map(o=>
-      selChip(o, (S.ans.size||[]).includes(o), `data-o2hf="size" data-o="${o}"`, 'sm')).join('')}</div></div>`;
-  }
-  if(['caddr','addr','move.from'].includes(key)){
-    return `<div class="o2h-detail-edit"><div class="opts">${REGION_SIDO.map(o=>
-      selChip(o, (S.ans[key]||[]).includes(o), `data-o2hf="${key}" data-o="${o}"`, 'sm')).join('')}</div></div>`;
-  }
-  return '';
+/* ── 정보 수정 BottomSheet ────────────────────────────
+   ODS BottomSheet(.bsheet) 골격에 Chip 만 얹는다. 제목은 목록 행 라벨을 그대로 쓴다. */
+const O2H_SIZE_OPTS = ['10평 이하','10평대','20평대','30평대','40평대','50평대'];
+function o2hEditOpts(key){
+  if(key==='size') return O2H_SIZE_OPTS;
+  if(['caddr','addr','move.from'].includes(key)) return REGION_SIDO;
+  return null;
+}
+const o2hEditTitle = key => (o2hDetailRows().find(r=>r.key===key)||{}).label || '정보 수정';
+function o2hDetailSheet(){
+  const key = S.o2hEditField; if(!key) return '';
+  const opts = o2hEditOpts(key); if(!opts) return '';
+  const sel = S.ans[key] || [];
+  return `<div class="bs-overlay" id="o2hEdOv"></div>
+    <section class="bsheet o2h-edit-sheet" role="dialog" aria-label="${o2hEditTitle(key)} 수정">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-head">
+        <b class="bs-title t-heading17 w-semibold">${o2hEditTitle(key)}</b>
+        <button class="ods-iconbtn" id="o2hEdX" type="button" aria-label="닫기">${ic('IconX',24)}</button>
+      </div>
+      <div class="bs-body">
+        <div class="x-chips">${opts.map(o=>
+          selChip(o, sel.includes(o), `data-o2hf="${key}" data-o="${o}"`, 'md')).join('')}</div>
+      </div>
+      <div class="bs-foot">
+        ${boxButton({label:'확인', size:'large', variant:'brand-solid', id:'o2hEdOk', full:true, disabled:!sel.length})}
+      </div>
+    </section>`;
 }
 const O2H_UPSELL = [
   {k:'clean', title:'이사청소 추가', badge:'이사와 함께 신청하면 5만 포인트'},
@@ -4154,7 +4171,7 @@ VIEW.o2hForm = ()=>{
     return;
   }
   const rows = o2hDetailRows().map(r=> o2hDetailRow(r)).join('');
-  const editor = S.o2hEditField ? o2hDetailEditor(S.o2hEditField) : '';
+  const sheet = o2hDetailSheet();
   screen.innerHTML = `
     <div class="o2h-form-screen">
       ${topNav({title:'', backId:'bk'})}
@@ -4162,16 +4179,21 @@ VIEW.o2hForm = ()=>{
         <p class="t-heading20 w-semibold">아래 정보만 입력하면<br>예상 견적을 알 수 있어요</p>
       </div>
       <div class="o2h-detail-list">${rows}</div>
-      ${editor}
       <div class="o2h-sticky-cta">
         ${boxButton({label:'예상 견적 보기', size:'large', variant:'brand-solid', id:'o2hDone', full:true, disabled:!o2hInfoReady()})}
       </div>
-    </div>`;
+    </div>
+    ${sheet}`;
+  screen.classList.toggle('has-sheet', !!sheet);
   $('#bk').onclick = ()=>go('o2hSelect');
   screen.querySelectorAll('[data-o2h-edit]').forEach(b=> b.onclick=()=>{
-    S.o2hEditField = S.o2hEditField===b.dataset.o2hEdit ? null : b.dataset.o2hEdit;
+    S.o2hEditField = b.dataset.o2hEdit;
     render();
   });
+  const closeEdit = ()=>{ S.o2hEditField = null; render(); };
+  const edOv=$('#o2hEdOv'); if(edOv) edOv.onclick=closeEdit;
+  const edX=$('#o2hEdX'); if(edX) edX.onclick=closeEdit;
+  const edOk=$('#o2hEdOk'); if(edOk) edOk.onclick=closeEdit;
   screen.querySelectorAll('[data-o2hf]').forEach(b=> b.onclick=()=>{
     const {o2hf:key,o}=b.dataset;
     S.ans[key]=[o];

@@ -282,6 +282,11 @@ body.preview-only .phone:has(.home-gnb) .o2h-nudge{bottom:calc(70px + env(safe-a
 .o2h-detail-act.is-add{background:var(--ods-background-brand-weak);color:var(--ods-foreground-brand)}
 .o2h-edit-sheet{max-height:88%}
 .o2h-edit-sheet .bs-body{padding-bottom:8px}
+/* 예정일 시트 하단 — 뒤따르는 일정을 같은 날로 채우는 연동 체크박스 */
+.o2h-edit-links{display:flex;flex-direction:column;gap:4px;padding:14px 16px 0;
+  border-top:1px solid var(--ods-background-weak);margin-top:14px}
+.o2h-edit-link{display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;
+  color:var(--ods-foreground)}
 .o2h-sticky-cta{position:sticky;bottom:0;margin-top:auto;z-index:5;background:var(--ods-background);
   border-top:1px solid rgba(0,0,0,.05);border-radius:16px 16px 0 0;
   box-shadow:2px 2px 20px rgba(194,200,204,.2);padding:6px 16px calc(6px + env(safe-area-inset-bottom,0px))}
@@ -1977,28 +1982,44 @@ const defaultO2hFieldBranch = svcs => Object.fromEntries(svcs.map(k=>[k, (O2H_FI
 const defaultO2hCardBranch = svcs => Object.fromEntries(svcs.map(k=>[k, (O2H_CARD_BRANCHES[k]||[])[0]?.branch||'draft']));
 const o2hFieldBranch = k => S.o2hFieldBranch[k] || 'common';
 const o2hCardBranch = k => S.o2hCardBranch[k] || 'draft';
-/* 정책 A · 예상견적 카드 상세 항목 목업값 (작성완료 분기) */
+/* 예상견적 카드 상세 항목 목업값 (작성완료 분기) */
 const O2H_DEMO = {
-  fbudget:'1000만원대', pbudget:'200만원대', scope:'도배·주방·욕실', space:'시공 시 공실 예정', cdate:'2-3개월 내',
-  mdate:'2026.10.21', mtime:'오후 (12-18시)', mtype:'가정이사', mpack:'포장이사',
-  clday:'이사/시공 다음날', cltime:'오전 (9-12시)', rooms:'3룸', veranda:'2', toilet:'2',
-  isp:'KT', tv:'결합', ritem:'정수기'
+  fbudget:'1000만원대', pbudget:'200만원대', scope:'도배·주방·욕실', space:'시공 시 공실 예정', cdate:'9월 20일',
+  mdate:'9월 23일', mtype:'가정이사', mpack:'포장이사', elev:'있음',
+  clday:'9월 24일', rooms:'방 3 · 베란다 2', toilet:'2',
+  isp:'KT', tv:'결합', term:'약정 만료 예정', ritem:'정수기'
 };
 function o2hAnsVal(key, demo){ return (S.ans[key]||[])[0] || demo || '입력하기'; }
 function o2hHasCon(){ return S.picked.has('full')||S.picked.has('part'); }
 function o2hHasLife(){ return pickedList().some(k=>['full','part','move','clean'].includes(k)); }
+/* 외부에서 넘어온 배송지 — 있으면 시공지를 이 값으로 먼저 채운다 */
+const O2H_DELIVERY_ADDR = '서울특별시 양천구 목동서로70 1201호';
+/* 주소로 조회되는 세대 정보 — 사용자에게 묻지 않는 값 */
+const O2H_ADDR_INFO = {size:'30평대', elev:'있음', rooms:'방 3 · 베란다 2', toilet:'2'};
+/* 주소지는 시공지 > 이사 출발지 > 이사 도착지 순으로 받고, 앞 순위 값으로 뒤를 채운다 */
 function o2hPrefillAddrs(){
-  if(!S.ans.caddr?.length) S.ans.caddr = S.ans.addr?.length ? [...S.ans.addr] : ['서울/경기'];
-  if(!S.ans.addr?.length) S.ans.addr = S.ans.caddr?.length ? [...S.ans.caddr] : ['서울/경기'];
-  if(S.picked.has('move') && !S.ans['move.from']?.length) S.ans['move.from'] = ['서울/경기'];
-  if(S.picked.has('clean') && !S.ans.claddr?.length) S.ans.claddr = S.ans.caddr?.length ? [...S.ans.caddr] : [...S.ans.addr];
+  if(o2hHasCon() && !S.ans.caddr?.length) S.ans.caddr = [O2H_DELIVERY_ADDR];
+  if(S.picked.has('move')){
+    if(!S.ans['move.from']?.length) S.ans['move.from'] = ['부산'];
+    if(!S.ans.addr?.length && S.ans.caddr?.length) S.ans.addr = [...S.ans.caddr];
+  }
+  if(S.picked.has('clean') && !S.ans.claddr?.length)
+    S.ans.claddr = S.ans.caddr?.length ? [...S.ans.caddr] : (S.ans.addr?.length ? [...S.ans.addr] : []);
+  o2hPrefillFromAddr();
 }
+/* 주소가 정해지면 평수·엘리베이터·방 구조를 조회해 채운다 */
+function o2hPrefillFromAddr(){
+  if(!(S.ans.caddr?.length || S.ans.addr?.length || S.ans.claddr?.length)) return;
+  if(!S.ans.size?.length) S.ans.size = [O2H_ADDR_INFO.size];
+  if(S.picked.has('move') && !S.ans.elev?.length) S.ans.elev = [O2H_ADDR_INFO.elev];
+  if(S.picked.has('clean')){
+    if(!S.ans.rooms?.length) S.ans.rooms = [O2H_ADDR_INFO.rooms];
+    if(!S.ans.toilet?.length) S.ans.toilet = [O2H_ADDR_INFO.toilet];
+  }
+}
+/* 데모 시작값 — 주소·평수·예정일은 비워두고 prefill 이 채우는 과정을 보여준다 */
 function o2hAnsForCase(svcs){
-  const ans = {size:['30평대'], caddr:['서울/경기'], addr:['서울/경기'], 'move.from':['부산']};
-  if(svcs.includes('clean')) ans.claddr = ['서울/경기'];
-  if(svcs.includes('net')) ans.isp = ['KT'];
-  if(svcs.includes('rent')) ans.ritem = ['정수기'];
-  return ans;
+  return {};
 }
 function resetO2h(caseSvcs){
   const svcs = caseSvcs || ['full','move'];
@@ -2007,10 +2028,12 @@ function resetO2h(caseSvcs){
   S.o2hSub = 'info'; S.o2hMethod = 'chat'; S.o2hApplied = false; S.o2hProgress = false;
   S.o2hNetApplied = false; S.o2hPeriod = '6m'; S.o2hPeriodOpen = false;
   S.o2hOrderTab = 'draft'; S.o2hChecked = new Set(svcs.filter(k=> O2H_ORDER_FIELDS[k])); S.o2hEditField = null;
+  S.o2hEditDraft = null; S.o2hEditMonth = O2H_CAL_TODAY.m; S.o2hLink = {};
   S.step = 0; S.sheet = null;
   S.o2hExtra = {}; S.o2hSheet = null;
   S.o2hFieldBranch = defaultO2hFieldBranch(svcs);
   S.o2hCardBranch = defaultO2hCardBranch(svcs);
+  o2hPrefillAddrs();
 }
 function setFlowGroup(g, opts={}){
   const b = document.body;
@@ -2562,7 +2585,7 @@ const QMX = {
     {id:'mpack', q:'포장 종류를 선택해주세요.', list:[
       {t:'포장이사',   s:'포장부터 정리까지 모두 맡겨요'},
       {t:'반포장이사', s:'깨지기 쉬운 짐만 포장해요'},
-      {t:'짐 운반만',  s:'운반만, 포장은 직접 해요'}]},
+      {t:'일반이사',   s:'운반만, 포장은 직접 해요'}]},
     {id:'mcargo', q:'이사할 짐 정보를 알려주세요.', gallery:true, opts:['사진·영상 첨부','건너뛰기']},
   ],
   clean:[
@@ -3466,113 +3489,85 @@ VIEW.list = ()=>{
 
 /* ══════════ 화면 보기-3 · O2H 통합 비교견적 플로우 (Figma 340:39827) ══════════
    O2H 홈 → 입력폼(서비스 선택·필수 정보) → 예상견적 확인 → 비교견적 신청 */
-/* ══════════ 세부 '추가 입력' — 서비스별 4문항 ══════════
-   출처: 가견적_신청전_최소입력항목_20260814
-   채택 기준 = ① 주소로 유추할 수 없다 ② 파트너가 상담에서 반드시 되묻는다.
-   층수·엘리베이터·방/욕실 개수·준공연도는 주소 프리필이라 묻지 않는다.
-   라벨은 '보관이사/짐 정보/시공 범위' 규칙에 맞춰 6자 이하로 정리했다.
+/* ══════════ 세부 '추가 입력' — 서비스별 카드 문항 ══════════
+   채택 기준 = ① 주소·입력폼으로 유추할 수 없다 ② 파트너가 상담에서 반드시 되묻는다.
+   층수·엘리베이터·방/베란다 개수·평수·준공연도는 주소로 알 수 있어 묻지 않는다.
+   문항 수는 서비스마다 다르다. 라벨은 6자 이하로 정리했다.
+   key 에 'x.' 접두어가 없으면 카드 행과 같은 값이라 S.ans 에 저장한다.
    band = 응답별 예상견적 상·하한 배율(문항이 범위를 얼마나 좁히는지 시연용). */
+const O2H_SCOPE_OPTS = ['도배','마루·장판','주방','욕실','도어·문틀','창호·샷시','발코니 확장','시스템에어컨'];
 const O2H_EXTRA = {
   full: [
-    {key:'x.full.scope', label:'시공 범위', type:'multi',
+    {key:'scope', label:'시공 범위', type:'multi',
      q:'어디를 손보고 싶으세요?', desc:'대략이면 충분해요. 여러 개 고를 수 있어요.',
-     opts:['도배','바닥','주방','욕실','샷시','조명·전기','전체']},
-    {key:'x.full.floor', label:'현재 바닥', type:'single',
-     q:'지금 바닥은 어떤 자재인가요?', desc:'철거 범위가 달라져 견적 폭을 가르는 항목이에요.',
-     opts:['장판','마루','타일','모르겠어요'],
-     band:{'장판':[1,1.1],'마루':[1.05,1.3],'타일':[1,1.15],'모르겠어요':[1,1.35]}},
-    {key:'x.full.live', label:'거주 상태', type:'single',
-     q:'시공하는 동안 집에 계시나요?',
-     opts:['시공 시 공실 예정','현재 공실','거주하며 시공','모르겠어요'],
-     band:{'시공 시 공실 예정':[1,1.05],'현재 공실':[1,1.05],'거주하며 시공':[1.1,1.3],'모르겠어요':[1,1.3]}},
-    {key:'x.full.grade', label:'마감 수준', type:'single',
-     q:'자재 마감은 어느 정도로 생각하세요?', desc:'예산이 아니라 마감 등급으로 물어요. 금액은 견적이 답해요.',
-     opts:['실속','기본','고급','아직 모르겠어요'],
-     band:{'실속':[.8,.95],'기본':[.95,1.15],'고급':[1.2,1.6],'아직 모르겠어요':[.8,1.6]}}
+     opts:O2H_SCOPE_OPTS}
   ],
   part: [
-    {key:'x.part.scope', label:'시공 범위', type:'multi',
+    {key:'scope', label:'시공 범위', type:'multi',
      q:'어디를 손보고 싶으세요?', desc:'대략이면 충분해요. 여러 개 고를 수 있어요.',
-     opts:['도배','바닥','주방','욕실','샷시','조명·전기']},
+     opts:O2H_SCOPE_OPTS},
     {key:'x.part.floor', label:'현재 바닥', type:'single',
      q:'지금 바닥은 어떤 자재인가요?', desc:'철거 범위가 달라져 견적 폭을 가르는 항목이에요.',
      opts:['장판','마루','타일','모르겠어요'],
      band:{'장판':[1,1.1],'마루':[1.05,1.3],'타일':[1,1.15],'모르겠어요':[1,1.35]}},
-    {key:'x.part.live', label:'거주 상태', type:'single',
-     q:'시공하는 동안 집에 계시나요?',
-     opts:['시공 시 공실 예정','현재 공실','거주하며 부분시공','모르겠어요'],
-     band:{'시공 시 공실 예정':[1,1.05],'현재 공실':[1,1.05],'거주하며 부분시공':[1.1,1.3],'모르겠어요':[1,1.3]}},
-    {key:'x.part.grade', label:'마감 수준', type:'single',
-     q:'자재 마감은 어느 정도로 생각하세요?',
-     opts:['실속','기본','고급','아직 모르겠어요'],
-     band:{'실속':[.8,.95],'기본':[.95,1.15],'고급':[1.2,1.6],'아직 모르겠어요':[.8,1.6]}}
+    {key:'space', label:'공간 상황', type:'single',
+     q:'시공하실 공간 상황은 어떤가요?',
+     opts:['현재 공실','시공 시 공실 예정','시공 시 짐 (일부) 있을 예정'],
+     band:{'현재 공실':[1,1.05],'시공 시 공실 예정':[1,1.05],'시공 시 짐 (일부) 있을 예정':[1.1,1.3]}}
   ],
   move: [
-    {key:'x.move.big', label:'큰 짐', type:'single',
-     q:'큰 짐이 몇 개인가요?', desc:'장롱·침대·소파를 합쳐서 세어주세요. 톤수를 가르는 항목이에요.',
-     opts:['0개','1~2개','3~4개','5개 이상','모르겠어요'],
-     band:{'0개':[.6,.8],'1~2개':[.8,1],'3~4개':[1,1.25],'5개 이상':[1.25,1.6],'모르겠어요':[.8,1.6]}},
-    {key:'x.move.pack', label:'포장 범위', type:'single',
+    {key:'mpack', label:'포장 종류', type:'single',
      q:'포장은 어디까지 맡기시겠어요?',
-     opts:['짐 싸는 것까지 맡길게요','짐은 제가 쌀게요','옮기기만 해주세요'],
-     band:{'짐 싸는 것까지 맡길게요':[1,1.15],'짐은 제가 쌀게요':[.75,.9],'옮기기만 해주세요':[.58,.72]}},
-    {key:'x.move.date', label:'이사 날짜', type:'date',
-     q:'언제 이사하시나요?', desc:'손없는날·성수기·주말 가산은 날짜만 고르면 자동으로 반영돼요.'},
+     opts:['포장이사','반포장이사','일반이사'],
+     band:{'포장이사':[1,1.15],'반포장이사':[.75,.9],'일반이사':[.58,.72]}},
+    /* 필요 여부와 기간을 한 문항으로 받는다 — 기간을 고르면 곧 필요하다는 뜻이다 */
     {key:'x.move.keep', label:'보관이사', type:'single',
      q:'짐을 맡겨둘 기간이 필요한가요?', desc:'보관이사는 매칭 가능한 파트너 자체가 달라져요.',
-     opts:['아니요','며칠 필요해요','아직 모르겠어요'],
-     band:{'아니요':[1,1],'며칠 필요해요':[1.15,1.35],'아직 모르겠어요':[1,1.35]}}
+     opts:['필요 없어요','일주일 이내','한달 이내','한달 이상'],
+     band:{'필요 없어요':[1,1],'일주일 이내':[1.1,1.25],'한달 이내':[1.2,1.4],'한달 이상':[1.35,1.6]}}
   ],
   clean: [
     {key:'x.clean.state', label:'집 상태', type:'single',
      q:'청소할 때 집은 어떤 상태인가요?', desc:'짐 유무가 작업 시간과 인원을 가장 크게 가르는 항목이에요.',
      opts:['입주 전 빈집','짐이 있는 상태','이사 당일','모르겠어요'],
-     band:{'입주 전 빈집':[.9,1],'짐이 있는 상태':[1.1,1.35],'이사 당일':[1,1.15],'모르겠어요':[.9,1.35]}},
-    {key:'x.clean.date', label:'청소 날짜', type:'date',
-     q:'언제 청소하시나요?', desc:'이사 당일·주말은 파트너 일정이 달라져요.'},
-    {key:'x.clean.opt', label:'추가 청소', type:'multi',
-     q:'따로 챙겨야 할 곳이 있나요?', desc:'여러 개 고를 수 있어요.',
-     opts:['베란다·확장','곰팡이 제거','줄눈 시공','새시·창틀','없어요']},
-    {key:'x.clean.pet', label:'반려동물', type:'single',
-     q:'반려동물과 함께 지내셨나요?', desc:'털·냄새 작업이 더해지면 시간이 늘어나요.',
-     opts:['있어요','없어요'],
-     band:{'있어요':[1.05,1.2],'없어요':[1,1]}}
+     band:{'입주 전 빈집':[.9,1],'짐이 있는 상태':[1.1,1.35],'이사 당일':[1,1.15],'모르겠어요':[.9,1.35]}}
   ],
   net: [
-    {key:'x.net.mobile', label:'휴대폰', type:'single',
-     q:'지금 쓰는 휴대폰은 어디인가요?', desc:'결합 할인이 월 납부액을 가장 크게 가르는 항목이에요.',
-     opts:['SKT','KT','LG U+','알뜰폰','모르겠어요']},
-    {key:'x.net.state', label:'가입 상태', type:'single',
-     q:'지금 인터넷은 어떤 상태인가요?', desc:'신규·재약정 여부가 확인돼야 상담이 시작돼요.',
-     opts:['처음 신청해요','약정이 끝나가요','약정이 남았어요','모르겠어요']},
-    {key:'x.net.usage', label:'사용 환경', type:'single',
-     q:'집에서 인터넷을 어떻게 쓰시나요?', desc:'속도(100M·500M·1G)는 이 답으로 정해드려요.',
-     opts:['혼자 가볍게','두세 명이 함께','게임·영상을 많이 봐요']},
-    {key:'x.net.tv', label:'TV 시청', type:'single',
-     q:'TV도 함께 신청하시겠어요?',
-     opts:['TV도 함께','인터넷만','모르겠어요']}
+    {key:'isp', label:'선호 통신사', type:'single',
+     q:'선호하는 통신사가 있나요?',
+     opts:['KT','SKT','LG U+','상관 없음']},
+    {key:'tv', label:'TV 결합', type:'single',
+     q:'TV 결합도 하시겠어요?',
+     opts:['결합','미결합']},
+    {key:'term', label:'약정 여부', type:'single',
+     q:'지금 인터넷 약정은 어떤 상태인가요?', desc:'신규·재약정에 따라 받을 수 있는 혜택이 달라져요.',
+     opts:['신규 가입','약정 만료 예정','약정 남음']}
   ],
   rent: [
-    {key:'x.rent.item', label:'관심 품목', type:'multi',
+    {key:'ritem', label:'렌탈 품목', type:'multi',
      q:'어떤 걸 알아보고 계신가요?', desc:'품목이 정해져야 모델·정가 계산이 시작돼요.',
-     opts:['정수기','공기청정기','비데','안마의자']},
-    {key:'x.rent.feat', label:'필요 기능', type:'multi',
-     q:'꼭 필요한 기능이 있나요?', desc:'모델을 좁히는 문항이에요. 여러 개 고를 수 있어요.',
-     opts:['얼음 필요','냉·온수','정수만','방수','리모컨','어린이 모드','상관 없어요']},
-    {key:'x.rent.term', label:'사용 기간', type:'single',
-     q:'얼마나 오래 쓰실 예정인가요?', desc:'의무 사용 기간과 계약 기간은 결과 화면에서 나눠 안내해요.',
-     opts:['3년','5년','6년 이상','아직 모르겠어요']},
-    {key:'x.rent.people', label:'사용 인원', type:'single',
-     q:'몇 분이 함께 사용하시나요?', desc:'용량·설치 형태 추천에 쓰여요.',
-     opts:['1인','2~3인','4인 이상']}
+     opts:['정수기','공기청정기','비데','매트리스']}
   ]
 };
 const o2hExtraFields = k => O2H_EXTRA[k] || [];
 const o2hExtraField = (k, key) => o2hExtraFields(k).find(f=>f.key===key);
-function o2hExtraRaw(key){ return (S.o2hExtra||{})[key]; }
+/* 카드 행과 값을 공유하는 문항은 S.ans, 카드에만 있는 문항은 S.o2hExtra 에 담는다 */
+const o2hAnsBacked = key => !String(key).startsWith('x.');
+function o2hExtraRaw(f){
+  if(!f) return null;
+  if(o2hAnsBacked(f.key)){
+    const v = S.ans[f.key] || [];
+    return f.type==='multi' ? [...v] : (v[0] ?? null);
+  }
+  return (S.o2hExtra||{})[f.key];
+}
+function o2hExtraSet(f, val){
+  if(o2hAnsBacked(f.key)) S.ans = {...S.ans, [f.key]: Array.isArray(val) ? [...val] : [val]};
+  else S.o2hExtra = {...(S.o2hExtra||{}), [f.key]: val};
+}
 /* 카드 행에 보여줄 짧은 값 — 다중 선택은 '도배 외 2' 로 줄인다 */
 function o2hExtraVal(f){
-  const v = o2hExtraRaw(f.key);
+  const v = o2hExtraRaw(f);
   if(!v || (Array.isArray(v) && !v.length)) return null;
   if(Array.isArray(v)) return v.length>1 ? `${v[0]} 외 ${v.length-1}` : v[0];
   return v;
@@ -3580,13 +3575,13 @@ function o2hExtraVal(f){
 const o2hExtraPending = k => o2hExtraFields(k).filter(f=>!o2hExtraVal(f));
 /* 작성완료·신청완료 카드에서는 추가 입력을 더 받지 않는다 */
 const o2hExtraOpen = k => !['ready','applied'].includes(o2hCardBranch(k));
-/* 4문항이 모두 채워지면 상·하한 배율을 곱해 견적 범위를 좁혀 보여준다 */
+/* 문항이 모두 채워지면 상·하한 배율을 곱해 견적 범위를 좁혀 보여준다 */
 function o2hExtraBand(k){
   const base = o2hSvcMin(k), fs = o2hExtraFields(k);
   if(!base || !fs.length || o2hExtraPending(k).length) return null;
   let lo = 1, hi = 1;
   fs.forEach(f=>{
-    const v = o2hExtraRaw(f.key);
+    const v = o2hExtraRaw(f);
     const b = f.band && f.band[Array.isArray(v)?v[0]:v];
     if(b){ lo *= b[0]; hi *= b[1]; } else { hi *= 1.05; }
   });
@@ -3594,30 +3589,28 @@ function o2hExtraBand(k){
   return r(hi) > r(lo) ? `${r(lo).toLocaleString('ko-KR')}~${r(hi).toLocaleString('ko-KR')}만원`
                        : `${r(hi).toLocaleString('ko-KR')}만원부터`;
 }
+/* 카드 노출 항목 — 입력폼에서 받은 값(평수·주소·예정일)과 주소로 채운 값만 둔다.
+   카드에서 직접 받는 문항은 O2H_EXTRA 가 행으로 붙는다. */
 const O2H_ORDER_FIELDS = {
   full: ()=>{
     const rows = [
       {label:'평수', done:()=>!!S.ans.size?.length, val:()=>g('size')},
-      {label:'시공 주소', done:()=>!!(S.ans.caddr||[]).length, val:()=>g('caddr')}
+      {label:'시공지', done:()=>!!(S.ans.caddr||[]).length, val:()=>g('caddr')}
     ];
     if(o2hFieldBranch('full')==='full') rows.push(
       {label:'예산', done:()=>!!(S.ans.fbudget||[]).length, val:()=>o2hAnsVal('fbudget',O2H_DEMO.fbudget)},
-      {label:'시공 희망범위', done:()=>!!(S.ans.scope||[]).length, val:()=>o2hAnsVal('scope',O2H_DEMO.scope)},
-      {label:'공간 상황', done:()=>!!(S.ans.space||[]).length, val:()=>o2hAnsVal('space',O2H_DEMO.space)},
-      {label:'시공 일정', done:()=>!!(S.ans.cdate||[]).length, val:()=>o2hAnsVal('cdate',O2H_DEMO.cdate)}
+      {label:'시공 예정일', done:()=>!!(S.ans.cdate||[]).length, val:()=>o2hAnsVal('cdate',O2H_DEMO.cdate)}
     );
     return rows;
   },
   part: ()=>{
     const rows = [
       {label:'평수', done:()=>!!S.ans.size?.length, val:()=>g('size')},
-      {label:'시공 주소', done:()=>!!(S.ans.caddr||[]).length, val:()=>g('caddr')}
+      {label:'시공지', done:()=>!!(S.ans.caddr||[]).length, val:()=>g('caddr')}
     ];
     if(o2hFieldBranch('part')==='full') rows.push(
       {label:'예산', done:()=>!!(S.ans.pbudget||[]).length, val:()=>o2hAnsVal('pbudget',O2H_DEMO.pbudget)},
-      {label:'시공 희망범위', done:()=>!!(S.ans.scope||[]).length, val:()=>o2hAnsVal('scope',O2H_DEMO.scope)},
-      {label:'공간 상황', done:()=>!!(S.ans.space||[]).length, val:()=>o2hAnsVal('space',O2H_DEMO.space)},
-      {label:'시공 일정', done:()=>!!(S.ans.cdate||[]).length, val:()=>o2hAnsVal('cdate',O2H_DEMO.cdate)}
+      {label:'시공 예정일', done:()=>!!(S.ans.cdate||[]).length, val:()=>o2hAnsVal('cdate',O2H_DEMO.cdate)}
     );
     return rows;
   },
@@ -3629,34 +3622,29 @@ const O2H_ORDER_FIELDS = {
     ];
     if(o2hFieldBranch('move')==='full') rows.push(
       {label:'이사 예정일', done:()=>!!(S.ans.mdate||[]).length, val:()=>o2hAnsVal('mdate',O2H_DEMO.mdate)},
-      {label:'선호 시간대', done:()=>!!(S.ans.mtime||[]).length, val:()=>o2hAnsVal('mtime',O2H_DEMO.mtime)},
       {label:'이사 유형', done:()=>!!(S.ans.mtype||[]).length, val:()=>o2hAnsVal('mtype',O2H_DEMO.mtype)},
-      {label:'포장 종류', done:()=>!!(S.ans.mpack||[]).length, val:()=>o2hAnsVal('mpack',O2H_DEMO.mpack)}
+      /* 주소지로 채우는 항목 — 사용자에게 묻지 않는다 */
+      {label:'엘리베이터', done:()=>!!(S.ans.elev||[]).length, val:()=>o2hAnsVal('elev',O2H_DEMO.elev)}
     );
     return rows;
   },
   clean: ()=>{
     const rows = [
       {label:'평수', done:()=>!!S.ans.size?.length, val:()=>g('size')},
-      {label:'주소지', done:()=>!!(S.ans.claddr||S.ans.caddr||S.ans.addr||[]).length,
+      {label:'청소 장소', done:()=>!!(S.ans.claddr||S.ans.caddr||S.ans.addr||[]).length,
         val:()=> (S.ans.claddr||S.ans.caddr||S.ans.addr||[])[0] || '입력하기'}
     ];
     if(o2hFieldBranch('clean')==='full') rows.push(
-      {label:'청소 희망일', done:()=>!!(S.ans.clday||[]).length, val:()=>o2hAnsVal('clday',O2H_DEMO.clday)},
-      {label:'선호 시간대', done:()=>!!(S.ans.cltime||[]).length, val:()=>o2hAnsVal('cltime',O2H_DEMO.cltime)},
-      {label:'방 개수', done:()=>!!(S.ans.rooms||[]).length, val:()=>o2hAnsVal('rooms',O2H_DEMO.rooms)},
-      {label:'베란다 개수', done:()=>!!(S.ans.veranda||[]).length, val:()=>o2hAnsVal('veranda',O2H_DEMO.veranda)},
+      {label:'청소 예정일', done:()=>!!(S.ans.clday||[]).length, val:()=>o2hAnsVal('clday',O2H_DEMO.clday)},
+      /* 방·베란다는 한 항목으로 묶어 주소지 기준으로 채운다 */
+      {label:'방·베란다 개수', done:()=>!!(S.ans.rooms||[]).length, val:()=>o2hAnsVal('rooms',O2H_DEMO.rooms)},
       {label:'화장실 개수', done:()=>!!(S.ans.toilet||[]).length, val:()=>o2hAnsVal('toilet',O2H_DEMO.toilet)}
     );
     return rows;
   },
-  net: ()=>[
-    {label:'선호 통신사', done:()=>!!(S.ans.isp||[]).length, val:()=>o2hAnsVal('isp',O2H_DEMO.isp)},
-    {label:'TV 결합', done:()=>!!(S.ans.tv||[]).length, val:()=>o2hAnsVal('tv',O2H_DEMO.tv)}
-  ],
-  rent: ()=>[
-    {label:'렌탈 품목', done:()=>!!(S.ans.ritem||[]).length, val:()=>o2hAnsVal('ritem',O2H_DEMO.ritem)}
-  ]
+  /* 인터넷·렌탈은 받는 항목이 곧 카드 문항이라 O2H_EXTRA 행만 노출한다 */
+  net: ()=>[],
+  rent: ()=>[]
 };
 function o2hOrderFields(k){ return (typeof O2H_ORDER_FIELDS[k]==='function' ? O2H_ORDER_FIELDS[k]() : O2H_ORDER_FIELDS[k]) || []; }
 function o2hSvcMin(k){
@@ -3758,8 +3746,7 @@ function o2hSvcOrderCard(k){
   const open = o2hExtraOpen(k);
   const exFields = open ? o2hExtraFields(k) : [], exPending = open ? o2hExtraPending(k) : [];
   /* 남은 문항 수를 CTA 라벨에 그대로 노출한다 (문서 §8 — 필수 문항은 0개) */
-  const cta = !exFields.length ? '세부 항목 추가하고 견적 보기'
-    : exPending.length ? `세부 항목 ${exPending.length}개 추가하고 견적 보기`
+  const cta = exPending.length ? `세부 항목 ${exPending.length}개 추가하고 견적 보기`
     : '이 조건으로 비교 견적 신청';
   const hint = exFields.length && exPending.length && exPending.length < exFields.length
     ? `<p class="o2h-order-hint t-detail12L16">${exFields.length - exPending.length}/${exFields.length} 입력 · 남은 항목을 채우면 범위가 좁아져요</p>` : '';
@@ -3908,15 +3895,34 @@ function o2hAddrDisplay(key){
   if(v==='서울/경기' || !v) return '서울특별시 송파구 올림픽로 135\n잠실리센츠 2단지, 1501호';
   return v;
 }
+const o2hDateVal = key => (S.ans[key]||[])[0] || '';
+/* 입력폼은 주소지와 일정만 받는다. 서비스별 상세 문항은 오더 카드에서 받는다.
+   주소지 순서는 시공지 > 이사 출발지 > 이사 도착지 다. */
 function o2hDetailRows(){
   const rows = [];
-  if(o2hHasLife()) rows.push({key:'size', label:'평수', value:o2hSizeDisplay(), filled:!!(S.ans.size||[]).length});
-  if(o2hHasCon()) rows.push({key:'caddr', label:'시공 주소', value:o2hAddrDisplay('caddr'), filled:!!(S.ans.caddr||[]).length});
+  if(o2hHasCon()){
+    rows.push({key:'size', label:'평수', type:'size', value:o2hSizeDisplay(), filled:!!(S.ans.size||[]).length});
+    rows.push({key:'caddr', label:'시공지', type:'addr', value:o2hAddrDisplay('caddr'), filled:!!(S.ans.caddr||[]).length});
+    rows.push({key:'cdate', label:'시공 예정일', type:'date',
+      value:o2hDateVal('cdate') || '시공 예정일 추가', filled:!!o2hDateVal('cdate'), add:true});
+  }
   if(S.picked.has('move')){
-    const same = o2hHasCon() && (S.ans.caddr||[]).length;
-    rows.push({key:'addr', label:'이사 도착지', value:same?'시공 주소와 동일':o2hAddrDisplay('addr'), filled:same||!!(S.ans.addr||[]).length});
-    rows.push({key:'move.from', label:'이사 출발지', value:(S.ans['move.from']||[]).length?'부산광역시 해운대구 센텀동':'출발지 정보 추가',
+    rows.push({key:'move.from', label:'이사 출발지', type:'addr',
+      value:(S.ans['move.from']||[]).length?'부산광역시 해운대구 센텀동':'출발지 정보 추가',
       filled:!!(S.ans['move.from']||[]).length, add:true});
+    const same = o2hHasCon() && (S.ans.caddr||[]).length;
+    rows.push({key:'addr', label:'이사 도착지', type:'addr',
+      value:same?'시공지와 동일':o2hAddrDisplay('addr'), filled:same||!!(S.ans.addr||[]).length});
+    rows.push({key:'mdate', label:'이사 예정일', type:'date',
+      value:o2hDateVal('mdate') || '이사 예정일 추가', filled:!!o2hDateVal('mdate'), add:true});
+  }
+  if(S.picked.has('clean')){
+    const same = (o2hHasCon() && (S.ans.caddr||[]).length) || (S.picked.has('move') && (S.ans.addr||[]).length);
+    rows.push({key:'claddr', label:'청소 장소', type:'addr',
+      value:same?(o2hHasCon()?'시공지와 동일':'이사 도착지와 동일'):o2hAddrDisplay('claddr'),
+      filled:same||!!(S.ans.claddr||[]).length});
+    rows.push({key:'clday', label:'청소 예정일', type:'date',
+      value:o2hDateVal('clday') || '청소 예정일 추가', filled:!!o2hDateVal('clday'), add:true});
   }
   return rows;
 }
@@ -3930,18 +3936,65 @@ function o2hDetailRow(r){
   </button>`;
 }
 /* ── 정보 수정 BottomSheet ────────────────────────────
-   ODS BottomSheet(.bsheet) 골격에 Chip 만 얹는다. 제목은 목록 행 라벨을 그대로 쓴다. */
+   ODS BottomSheet(.bsheet) 골격에 Chip 또는 Calendar 를 얹는다.
+   제목은 목록 행 라벨을 그대로 쓰고, 예정일에는 뒤따르는 일정을 함께 정하는 체크박스가 붙는다. */
 const O2H_SIZE_OPTS = ['10평 이하','10평대','20평대','30평대','40평대','50평대'];
+const o2hEditRow = key => o2hDetailRows().find(r=>r.key===key) || null;
+const o2hEditTitle = key => (o2hEditRow(key)||{}).label || '정보 수정';
 function o2hEditOpts(key){
   if(key==='size') return O2H_SIZE_OPTS;
-  if(['caddr','addr','move.from'].includes(key)) return REGION_SIDO;
+  if(['caddr','addr','move.from','claddr'].includes(key)) return REGION_SIDO;
   return null;
 }
-const o2hEditTitle = key => (o2hDetailRows().find(r=>r.key===key)||{}).label || '정보 수정';
+/* 앞선 일정에 붙는 연동 체크박스 — 체크하면 뒤따르는 예정일을 같은 날로 채운다 */
+function o2hEditLinks(key){
+  const links = [];
+  if(key==='cdate'){
+    if(S.picked.has('move')) links.push({k:'move', label:'시공 완료일에 이사 희망', target:'mdate'});
+    if(S.picked.has('clean')) links.push({k:'clean', label:'시공 완료일에 이사청소 희망', target:'clday'});
+  }
+  if(key==='mdate' && S.picked.has('clean') && !o2hHasCon())
+    links.push({k:'cleanSame', label:'이사청소 같은 날 희망', target:'clday'});
+  return links;
+}
 function o2hDetailSheet(){
   const key = S.o2hEditField; if(!key) return '';
-  const opts = o2hEditOpts(key); if(!opts) return '';
-  const sel = S.ans[key] || [];
+  const row = o2hEditRow(key); if(!row) return '';
+  const draft = S.o2hEditDraft;
+  let body = '';
+  if(row.type==='date'){
+    const month = S.o2hEditMonth || O2H_CAL_TODAY.m;
+    const firstDay = new Date(O2H_CAL_Y, month-1, 1).getDay();
+    const days = new Date(O2H_CAL_Y, month, 0).getDate();
+    const cells = [...Array(firstDay).fill(0), ...Array.from({length:days},(_,i)=>i+1)];
+    const dm = typeof draft==='string' && draft.match(/(\d+)월 (\d+)일/);
+    const picked = dm && +dm[1]===month ? +dm[2] : 0;
+    const links = o2hEditLinks(key);
+    body = `<div class="x-cal">
+      <div class="x-cal-nav">
+        <button type="button" id="o2hEdPrev" aria-label="이전 달" ${month<=O2H_CAL_TODAY.m?'disabled':''}>${ic('IconChevronLeft',20)}</button>
+        <b class="t-body16L20 w-semibold">${O2H_CAL_Y}년 ${month}월</b>
+        <button type="button" id="o2hEdNext" aria-label="다음 달" ${month>=12?'disabled':''}>${ic('IconChevronRight',20)}</button>
+      </div>
+      <div class="fm-cal">
+        <div class="fc-wk">${['일','월','화','수','목','금','토'].map(w=>`<span>${w}</span>`).join('')}</div>
+        <div class="fc-days">${cells.map(d=>{
+          if(!d) return '<span></span>';
+          const past = month===O2H_CAL_TODAY.m && d < O2H_CAL_TODAY.d;
+          return `<button class="fc-day${picked===d?' on':''}" type="button" data-o2hed-day="${d}"${past?' disabled':''}>${d}</button>`;
+        }).join('')}</div>
+      </div>
+    </div>
+    ${links.length ? `<div class="o2h-edit-links">${links.map(l=>`
+      <label class="o2h-edit-link" data-o2hed-link="${l.k}">
+        ${cbxIndicator(!!(S.o2hLink||{})[l.k], 'small')}
+        <span class="t-body15L24 w-medium">${l.label}</span>
+      </label>`).join('')}</div>` : ''}`;
+  }else{
+    const opts = o2hEditOpts(key); if(!opts) return '';
+    body = `<div class="x-chips">${opts.map(o=>
+      selChip(o, draft===o, `data-o2hed-opt="${o}"`, 'md')).join('')}</div>`;
+  }
   return `<div class="bs-overlay" id="o2hEdOv"></div>
     <section class="bsheet o2h-edit-sheet" role="dialog" aria-label="${o2hEditTitle(key)} 수정">
       <div class="bs-grab"><i></i></div>
@@ -3949,14 +4002,28 @@ function o2hDetailSheet(){
         <b class="bs-title t-heading17 w-semibold">${o2hEditTitle(key)}</b>
         <button class="ods-iconbtn" id="o2hEdX" type="button" aria-label="닫기">${ic('IconX',24)}</button>
       </div>
-      <div class="bs-body">
-        <div class="x-chips">${opts.map(o=>
-          selChip(o, sel.includes(o), `data-o2hf="${key}" data-o="${o}"`, 'md')).join('')}</div>
-      </div>
+      <div class="bs-body">${body}</div>
       <div class="bs-foot">
-        ${boxButton({label:'확인', size:'large', variant:'brand-solid', id:'o2hEdOk', full:true, disabled:!sel.length})}
+        ${boxButton({label:'확인', size:'large', variant:'brand-solid', id:'o2hEdOk', full:true, disabled:!draft})}
       </div>
     </section>`;
+}
+/* 확인 — 고른 값을 넣고, 주소면 뒤따르는 주소·세대 정보를, 일정이면 연동된 예정일을 함께 채운다 */
+function o2hEditApply(){
+  const key = S.o2hEditField, draft = S.o2hEditDraft;
+  if(!key || !draft) return;
+  S.ans = {...S.ans, [key]: [draft]};
+  if(key==='caddr'){
+    if(S.picked.has('move')) S.ans.addr = [draft];
+    if(S.picked.has('clean')) S.ans.claddr = [draft];
+  }
+  if(key==='addr' && S.picked.has('clean') && !o2hHasCon()) S.ans.claddr = [draft];
+  if(key==='size') S.ans.size = [draft];
+  o2hEditLinks(key).forEach(l=>{
+    if((S.o2hLink||{})[l.k]) S.ans[l.target] = [draft];
+  });
+  o2hPrefillFromAddr();
+  S.o2hEditField = null; S.o2hEditDraft = null;
 }
 const O2H_UPSELL = [
   {k:'clean', title:'이사청소 추가', badge:'이사와 함께 신청하면 5만 포인트'},
@@ -4085,10 +4152,10 @@ function o2hInfoFields(){
 }
 function o2hInfoReady(){
   if(!S.picked.size) return false;
-  if(o2hHasLife() && !(S.ans.size||[]).length) return false;
-  if(o2hHasCon() && !(S.ans.caddr||[]).length) return false;
-  if(S.picked.has('move') && (!(S.ans['move.from']||[]).length || !(S.ans.addr||[]).length)) return false;
-  if(S.picked.has('clean') && !o2hHasCon() && !(S.ans.claddr||[]).length) return false;
+  const has = k => !!(S.ans[k]||[]).length;
+  if(o2hHasCon() && !(has('size') && has('caddr') && has('cdate'))) return false;
+  if(S.picked.has('move') && !(has('move.from') && has('addr') && has('mdate'))) return false;
+  if(S.picked.has('clean') && !(has('claddr') && has('clday'))) return false;
   return true;
 }
 function o2hMethodSheet(){
@@ -4187,20 +4254,28 @@ VIEW.o2hForm = ()=>{
   screen.classList.toggle('has-sheet', !!sheet);
   $('#bk').onclick = ()=>go('o2hSelect');
   screen.querySelectorAll('[data-o2h-edit]').forEach(b=> b.onclick=()=>{
-    S.o2hEditField = b.dataset.o2hEdit;
+    const key = b.dataset.o2hEdit;
+    S.o2hEditField = key;
+    S.o2hEditDraft = (S.ans[key]||[])[0] || null;
+    const dm = String(S.o2hEditDraft||'').match(/(\d+)월/);
+    S.o2hEditMonth = dm ? +dm[1] : O2H_CAL_TODAY.m;
     render();
   });
-  const closeEdit = ()=>{ S.o2hEditField = null; render(); };
+  const closeEdit = ()=>{ S.o2hEditField = null; S.o2hEditDraft = null; render(); };
   const edOv=$('#o2hEdOv'); if(edOv) edOv.onclick=closeEdit;
   const edX=$('#o2hEdX'); if(edX) edX.onclick=closeEdit;
-  const edOk=$('#o2hEdOk'); if(edOk) edOk.onclick=closeEdit;
-  screen.querySelectorAll('[data-o2hf]').forEach(b=> b.onclick=()=>{
-    const {o2hf:key,o}=b.dataset;
-    S.ans[key]=[o];
-    if(key==='caddr'){
-      if(S.picked.has('move')) S.ans.addr = [...S.ans.caddr];
-      if(S.picked.has('clean')) S.ans.claddr = [...S.ans.caddr];
-    }
+  const edOk=$('#o2hEdOk'); if(edOk) edOk.onclick=()=>{ o2hEditApply(); render(); };
+  screen.querySelectorAll('[data-o2hed-opt]').forEach(b=> b.onclick=()=>{
+    S.o2hEditDraft = b.dataset.o2hedOpt; render();
+  });
+  screen.querySelectorAll('[data-o2hed-day]').forEach(b=> b.onclick=()=>{
+    S.o2hEditDraft = `${S.o2hEditMonth||O2H_CAL_TODAY.m}월 ${b.dataset.o2hedDay}일`; render();
+  });
+  const edPrev=$('#o2hEdPrev'); if(edPrev) edPrev.onclick=()=>{ S.o2hEditMonth=(S.o2hEditMonth||O2H_CAL_TODAY.m)-1; render(); };
+  const edNext=$('#o2hEdNext'); if(edNext) edNext.onclick=()=>{ S.o2hEditMonth=(S.o2hEditMonth||O2H_CAL_TODAY.m)+1; render(); };
+  screen.querySelectorAll('[data-o2hed-link]').forEach(l=> l.onclick=()=>{
+    const k = l.dataset.o2hedLink;
+    S.o2hLink = {...(S.o2hLink||{}), [k]: !(S.o2hLink||{})[k]};
     render();
   });
   const done=$('#o2hDone'); if(done) done.onclick=()=>{
@@ -4218,7 +4293,7 @@ const O2H_CAL_Y = 2026, O2H_CAL_TODAY = {m:8, d:14};
 function o2hOpenExtra(svc, key, chain, flow){
   const f = o2hExtraField(svc, key); if(!f) return;
   const open = !!S.o2hSheet;   /* 이미 열려 있으면 다음 문항으로 내용만 바꾼다 */
-  const cur = o2hExtraRaw(key);
+  const cur = o2hExtraRaw(f);
   const m = typeof cur==='string' && cur.match(/(\d+)월/);
   S.o2hSheet = {svc, key, chain:!!chain, flow: flow || null, step:'q',
     draft: f.type==='multi' ? [...(cur||[])] : (cur||null),
@@ -4395,7 +4470,7 @@ function o2hBindExtraSheet(){
   const ok = $('#o2hxOk');
   if(ok) ok.onclick = ()=>{
     if(!o2hExtraDraftFilled()) return;
-    S.o2hExtra = {...(S.o2hExtra||{}), [s.key]: s.draft};
+    o2hExtraSet(f, s.draft);
     const rest = s.chain ? o2hExtraPending(s.svc) : [];
     if(rest.length) o2hOpenExtra(s.svc, rest[0].key, true, s.flow);
     else if(s.flow==='net') o2hNetStep('confirm');   /* 마지막 문항 뒤 연락처 확인으로 */
@@ -4477,8 +4552,7 @@ VIEW.o2hOrder = ()=>{
   /* 카드 CTA — 남은 문항이 있으면 첫 문항부터 이어서, 다 채웠으면 신청으로 */
   screen.querySelectorAll('[data-o2h-cta]').forEach(b=> b.onclick=()=>{
     const k = b.dataset.o2hCta;
-    if(!o2hExtraOpen(k) || !o2hExtraFields(k).length) return;
-    const rest = o2hExtraPending(k);
+    const rest = o2hExtraOpen(k) ? o2hExtraPending(k) : [];
     if(rest.length) return o2hOpenExtra(k, rest[0].key, true);
     S.o2hChecked.add(k); go('o2hApply');
   });

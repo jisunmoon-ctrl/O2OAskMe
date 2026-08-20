@@ -244,12 +244,17 @@ body.view3 .o2o-home{padding-bottom:120px}
   width:100%;font-family:inherit;text-align:left}
 .o2h-menu-row-ic{flex:0 0 24px}
 .o2h-menu-row-t{flex:1;color:var(--ods-foreground)}
-.o2h-compact{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-.o2h-compact::-webkit-scrollbar{display:none}
-.o2h-compact-item{flex:0 0 56px;display:flex;flex-direction:column;align-items:center;gap:6px;
-  background:none;border:0;cursor:pointer;font-family:inherit;padding:0}
-.o2h-compact-ic{width:56px;height:56px;border-radius:12px;background:var(--ods-background-brand-weak);
+/* "이사 계획 중이라면" 5-up — Figma 638:33016 › Menu-LS.
+   카드 좌우 패딩 12 · 타이틀 아래 8 · 아이콘 프레임 56(padding 4)에 강조 배경 없음 */
+.o2h-plan-card{padding:16px 12px}
+.o2h-plan-card .o2h-sec-t{margin-bottom:8px}
+.o2h-compact{display:flex;gap:10px;justify-content:space-between;align-items:center}
+.o2h-compact-item{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:none;border:0;cursor:pointer;font-family:inherit;padding:0;
+  border-radius:12px;overflow:hidden}
+.o2h-compact-ic{width:56px;height:56px;padding:4px;border-radius:12px;overflow:hidden;
   display:grid;place-items:center}
+.o2h-compact-lb{min-width:100%;text-align:center;color:var(--ods-foreground)}
 .o2h-nudge{position:absolute;left:50%;bottom:16px;z-index:8;transform:translateX(-50%);
   display:flex;align-items:center;gap:4px;padding:12px 16px;border-radius:100px;border:0;cursor:pointer;
   font-family:inherit;white-space:nowrap;background:var(--ods-background-inverse);color:var(--ods-foreground-inverse);
@@ -290,6 +295,79 @@ body.preview-only .phone:has(.home-gnb) .o2h-nudge{bottom:calc(70px + env(safe-a
 .o2h-sticky-cta{position:sticky;bottom:0;margin-top:auto;z-index:5;background:var(--ods-background);
   border-top:1px solid rgba(0,0,0,.05);border-radius:16px 16px 0 0;
   box-shadow:2px 2px 20px rgba(194,200,204,.2);padding:6px 16px calc(6px + env(safe-area-inset-bottom,0px))}
+/* ── Flow B 주소·일정 퍼널 (Figma 12:3034 · 12:3051 · 12:3971 · 12:4085 · 9470:79228/79658 · 9478:116171)
+   입력폼 목록을 대체. 시공: 시공지 → 조회 → 일정 / 이사만: 출발지 → 도착지 → 종류.
+   ODS 에 progress bar 가 없어 Box 조합 [예외 기록] */
+.o2h-fnl-screen{background:var(--ods-background);min-height:100%;display:flex;flex-direction:column}
+.o2h-fnl-pbar{height:3px;background:var(--ods-background-weak);flex:0 0 auto;border-radius:100px;overflow:hidden}
+.o2h-fnl-pbar i{display:block;height:100%;background:var(--ods-foreground-brand);border-radius:100px;
+  transition:width .35s cubic-bezier(.4,0,.2,1)}
+.o2h-fnl-head{padding:20px 16px}
+.o2h-fnl-head p{margin:0}
+.o2h-fnl-head .sub{margin-top:6px;color:var(--ods-foreground-weak)}
+.o2h-fnl-pad{padding:0 16px 16px}
+.o2h-srch-field{display:flex;align-items:center;gap:8px;width:100%;padding:11px 12px;
+  border:0;border-radius:100px;background:var(--ods-background-weak);color:var(--ods-foreground-weak);
+  font-family:inherit;text-align:left;cursor:pointer}
+.o2h-srch-field svg{flex:0 0 auto;color:var(--ods-foreground-weak)}
+.o2h-fnl-sec{padding:12px 16px 4px;color:var(--ods-foreground)}
+.o2h-addr-item{display:block;width:100%;padding:20px 16px;border:0;border-bottom:1px solid var(--ods-border);
+  background:var(--ods-background);font-family:inherit;text-align:left;cursor:pointer}
+.o2h-addr-item:last-child{border-bottom:0}
+.o2h-addr-item .lb{display:flex;align-items:center;gap:4px;color:var(--ods-foreground)}
+.o2h-addr-item .ad{display:block;margin-top:4px;color:var(--ods-foreground-weak)}
+.o2h-srch-sheet{max-height:92%;height:92%}
+.o2h-srch-sheet .bs-body{padding:0 16px 24px}
+.o2h-srch-input{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:100px;
+  background:var(--ods-background-weak);color:var(--ods-foreground-weak);cursor:pointer}
+.o2h-srch-input .q{flex:1;min-width:0;color:var(--ods-foreground)}
+.o2h-srch-input .ph{flex:1;min-width:0;color:var(--ods-foreground-weak)}
+.o2h-srch-input button{border:0;background:none;padding:0;display:grid;place-items:center;
+  color:var(--ods-foreground-weak);cursor:pointer}
+.o2h-srch-tips{margin:20px 0 0;padding:0;list-style:none;color:var(--ods-foreground-weak)}
+.o2h-srch-tips .hd{margin-bottom:12px;padding:0}
+.o2h-srch-tips li{position:relative;padding-left:10px;margin-top:8px}
+.o2h-srch-tips li::before{content:"";position:absolute;left:0;top:9px;width:3px;height:3px;
+  border-radius:50%;background:var(--ods-foreground-weak)}
+.o2h-srch-tips .hd::before{display:none}
+.o2h-srch-tips b{color:var(--ods-foreground);font-weight:600}
+.o2h-srch-res{display:block;width:100%;padding:16px 0;border:0;border-bottom:1px solid var(--ods-border);
+  background:none;font-family:inherit;text-align:left;cursor:pointer}
+.o2h-srch-res .rd{color:var(--ods-foreground)}
+.o2h-srch-res .zip{color:var(--ods-foreground-weak);margin-right:4px}
+.o2h-srch-res .hl{color:var(--ods-foreground-brand)}
+.o2h-srch-res .jb{display:flex;align-items:center;gap:6px;margin-top:6px;color:var(--ods-foreground-weak)}
+.o2h-srch-res .jb i{font-style:normal;padding:1px 5px;border-radius:4px;
+  background:var(--ods-background-weak);font-size:11px;line-height:16px}
+.o2h-dtl-eyebrow{padding:20px 16px 0;color:var(--ods-foreground);margin:0}
+.o2h-dtl-head{padding:4px 16px 20px}
+.o2h-dtl-head p{margin:0}
+.o2h-dtl-sec{padding:0 16px 20px}
+.o2h-dtl-input{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;
+  border:1px solid var(--ods-border);border-radius:8px;background:var(--ods-background);
+  font-family:inherit;text-align:left;cursor:pointer}
+.o2h-dtl-input .v{flex:1;min-width:0;color:var(--ods-foreground)}
+.o2h-dtl-input .ph{flex:1;min-width:0;color:var(--ods-foreground-weak)}
+.o2h-dtl-input .clr{border:0;background:none;padding:0;display:grid;place-items:center;
+  color:var(--ods-foreground-weak);cursor:pointer}
+.o2h-load-list{display:flex;flex-direction:column;gap:4px;padding:0 16px}
+.o2h-load-row{display:flex;align-items:center;gap:4px;min-height:24px;color:var(--ods-foreground-weak)}
+.o2h-load-row svg,.o2h-load-row .ods-spinner{flex:0 0 auto}
+.o2h-range{padding:0 16px 24px}
+.o2h-range .x-cal-nav{justify-content:flex-start;padding:0 12px 4px}
+.o2h-range .fc-days{gap:0}
+.o2h-range .fc-day{position:relative;z-index:1}
+.o2h-range .fc-day.in{border-radius:0;background:transparent}
+.o2h-range .fc-day.in::before{content:"";position:absolute;inset:6px 0;background:var(--ods-background-weak);z-index:-1}
+.o2h-range .fc-day.start,.o2h-range .fc-day.end{
+  background:var(--ods-background-inverse);color:var(--ods-foreground-inverse);z-index:1}
+.o2h-range .fc-day.start.in::before{left:50%}
+.o2h-range .fc-day.end.in::before{right:50%}
+.o2h-range .fc-day.dot::after{content:"";position:absolute;left:50%;bottom:5px;width:4px;height:4px;
+  margin-left:-2px;border-radius:50%;background:var(--ods-foreground)}
+.o2h-range .fc-day.start.dot::after,.o2h-range .fc-day.end.dot::after{background:var(--ods-foreground-inverse)}
+.o2h-mtype{padding:0 16px 24px;display:flex;flex-direction:column;gap:8px}
+.q-li.on{border-color:var(--ods-foreground)}
 .o2h-order-screen{background:var(--ods-background-weak);min-height:100%;display:flex;flex-direction:column}
 .o2h-order-head{background:var(--ods-background);position:sticky;top:0;z-index:4}
 .o2h-nav-chat{position:relative}
@@ -1448,8 +1526,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
           화면 보기 - 3
         </button>
-        <button class="preview-toggle" id="o2hBarNudge" type="button" title="402:34413 · 넛징 CTA" aria-pressed="true">402 · 넛징</button>
-        <button class="preview-toggle" id="o2hBarProgress" type="button" title="430:93197 · 예상견적 바" aria-pressed="false">430 · 견적바</button>
       </div>
     </div>
     <section>
@@ -1463,6 +1539,10 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
     <section id="o2hFieldSection" class="panel-section">
       <h3>정보 항목</h3>
       <ul id="o2hFieldMenu" class="panel-menu"></ul>
+    </section>
+    <section id="o2hEntrySection" class="panel-section">
+      <h3>진입 상태</h3>
+      <ul id="o2hEntryMenu" class="panel-menu"></ul>
     </section>
     <section id="o2hCardSection" class="panel-section">
       <h3>카드 표기</h3>
@@ -1525,6 +1605,7 @@ const ODS_ICON = {
  "IconHeadset": "<path fill-rule=\"evenodd\" d=\"M240.075 35c68.716 0 129.632 40.474 138.653 106.502 25.026 2.004 45.903 9.368 61.214 23.515C458.434 182.102 466 206.449 466 234.441s-7.565 52.341-26.058 69.426c-15.114 13.964-35.65 21.32-60.248 23.435-3.824 72.063-67.416 116.749-139.62 116.749-8.836 0-16-7.164-16-16s7.164-16 16-16c62.212 0 107.723-38.161 107.802-91.517V158.377C347.718 105.094 302.233 67 240.075 67c-62.266 0-107.802 38.227-107.803 91.655h-.148v148.299c0 11.506-9.418 21.253-21.44 20.927-30.069-.815-54.897-8.577-72.16-25.473C21.122 285.376 14 261.616 14 234.441c0-27.992 7.566-52.339 26.058-69.424 15.342-14.175 36.272-21.541 61.365-23.528C110.449 75.469 171.363 35 240.075 35M100.124 173.744c-18.235 1.985-30.426 7.455-38.35 14.777C51.967 197.58 46 211.988 46 234.441c0 21.824 5.647 36.034 14.907 45.098 7.908 7.74 20.295 13.54 39.217 15.599zm279.752 121.394c18.235-1.986 30.426-7.453 38.351-14.775 9.805-9.059 15.773-23.468 15.773-45.922s-5.968-36.861-15.773-45.92c-7.925-7.322-20.116-12.792-38.351-14.777z\" clip-rule=\"evenodd\"></path>",
  "IconCheckSeal": "<path d=\"M291.279 191.602c6.3-6.197 16.43-6.114 22.627.185s6.114 16.43-.185 22.627l-83.355 82c-6.207 6.107-16.159 6.127-22.392.047l-46.646-45.5c-6.325-6.17-6.451-16.3-.281-22.625 6.17-6.326 16.299-6.452 22.625-.281l35.425 34.555z\"></path><path fill-rule=\"evenodd\" d=\"M215.811 45.343c13.723-12.45 34.655-12.45 48.378 0l33.868 30.726a4 4 0 0 0 2.841 1.034l45.695-1.768c18.515-.717 34.551 12.739 37.06 31.098l6.194 45.307a4 4 0 0 0 1.511 2.619l36.141 28.017c14.645 11.353 18.28 31.968 8.401 47.644l-24.379 38.688a4 4 0 0 0-.525 2.979l9.677 44.693c3.921 18.11-6.546 36.238-24.19 41.897l-43.544 13.966a4 4 0 0 0-2.316 1.944l-21.315 40.458c-8.638 16.393-28.308 23.553-45.462 16.546L241.513 413.9a4 4 0 0 0-3.026 0l-42.333 17.291c-17.154 7.007-36.824-.153-45.462-16.546l-21.315-40.458a4 4 0 0 0-2.316-1.944l-43.544-13.966c-17.644-5.659-28.11-23.787-24.19-41.897l9.677-44.693a4 4 0 0 0-.526-2.979L44.1 230.02c-9.88-15.676-6.244-36.291 8.4-47.644l36.142-28.017a4 4 0 0 0 1.511-2.619l6.194-45.307c2.51-18.36 18.544-31.815 37.06-31.098l45.695 1.769a4 4 0 0 0 2.841-1.035zm26.876 23.699a4 4 0 0 0-5.375 0l-33.867 30.727a36 36 0 0 1-25.582 9.311l-45.693-1.768a4 4 0 0 0-4.118 3.455l-6.193 45.306a36 36 0 0 1-13.612 23.577l-36.14 28.017a4 4 0 0 0-.934 5.294l24.379 38.687a36 36 0 0 1 4.727 26.811l-9.676 44.692a4 4 0 0 0 2.687 4.656l43.543 13.965a36 36 0 0 1 20.855 17.499l21.315 40.457a4 4 0 0 0 5.052 1.838l42.333-17.29a36 36 0 0 1 27.224 0l42.333 17.29a4 4 0 0 0 5.052-1.838l21.314-40.457a36 36 0 0 1 20.856-17.499l43.543-13.965a4 4 0 0 0 2.687-4.656l-9.676-44.692a36 36 0 0 1 4.727-26.811l24.379-38.688a4 4 0 0 0-.933-5.293l-36.141-28.017a36 36 0 0 1-13.611-23.577l-6.194-45.306a4 4 0 0 0-4.118-3.455l-45.693 1.768a36 36 0 0 1-25.582-9.311z\" clip-rule=\"evenodd\"></path>",
  "IconX": "<path d=\"M373.686 83.686c6.249-6.248 16.379-6.248 22.627 0s6.249 16.379 0 22.627L262.627 240l133.686 133.686.289.295c5.958 6.269 5.862 16.181-.289 22.332s-16.063 6.247-22.332.288l-.295-.288L240 262.627 106.313 396.313l-.294.288c-6.269 5.959-16.183 5.863-22.333-.288s-6.246-16.064-.288-22.332l.288-.295 133.686-133.687L83.686 106.313c-6.248-6.248-6.248-16.378 0-22.627s16.379-6.248 22.627 0l133.686 133.686z\"></path>",
+ "IconXCircleFilled": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M240.254 41c110.045 0 199.254 89.209 199.254 199.254s-89.209 199.254-199.254 199.254S41 350.299 41 240.254 130.209 41 240.254 41m-48.941 127.687c-6.248-6.249-16.378-6.249-22.626 0s-6.249 16.378 0 22.626L217.374 240l-48.687 48.687c-6.249 6.248-6.249 16.378 0 22.626s16.378 6.249 22.626 0l48.689-48.687 48.685 48.684.294.289c6.269 5.958 16.183 5.861 22.333-.289 6.151-6.151 6.247-16.063.289-22.331l-.289-.296L262.629 240l48.685-48.683c6.249-6.248 6.249-16.378 0-22.627s-16.379-6.248-22.627 0l-48.685 48.683z\"></path>",
  "IconMinus": "<path d=\"M406 224c8.837 0 16 7.163 16 16s-7.163 16-16 16H74c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path>",
  /* [예외 기록] IconPlus 는 패키지 원본 path 를 확보하지 못해, IconMinus path 를 중심(240,240) 기준 90° 회전해 겹친 조합으로 구성 */
  "IconPlus": "<path d=\"M406 224c8.837 0 16 7.163 16 16s-7.163 16-16 16H74c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path><path transform=\"rotate(90 240 240)\" d=\"M406 224c8.837 0 16 7.163 16 16s-7.163 16-16 16H74c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path>",
@@ -1573,6 +1654,13 @@ const ODS_ASSET = {
   movingBox:    'AssetMovingBoxLargeGenuineBlueView1/image_240.png',
   wifiRouter:   'AssetWiFiRouterLargeDarkBlueView1/image_240.png',
   waterPurifier:'AssetWaterPurifierLargeGenuineBlueView1/image_240.png',
+  /* O2H 홈 "이사 계획 중이라면" 5-up (Figma 638:33016 › Menu-LS) — 정면 View3 세트.
+     Figma 레이어명이 일부 View4 로 적혀 있으나 실제 원본 이미지는 모두 View3 이다. */
+  truckV3:        'AssetTruckLargeGenuineBlueView3/image_240.png',
+  cleaningToolV3: 'AssetCleaningToolLargeGenuineBlueView3/image_240.png',
+  wifiRouterV3:   'AssetWiFiRouterLargeGenuineBlueView3/image_240.png',
+  waterPurifierV3:'AssetWaterPurifierLargeGenuineBlueView3/image_240.png',
+  handDrillV3:    'AssetHandDrillLargeGenuineBlueView3/image_240.png',
   photoBasin:   'AssetPhotoWashBasinLarge/image_240.png',  /* 욕실 — Figma 75:28628 */
   headset:      'AssetFaceSmilingCapHeadsetLarge/image_240.webp'  /* 상담원 — 종합 상담 카드(209:9522) */
 };
@@ -1674,6 +1762,14 @@ const HOME_COMPACT = [
   {k:'fix',   label:'설치수리', art:'movingBox'},
   {k:'net',   label:'인터넷',   art:'wifiRouter'},
   {k:'rent',  label:'렌탈',     art:'waterPurifier'}
+];
+/* O2H 홈 "이사 계획 중이라면" 5-up (Figma 638:33016 › Menu-LS) — 서비스키 · 라벨 · ODS 에셋 */
+const O2H_PLAN_MENU = [
+  {k:'move',  label:'이사',     art:'truckV3'},
+  {k:'clean', label:'이사청소', art:'cleaningToolV3'},
+  {k:'net',   label:'인터넷',   art:'wifiRouterV3'},
+  {k:'rent',  label:'렌탈',     art:'waterPurifierV3'},
+  {k:'fix',   label:'제품설치', art:'handDrillV3'}
 ];
 /* 배송지 목록 BottomSheet 데이터 (Figma 64:21663) */
 const ADDR_BOOK = [
@@ -1836,7 +1932,7 @@ const isReserve = () => { const d=dday(); return d==null || d>45; };
 /* ══════════════ 상태 ══════════════ */
 const LABELS = {entry:'진입',select:'서비스 선택',loading:'정보 항목 구성',form:'정보 입력',
   branch:'견적서 확인',list:'상담 내역'};
-const O2H_LABELS = {o2hHome:'O2H 홈', o2hSelect:'서비스 선택', o2hForm:'입력폼', o2hOrder:'예상견적 확인', o2hApply:'비교견적 신청'};
+const O2H_LABELS = {o2hHome:'O2O 홈', o2hSelect:'서비스 선택', o2hForm:'주소·일정', o2hOrder:'예상견적 확인', o2hApply:'비교견적 신청'};
 /* 02 서비스 선택 ~ 06 상담 내역. 견적서 확인 → 상담 신청 완료 → 상담 내역(매칭 리스트). */
 const PHASE1 = ['entry','select','loading','form','branch','list'];
 const PHASE3 = ['o2hHome','o2hSelect','o2hForm','o2hOrder','o2hApply'];
@@ -1845,7 +1941,7 @@ const getFlowGroup = () => isView3() ? 'B' : 'A';
 const flowKeys = () => isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'info', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -1955,7 +2051,7 @@ function renderRail(){
   $('#rail').querySelectorAll('[data-step]').forEach(b=> b.onclick=()=>{
     const step = b.dataset.step;
     if(isView3()){
-      if(step==='o2hForm' && S.picked.size){ o2hPrefillAddrs(); S.o2hSub='info'; }
+      if(step==='o2hForm' && S.picked.size){ o2hStartFunnel(); return; }
       if(step==='o2hOrder') S.o2hProgress = true;
     }
     go(step);
@@ -1994,15 +2090,34 @@ function o2hHasCon(){ return S.picked.has('full')||S.picked.has('part'); }
 function o2hHasLife(){ return pickedList().some(k=>['full','part','move','clean'].includes(k)); }
 /* 외부에서 넘어온 배송지 — 있으면 시공지를 이 값으로 먼저 채운다 */
 const O2H_DELIVERY_ADDR = '서울특별시 양천구 목동서로70 1201호';
-/* 주소로 조회되는 세대 정보 — 사용자에게 묻지 않는 값 */
 const O2H_ADDR_INFO = {size:'30평대', elev:'있음', rooms:'방 3 · 베란다 2', toilet:'2'};
-/* 주소지는 시공지 > 이사 출발지 > 이사 도착지 순으로 받고, 앞 순위 값으로 뒤를 채운다 */
+/* 최근 주소 — Figma 12:3034. 배송지는 후보일 뿐 자동 확정하지 않는다 */
+const O2H_SAVED_ADDRS = [
+  {label:'시공지', addr:'서울 강남구 테헤란로 42 삼성증권빌딩'},
+  {label:'집', addr:'서울특별시 송파구 올림픽로 145, 1510호', badge:'기본배송지', detail:'1510호'},
+  {label:'우리집', addr:'서울특별시 송파구 올림픽로 120, 300호', detail:'300호'},
+  {label:'회사', addr:'서울특별시 송파구 올림픽로 1105, 1101호', detail:'1101호'},
+  {label:'본가', addr:'서울특별시 목동서로 70 1510호', detail:'1510호'}
+];
+const O2H_SRCH_QUERY = '서울 서초구';
+const O2H_SRCH_RESULTS = [
+  {zip:'135-080', road:'서울 서초구 사임당로 10길 39', jibun:'서울 서초구 서초동 1620-20'},
+  {zip:'135-081', road:'서울 서초구 사임당로 10길 41', jibun:'서울 서초구 서초동 1620-21'},
+  {zip:'135-082', road:'서울 서초구 사임당로 12길 3',  jibun:'서울 서초구 서초동 1621-4'}
+];
+const O2H_SRCH_TIPS = [
+  ['서초대로 74길 4', '(도로명+건물번호)'],
+  ['역삼동 824-10', '(동/읍/면/리+번지)'],
+  ['반포힐스테이트', '(건물명,아파트명)']
+];
+const O2H_MOVE_TYPES = [
+  {t:'포장이사', s:'포장부터 정리까지 모두 맡겨요'},
+  {t:'반포장이사', s:'깨지기 쉬운 짐만 포장해요'},
+  {t:'용달', s:'운반만, 포장은 직접 해요'}
+];
+/* 주소가 정해지면 평수·엘리베이터·방 구조를 조회해 채운다. 배송지는 리스트 후보일 뿐 여기서 확정하지 않는다 */
 function o2hPrefillAddrs(){
-  if(o2hHasCon() && !S.ans.caddr?.length) S.ans.caddr = [O2H_DELIVERY_ADDR];
-  if(S.picked.has('move')){
-    if(!S.ans['move.from']?.length) S.ans['move.from'] = ['부산'];
-    if(!S.ans.addr?.length && S.ans.caddr?.length) S.ans.addr = [...S.ans.caddr];
-  }
+  if(S.picked.has('move') && !S.ans.addr?.length && S.ans.caddr?.length) S.ans.addr = [...S.ans.caddr];
   if(S.picked.has('clean') && !S.ans.claddr?.length)
     S.ans.claddr = S.ans.caddr?.length ? [...S.ans.caddr] : (S.ans.addr?.length ? [...S.ans.addr] : []);
   o2hPrefillFromAddr();
@@ -2025,15 +2140,16 @@ function resetO2h(caseSvcs){
   const svcs = caseSvcs || ['full','move'];
   S.picked = new Set(svcs);
   S.ans = o2hAnsForCase(svcs);
-  S.o2hSub = 'info'; S.o2hMethod = 'chat'; S.o2hApplied = false; S.o2hProgress = false;
+  S.o2hSub = 'pick'; S.o2hMethod = 'chat'; S.o2hApplied = false; S.o2hProgress = false;
   S.o2hNetApplied = false; S.o2hPeriod = '6m'; S.o2hPeriodOpen = false;
   S.o2hOrderTab = 'draft'; S.o2hChecked = new Set(svcs.filter(k=> O2H_ORDER_FIELDS[k])); S.o2hEditField = null;
   S.o2hEditDraft = null; S.o2hEditMonth = O2H_CAL_TODAY.m; S.o2hLink = {};
+  S.o2hFunnelI = 0; S.o2hAddrKey = null; S.o2hSrchOpen = false; S.o2hSrchQ = '';
+  S.o2hDetail = ''; S.o2hRoad = ''; S.o2hRange = null; S.o2hCalMonth = O2H_CAL_TODAY.m;
   S.step = 0; S.sheet = null;
   S.o2hExtra = {}; S.o2hSheet = null;
   S.o2hFieldBranch = defaultO2hFieldBranch(svcs);
   S.o2hCardBranch = defaultO2hCardBranch(svcs);
-  o2hPrefillAddrs();
 }
 function setFlowGroup(g, opts={}){
   const b = document.body;
@@ -2062,14 +2178,6 @@ function initPreviewToggle(){
   if(on1) on1.onclick=()=>{ setFlowGroup('A'); b.classList.remove('view2'); b.classList.add('preview-only'); S.screen='entry'; render(); };
   if(on2) on2.onclick=()=>{ setFlowGroup('A'); b.classList.add('view2','preview-only'); S.screen='entry'; render(); };
   if(on3) on3.onclick=()=>{ setFlowGroup('B'); b.classList.add('preview-only'); resetO2h(); go('o2hHome'); };
-  const barN=$('#o2hBarNudge'), barP=$('#o2hBarProgress');
-  const syncO2hBarBtns=()=>{
-    if(barN) barN.setAttribute('aria-pressed', !S.o2hProgress);
-    if(barP) barP.setAttribute('aria-pressed', !!S.o2hProgress);
-  };
-  if(barN) barN.onclick=()=>{ S.o2hProgress=false; syncO2hBarBtns(); if(S.screen!=='o2hHome') go('o2hHome'); else renderO2hBottomBar(); };
-  if(barP) barP.onclick=()=>{ S.o2hProgress=true; syncO2hBarBtns(); if(S.screen!=='o2hHome') go('o2hHome'); else renderO2hBottomBar(); };
-  syncO2hBarBtns();
   if(off) off.onclick=()=>{ b.classList.remove('preview-only'); render(); };
 }
 
@@ -2117,6 +2225,11 @@ function renderFabEntry(){
     }, {passive:true});
   }
 }
+/* O2H 홈 하단 진입 상태 — 작성 이력이 없으면 넛징 CTA, 있으면 예상견적 바가 깔린다 */
+const O2H_ENTRY_MODES = [
+  {k:'cold',   id:'402', n:'cold start (작성 넛징)', progress:false},
+  {k:'retain', id:'430', n:'retain (작성 중)',       progress:true}
+];
 function renderO2hBottomBar(){
   const slot=$('#o2hBottomSlot'); if(!slot) return;
   if(!(isView3() && S.screen==='o2hHome')){ slot.innerHTML=''; return; }
@@ -2129,17 +2242,13 @@ function renderO2hBottomBar(){
       </div>
       ${boxButton({label:'예상견적 보기', size:'medium', variant:'solid', id:'o2hGoOrder'})}
     </div>`;
-    $('#o2hBarNudge')?.setAttribute('aria-pressed','false');
-    $('#o2hBarProgress')?.setAttribute('aria-pressed','true');
     const goOrder=$('#o2hGoOrder'); if(goOrder) goOrder.onclick=()=> go('o2hOrder');
     return;
   }
-  slot.innerHTML = `<button class="o2h-nudge" id="o2hNudge" type="button" aria-label="비교 견적 한번에 받기">
-    <span class="t-body16L20 w-semibold">비교 견적 한번에 받기</span>${icCalc}
+  slot.innerHTML = `<button class="o2h-nudge" id="o2hNudge" type="button" aria-label="우리집 시공/이사 견적 한번에 받기">
+    <span class="t-body16L20 w-semibold">우리집 시공/이사 견적 한번에 받기</span>${icCalc}
   </button>`;
   const btn=$('#o2hNudge'); if(btn) btn.onclick=()=> o2hEnterFunnel();
-  $('#o2hBarNudge')?.setAttribute('aria-pressed','true');
-  $('#o2hBarProgress')?.setAttribute('aria-pressed','false');
 }
 function renderCases(){
   const menu = $('#caseMenu');
@@ -2170,12 +2279,18 @@ function renderCases(){
   });
 }
 function renderO2hBranches(){
-  const fieldSec = $('#o2hFieldSection'), cardSec = $('#o2hCardSection');
+  const fieldSec = $('#o2hFieldSection'), cardSec = $('#o2hCardSection'), entrySec = $('#o2hEntrySection');
   if(!isView3()){
-    fieldSec?.classList.add('hidden'); cardSec?.classList.add('hidden');
+    fieldSec?.classList.add('hidden'); cardSec?.classList.add('hidden'); entrySec?.classList.add('hidden');
     return;
   }
-  fieldSec?.classList.remove('hidden'); cardSec?.classList.remove('hidden');
+  fieldSec?.classList.remove('hidden'); cardSec?.classList.remove('hidden'); entrySec?.classList.remove('hidden');
+  $('#o2hEntryMenu').innerHTML = O2H_ENTRY_MODES.map(m=>
+    `<li><button data-o2hentry="${m.k}"${!!S.o2hProgress===m.progress?' aria-current="true"':''}><i>${m.id}</i>${m.n}</button></li>`).join('');
+  $('#o2hEntryMenu').querySelectorAll('[data-o2hentry]').forEach(b=> b.onclick=()=>{
+    S.o2hProgress = O2H_ENTRY_MODES.find(m=>m.k===b.dataset.o2hentry).progress;
+    if(S.screen!=='o2hHome') go('o2hHome'); else render();
+  });
   const svcs = pickedList().filter(k=> O2H_FIELD_BRANCHES[k]);
   $('#o2hFieldMenu').innerHTML = svcs.map(k=>`
     <li class="branch-group"><span class="branch-cap">${label(k)}</span><ul>${
@@ -2525,8 +2640,7 @@ VIEW.o2hSelect = ()=>{
       S.o2hCardBranch = {...S.o2hCardBranch, ...defaultO2hCardBranch(svcs)};
       S.o2hChecked = new Set(svcs.filter(k=> O2H_ORDER_FIELDS[k]));
       S.ans = {...o2hAnsForCase(svcs), ...S.ans};
-      o2hPrefillAddrs();
-      o2hStartForm();
+      o2hStartFunnel();
     }
   });
 };
@@ -3487,8 +3601,8 @@ VIEW.list = ()=>{
   $('#bk').onclick = ()=>go('entry');
 };
 
-/* ══════════ 화면 보기-3 · O2H 통합 비교견적 플로우 (Figma 340:39827) ══════════
-   O2H 홈 → 입력폼(서비스 선택·필수 정보) → 예상견적 확인 → 비교견적 신청 */
+/* ══════════ 화면 보기-3 · O2H 통합 비교견적 플로우
+   O2H 홈 → 서비스 선택 → 주소·일정 퍼널 → 예상견적 확인 → 비교견적 신청 */
 /* ══════════ 세부 '추가 입력' — 서비스별 카드 문항 ══════════
    채택 기준 = ① 주소·입력폼으로 유추할 수 없다 ② 파트너가 상담에서 반드시 되묻는다.
    층수·엘리베이터·방/베란다 개수·평수·준공연도는 주소로 알 수 있어 묻지 않는다.
@@ -3518,8 +3632,8 @@ const O2H_EXTRA = {
   move: [
     {key:'mpack', label:'포장 종류', type:'single',
      q:'포장은 어디까지 맡기시겠어요?',
-     opts:['포장이사','반포장이사','일반이사'],
-     band:{'포장이사':[1,1.15],'반포장이사':[.75,.9],'일반이사':[.58,.72]}},
+     opts:['포장이사','반포장이사','용달'],
+     band:{'포장이사':[1,1.15],'반포장이사':[.75,.9],'용달':[.58,.72]}},
     /* 필요 여부와 기간을 한 문항으로 받는다 — 기간을 고르면 곧 필요하다는 뜻이다 */
     {key:'x.move.keep', label:'보관이사', type:'single',
      q:'짐을 맡겨둘 기간이 필요한가요?', desc:'보관이사는 매칭 가능한 파트너 자체가 달라져요.',
@@ -3861,14 +3975,335 @@ function o2hNetDoneCard(){
     ${boxButton({label:'신청 내역 보기', size:'large', variant:'normal', attrs:'style="width:100%"'})}
   </article>`;
 }
-function o2hStartForm(){
-  o2hPrefillAddrs();
-  S.o2hSub = 'loading';
-  go('o2hForm');
-  setTimeout(()=>{
-    if(S.screen==='o2hForm' && S.o2hSub==='loading'){ S.o2hSub='info'; render(); }
-  }, 1200);
+let o2hLoadTimer = null;
+/* 시공 포함 → 시공지·조회·일정 / 이사만 → 출발지·도착지·종류. 입력폼 목록은 쓰지 않는다 */
+function o2hFunnelPlan(){
+  if(o2hHasCon()) return [
+    {kind:'addr', key:'caddr', title:'시공하려는 곳은 어디인가요?'},
+    {kind:'load'},
+    {kind:'sched'}
+  ];
+  if(S.picked.has('move')) return [
+    {kind:'addr', key:'move.from', title:'이사 출발지 주소를 알려주세요'},
+    {kind:'addr', key:'addr', title:'이사 도착지 주소를 알려주세요'},
+    {kind:'mtype'}
+  ];
+  if(S.picked.has('clean')) return [
+    {kind:'addr', key:'claddr', title:'청소할 집 주소를 알려주세요'}
+  ];
+  return [];
 }
+function o2hFunnelStage(){ return o2hFunnelPlan()[S.o2hFunnelI||0] || null; }
+function o2hFunnelPct(){
+  const n = Math.max(o2hFunnelPlan().length, 1);
+  const i = S.o2hFunnelI||0;
+  const bump = {detail:.2, load:.45, done:.7, sched:.85, mtype:.85}[S.o2hSub] || 0;
+  return Math.min(100, Math.round(((i + bump + 1) / (n + 1)) * 100));
+}
+function o2hEnterStage(stage){
+  S.o2hSrchOpen = false; S.o2hSrchQ = '';
+  if(!stage) return;
+  if(stage.kind==='addr'){
+    S.o2hSub = 'pick'; S.o2hAddrKey = stage.key; S.o2hDetail = ''; S.o2hRoad = '';
+  }else if(stage.kind==='load'){ o2hRunLoad(); }
+  else { S.o2hSub = stage.kind; }
+}
+function o2hGoQuote(){
+  clearTimeout(o2hLoadTimer);
+  S.o2hProgress = true;
+  if(!S.o2hChecked) S.o2hChecked = new Set(o2hQuotablePicked());
+  go('o2hOrder');
+}
+function o2hFunnelNext(){
+  const plan = o2hFunnelPlan();
+  S.o2hFunnelI = (S.o2hFunnelI||0) + 1;
+  if(S.o2hFunnelI >= plan.length) return o2hGoQuote();
+  o2hEnterStage(plan[S.o2hFunnelI]);
+  if(S.screen==='o2hForm'){ render(); screen.scrollTop=0; } else go('o2hForm');
+}
+function o2hStartFunnel(){
+  clearTimeout(o2hLoadTimer);
+  const plan = o2hFunnelPlan();
+  S.o2hFunnelI = 0; S.o2hRange = null; S.o2hCalMonth = O2H_CAL_TODAY.m;
+  if(!plan.length) return o2hGoQuote();
+  o2hEnterStage(plan[0]);
+  go('o2hForm');
+}
+function o2hCommitAddr(full){
+  const key = S.o2hAddrKey || 'caddr';
+  S.ans = {...S.ans, [key]:[full]};
+  if(key==='caddr'){
+    if(S.picked.has('move')) S.ans.addr = [full];
+    if(S.picked.has('clean')) S.ans.claddr = [full];
+  }
+  if(key==='addr' && S.picked.has('clean') && !o2hHasCon()) S.ans.claddr = [full];
+  o2hPrefillFromAddr();
+}
+function o2hRunLoad(){
+  clearTimeout(o2hLoadTimer);
+  S.o2hSub = 'load';
+  o2hLoadTimer = setTimeout(()=>{
+    if(S.screen!=='o2hForm') return;
+    if(!S.ans.size?.length) S.ans.size = [O2H_ADDR_INFO.size];
+    S.o2hSub = 'done'; render();
+    o2hLoadTimer = setTimeout(()=>{
+      if(S.screen!=='o2hForm' || S.o2hSub!=='done') return;
+      o2hFunnelNext();
+    }, 900);
+  }, 1400);
+}
+function o2hFunnelBack(){
+  if(S.o2hSrchOpen){ S.o2hSrchOpen = false; S.o2hSrchQ = ''; render(); return; }
+  if(S.o2hSub==='detail'){ S.o2hSub = 'pick'; S.o2hDetail = ''; render(); return; }
+  if(S.o2hSub==='load' || S.o2hSub==='done'){
+    clearTimeout(o2hLoadTimer);
+    S.o2hFunnelI = Math.max((S.o2hFunnelI||0)-1, 0);
+    o2hEnterStage(o2hFunnelStage()); render(); return;
+  }
+  if((S.o2hFunnelI||0) <= 0){ go('o2hSelect'); return; }
+  S.o2hFunnelI -= 1;
+  o2hEnterStage(o2hFunnelStage());
+  render();
+}
+function o2hSavedList(){
+  const used = new Set();
+  ['caddr','move.from','addr','claddr'].forEach(k=>{
+    if(k!==S.o2hAddrKey && (S.ans[k]||[])[0]) used.add((S.ans[k]||[])[0]);
+  });
+  return O2H_SAVED_ADDRS.filter(a=> !used.has(a.addr));
+}
+function o2hHighlight(text, q){
+  if(!q) return text;
+  const i = text.indexOf(q);
+  return i<0 ? text : `${text.slice(0,i)}<span class="hl">${q}</span>${text.slice(i+q.length)}`;
+}
+function o2hSrchSheet(){
+  if(!S.o2hSrchOpen) return '';
+  const q = S.o2hSrchQ || '';
+  const body = q
+    ? O2H_SRCH_RESULTS.map((r,i)=> `<button class="o2h-srch-res" type="button" data-o2h-pick="${i}">
+        <span class="rd t-body15L24"><span class="zip">${r.zip}</span>${o2hHighlight(r.road, q)}</span>
+        <span class="jb t-body14L18"><i>지번</i>${r.jibun}</span>
+      </button>`).join('')
+    : `<ul class="o2h-srch-tips t-body14L18">
+        <li class="hd">도로명 + 건물번호로 검색하면 결과가 더 정확합니다</li>
+        ${O2H_SRCH_TIPS.map(([a,b])=> `<li><b>${a}</b> ${b}</li>`).join('')}
+      </ul>`;
+  return `<div class="bs-overlay" id="o2hSrchOv"></div>
+    <div class="bsheet o2h-srch-sheet" role="dialog" aria-label="주소 검색">
+      <div class="bs-grab"><i></i></div>
+      <div class="bs-head"><span class="bs-title t-body16L20 w-bold">주소 검색</span>
+        <button class="ods-iconbtn" id="o2hSrchX" type="button" aria-label="닫기">${ic('IconX',24)}</button></div>
+      <div class="bs-body">
+        <div class="o2h-srch-input t-body15L24" id="o2hSrchTap">
+          ${ic('IconMagnifyingGlass',16)}
+          ${q ? `<span class="q">${q}</span><button type="button" id="o2hSrchClr" aria-label="지우기">${ic('IconXCircleFilled',18)}</button>`
+              : `<span class="ph">주소 검색</span>`}
+        </div>
+        ${body}
+      </div>
+    </div>`;
+}
+function o2hBindSrchSheet(){
+  const close = ()=>{ S.o2hSrchOpen = false; S.o2hSrchQ = ''; render(); };
+  const ov=$('#o2hSrchOv'); if(ov) ov.onclick = close;
+  const x=$('#o2hSrchX'); if(x) x.onclick = close;
+  const tap=$('#o2hSrchTap'); if(tap && !S.o2hSrchQ) tap.onclick = ()=>{ S.o2hSrchQ = O2H_SRCH_QUERY; render(); };
+  const clr=$('#o2hSrchClr'); if(clr) clr.onclick = e=>{ e.stopPropagation(); S.o2hSrchQ=''; render(); };
+  screen.querySelectorAll('[data-o2h-pick]').forEach(b=> b.onclick=()=>{
+    const r = O2H_SRCH_RESULTS[+b.dataset.o2hPick];
+    S.o2hSrchOpen = false; S.o2hSrchQ = '';
+    S.o2hRoad = r.road; S.o2hDetail = ''; S.o2hSub = 'detail';
+    render();
+  });
+}
+function o2hPickSaved(sv){
+  if(sv.detail){ o2hCommitAddr(sv.addr); o2hFunnelNext(); return; }
+  S.o2hRoad = sv.addr; S.o2hDetail = ''; S.o2hSub = 'detail'; render();
+}
+function o2hRangeDayClass(m, d, range){
+  const cls = [];
+  const start = range && range.start, end = range && range.end;
+  const is = (p, mm, dd) => p && p.m===mm && p.d===dd;
+  const after = (a, mm, dd) => a && (mm>a.m || (mm===a.m && dd>a.d));
+  const before = (a, mm, dd) => a && (mm<a.m || (mm===a.m && dd<a.d));
+  if(is(start,m,d)) cls.push('start','on');
+  if(is(end,m,d)) cls.push('end','on');
+  if(start && end && after(start,m,d) && before(end,m,d)) cls.push('in');
+  if(start && end && (is(start,m,d) || is(end,m,d))) cls.push('in');
+  if(m===O2H_CAL_TODAY.m && d===O2H_CAL_TODAY.d) cls.push('dot');
+  return cls.join(' ');
+}
+function o2hRangeLabel(){
+  const r = S.o2hRange; if(!r || !r.start || !r.end) return '';
+  return `${r.start.m}월 ${r.start.d}일 ~ ${r.end.m}월 ${r.end.d}일`;
+}
+function o2hRenderFunnel(){
+  const sub = S.o2hSub || 'pick';
+  if(sub==='detail') return o2hRenderDetail();
+  if(sub==='load' || sub==='done') return o2hRenderLoad();
+  if(sub==='sched') return o2hRenderSched();
+  if(sub==='mtype') return o2hRenderMoveType();
+  return o2hRenderPick();
+}
+function o2hRenderPick(){
+  const stage = o2hFunnelStage();
+  const title = (stage && stage.title) || '주소를 알려주세요';
+  const sheet = o2hSrchSheet();
+  screen.innerHTML = `
+    <div class="o2h-fnl-screen">
+      ${topNav({title:'', backId:'bk'})}
+      <div class="o2h-fnl-pbar"><i style="width:${o2hFunnelPct()}%"></i></div>
+      <div class="o2h-fnl-head"><p class="t-heading24 w-semibold">${title}</p></div>
+      <div class="o2h-fnl-pad">
+        <button class="o2h-srch-field t-body15L24" type="button" id="o2hSrchOpen">
+          ${ic('IconMagnifyingGlass',16)}주소 찾기
+        </button>
+      </div>
+      <p class="o2h-fnl-sec t-body16L20 w-semibold">최근 주소</p>
+      <div>${o2hSavedList().map((a,i)=> `<button class="o2h-addr-item" type="button" data-o2h-addr="${i}">
+        <span class="lb t-heading17 w-semibold">${a.label}${a.badge?sqBadge(a.badge,'neutral300','16'):''}</span>
+        <span class="ad t-body15L24">${a.addr}</span>
+      </button>`).join('')}</div>
+    </div>
+    ${sheet}`;
+  screen.classList.toggle('has-sheet', !!sheet);
+  $('#bk').onclick = o2hFunnelBack;
+  const open = $('#o2hSrchOpen'); if(open) open.onclick = ()=>{ S.o2hSrchOpen = true; S.o2hSrchQ = ''; render(); };
+  o2hBindSrchSheet();
+  const list = o2hSavedList();
+  screen.querySelectorAll('[data-o2h-addr]').forEach(b=> b.onclick=()=> o2hPickSaved(list[+b.dataset.o2hAddr]));
+}
+function o2hRenderDetail(){
+  const road = S.o2hRoad || '';
+  const detail = S.o2hDetail || '';
+  screen.innerHTML = `
+    <div class="o2h-fnl-screen">
+      ${topNav({title:'', backId:'bk'})}
+      <div class="o2h-fnl-pbar"><i style="width:${o2hFunnelPct()}%"></i></div>
+      <p class="o2h-dtl-eyebrow t-body14L18 w-semibold">${road}</p>
+      <div class="o2h-dtl-head"><p class="t-heading24 w-semibold">상세 주소를 입력해주세요</p></div>
+      <div class="o2h-dtl-sec">
+        <button class="o2h-dtl-input" type="button" id="o2hDtlAddr">
+          ${detail ? `<span class="v t-body16L20">${detail}</span><span class="clr" id="o2hDtlClr">${ic('IconXCircleFilled',18)}</span>`
+                   : `<span class="ph t-body16L20">상세주소 입력</span>`}
+        </button>
+      </div>
+      <div class="o2h-sticky-cta">
+        ${boxButton({label:'확인', size:'extra-large', variant:'brand-solid', id:'o2hDtlOk', full:true, disabled:!detail})}
+      </div>
+    </div>`;
+  screen.classList.remove('has-sheet');
+  $('#bk').onclick = o2hFunnelBack;
+  $('#o2hDtlAddr').onclick = ()=>{ if(!S.o2hDetail){ S.o2hDetail = '1510호'; render(); } };
+  const clr=$('#o2hDtlClr'); if(clr) clr.onclick = e=>{ e.stopPropagation(); S.o2hDetail=''; render(); };
+  const ok=$('#o2hDtlOk'); if(ok) ok.onclick = ()=>{
+    if(!S.o2hDetail) return;
+    o2hCommitAddr(`${road} ${S.o2hDetail}`.trim());
+    o2hFunnelNext();
+  };
+}
+function o2hRenderLoad(){
+  const addr = (S.ans[S.o2hAddrKey]||S.ans.caddr||[])[0] || S.o2hRoad || '';
+  const done = S.o2hSub==='done';
+  const rows = done
+    ? [['33평형'], ['최근 리모델링 견적']]
+    : [['평수 정보'], ['최근 리모델링 견적']];
+  screen.innerHTML = `
+    <div class="o2h-fnl-screen">
+      ${topNav({title:'', backId:'bk'})}
+      <div class="o2h-fnl-head">
+        <p class="t-body14L18 w-semibold">${addr}</p>
+        <p class="t-heading24 w-semibold" style="margin-top:4px">${done?'불러오기 완료!':'아파트 정보를<br>불러오고 있어요...'}</p>
+      </div>
+      <div class="o2h-load-list">${rows.map(([t])=> `<div class="o2h-load-row t-body15L24 w-medium">
+        ${done ? ic('IconCheckCircleFilled',16) : spinner(16)}<span>${t}</span>
+      </div>`).join('')}</div>
+    </div>`;
+  screen.classList.remove('has-sheet');
+  $('#bk').onclick = o2hFunnelBack;
+}
+function o2hRenderSched(){
+  const month = S.o2hCalMonth || O2H_CAL_TODAY.m;
+  const firstDay = new Date(O2H_CAL_Y, month-1, 1).getDay();
+  const days = new Date(O2H_CAL_Y, month, 0).getDate();
+  const cells = [...Array(firstDay).fill(0), ...Array.from({length:days},(_,i)=>i+1)];
+  const range = S.o2hRange;
+  const ready = !!(range && range.start && range.end);
+  screen.innerHTML = `
+    <div class="o2h-fnl-screen">
+      ${topNav({title:'', backId:'bk'})}
+      <div class="o2h-fnl-pbar"><i style="width:${o2hFunnelPct()}%"></i></div>
+      <div class="o2h-fnl-head">
+        <p class="t-heading24 w-semibold">원하시는 일정을 선택하세요</p>
+        <p class="sub t-body15L24">대략적인 시작일과 종료일을 선택하세요</p>
+      </div>
+      <div class="o2h-range">
+        <div class="x-cal-nav">
+          <button type="button" id="o2hCalPrev" aria-label="이전 달" ${month<=O2H_CAL_TODAY.m?'disabled':''}>${ic('IconChevronLeft',20)}</button>
+          <b class="t-body16L20 w-semibold">${O2H_CAL_Y}년 ${month}월</b>
+          <button type="button" id="o2hCalNext" aria-label="다음 달" ${month>=12?'disabled':''}>${ic('IconChevronRight',20)}</button>
+        </div>
+        <div class="fm-cal">
+          <div class="fc-wk">${['일','월','화','수','목','금','토'].map(w=>`<span>${w}</span>`).join('')}</div>
+          <div class="fc-days">${cells.map(d=>{
+            if(!d) return '<span></span>';
+            const past = month===O2H_CAL_TODAY.m && d < O2H_CAL_TODAY.d;
+            return `<button class="fc-day ${o2hRangeDayClass(month,d,range)}" type="button" data-o2h-day="${d}"${past?' disabled':''}>${d}</button>`;
+          }).join('')}</div>
+        </div>
+      </div>
+      <div class="o2h-sticky-cta">
+        ${boxButton({label:'예상 견적 보기', size:'large', variant:'brand-solid', id:'o2hDone', full:true, disabled:!ready})}
+      </div>
+    </div>`;
+  screen.classList.remove('has-sheet');
+  $('#bk').onclick = o2hFunnelBack;
+  const prev=$('#o2hCalPrev'); if(prev) prev.onclick = ()=>{ S.o2hCalMonth = month-1; render(); };
+  const next=$('#o2hCalNext'); if(next) next.onclick = ()=>{ S.o2hCalMonth = month+1; render(); };
+  screen.querySelectorAll('[data-o2h-day]').forEach(b=> b.onclick=()=>{
+    const d = +b.dataset.o2hDay;
+    const cur = {m:month, d};
+    const r = S.o2hRange;
+    if(!r || !r.start || r.end){ S.o2hRange = {start:cur, end:null}; }
+    else {
+      const s = r.start;
+      const later = cur.m>s.m || (cur.m===s.m && cur.d>=s.d);
+      S.o2hRange = later ? {start:s, end:cur} : {start:cur, end:null};
+    }
+    render();
+  });
+  const done=$('#o2hDone'); if(done) done.onclick = ()=>{
+    if(!ready) return;
+    S.ans.cdate = [o2hRangeLabel()];
+    if(S.picked.has('move') && (S.o2hLink||{}).move) S.ans.mdate = [o2hRangeLabel()];
+    o2hFunnelNext();
+  };
+}
+function o2hRenderMoveType(){
+  const cur = (S.ans.mpack||[])[0] || '';
+  screen.innerHTML = `
+    <div class="o2h-fnl-screen">
+      ${topNav({title:'', backId:'bk'})}
+      <div class="o2h-fnl-pbar"><i style="width:${o2hFunnelPct()}%"></i></div>
+      <div class="o2h-fnl-head">
+        <p class="t-heading24 w-semibold">이사 종류를 선택하세요</p>
+        <p class="sub t-body15L24">포장 범위에 따라 견적이 달라져요</p>
+      </div>
+      <div class="o2h-mtype">${O2H_MOVE_TYPES.map(o=> `
+        <button class="q-li${cur===o.t?' on':''}" type="button" data-o2h-mtype="${o.t}">
+          <b class="ql-t t-body16L20 w-semibold">${o.t}</b>
+          <span class="ql-s t-body14L18">${o.s}</span>
+        </button>`).join('')}</div>
+    </div>`;
+  screen.classList.remove('has-sheet');
+  $('#bk').onclick = o2hFunnelBack;
+  screen.querySelectorAll('[data-o2h-mtype]').forEach(b=> b.onclick=()=>{
+    S.ans.mpack = [b.dataset.o2hMtype];
+    o2hFunnelNext();
+  });
+}
+function o2hStartForm(){ o2hStartFunnel(); }
 function o2hNavRight(){
   return `<button class="ods-iconbtn" type="button" aria-label="내역">${ic('IconTextDocument',24)}</button>
     <button class="ods-iconbtn o2h-nav-chat" type="button" aria-label="채팅">${ic('IconBubbleRight',24)}<span class="o2h-nav-badge">9</span></button>`;
@@ -3892,8 +4327,7 @@ function o2hSizeDisplay(){
 }
 function o2hAddrDisplay(key){
   const v = (S.ans[key]||[])[0];
-  if(v==='서울/경기' || !v) return '서울특별시 송파구 올림픽로 135\n잠실리센츠 2단지, 1501호';
-  return v;
+  return (!v || v==='서울/경기') ? '' : v;
 }
 const o2hDateVal = key => (S.ans[key]||[])[0] || '';
 /* 입력폼은 주소지와 일정만 받는다. 서비스별 상세 문항은 오더 카드에서 받는다.
@@ -4090,13 +4524,13 @@ function o2hHomeMenuStack(){
           ${ic('IconChevronRight',12)}
         </button>
       </div>
-      <div class="o2h-sec-card">
+      <div class="o2h-sec-card o2h-plan-card">
         <b class="o2h-sec-t t-body15L24 w-semibold">이사 계획 중이라면</b>
         <div class="o2h-compact">
-          ${[{k:'move',l:'이사',a:'truck'},{k:'clean',l:'이사청소',a:'cleaningTool'},{k:'net',l:'인터넷',a:'wifiRouter'},{k:'rent',l:'렌탈',a:'waterPurifier'},{k:'fix',l:'제품설치',a:'movingBox'}].map(c=>`
+          ${O2H_PLAN_MENU.map(c=>`
             <button class="o2h-compact-item" type="button">
-              <span class="o2h-compact-ic">${asset(c.a,46)}</span>
-              <span class="t-detail13L18 w-medium">${c.l}</span>
+              <span class="o2h-compact-ic">${asset(c.art,46)}</span>
+              <span class="o2h-compact-lb t-detail13L18 w-medium">${c.label}</span>
             </button>`).join('')}
         </div>
       </div>
@@ -4222,69 +4656,7 @@ VIEW.o2hHome = ()=>{
   });
 };
 
-VIEW.o2hForm = ()=>{
-  if(S.o2hSub==='loading'){
-    screen.innerHTML = `
-      <div class="o2h-form-screen">
-        ${topNav({title:'', backId:'bk'})}
-        <div class="o2h-form-loading">
-          <div class="o2h-form-head">
-            <p class="t-heading20 w-semibold">예상 견적 계산에 필요한<br>정보를 구성 중이에요</p>
-            <p class="sub t-body14L18 w-medium">주소지 정보를 불러오고 있어요...</p>
-          </div>
-        </div>
-      </div>`;
-    $('#bk').onclick = ()=>go('o2hSelect');
-    return;
-  }
-  const rows = o2hDetailRows().map(r=> o2hDetailRow(r)).join('');
-  const sheet = o2hDetailSheet();
-  screen.innerHTML = `
-    <div class="o2h-form-screen">
-      ${topNav({title:'', backId:'bk'})}
-      <div class="o2h-form-head">
-        <p class="t-heading20 w-semibold">아래 정보만 입력하면<br>예상 견적을 알 수 있어요</p>
-      </div>
-      <div class="o2h-detail-list">${rows}</div>
-      <div class="o2h-sticky-cta">
-        ${boxButton({label:'예상 견적 보기', size:'large', variant:'brand-solid', id:'o2hDone', full:true, disabled:!o2hInfoReady()})}
-      </div>
-    </div>
-    ${sheet}`;
-  screen.classList.toggle('has-sheet', !!sheet);
-  $('#bk').onclick = ()=>go('o2hSelect');
-  screen.querySelectorAll('[data-o2h-edit]').forEach(b=> b.onclick=()=>{
-    const key = b.dataset.o2hEdit;
-    S.o2hEditField = key;
-    S.o2hEditDraft = (S.ans[key]||[])[0] || null;
-    const dm = String(S.o2hEditDraft||'').match(/(\d+)월/);
-    S.o2hEditMonth = dm ? +dm[1] : O2H_CAL_TODAY.m;
-    render();
-  });
-  const closeEdit = ()=>{ S.o2hEditField = null; S.o2hEditDraft = null; render(); };
-  const edOv=$('#o2hEdOv'); if(edOv) edOv.onclick=closeEdit;
-  const edX=$('#o2hEdX'); if(edX) edX.onclick=closeEdit;
-  const edOk=$('#o2hEdOk'); if(edOk) edOk.onclick=()=>{ o2hEditApply(); render(); };
-  screen.querySelectorAll('[data-o2hed-opt]').forEach(b=> b.onclick=()=>{
-    S.o2hEditDraft = b.dataset.o2hedOpt; render();
-  });
-  screen.querySelectorAll('[data-o2hed-day]').forEach(b=> b.onclick=()=>{
-    S.o2hEditDraft = `${S.o2hEditMonth||O2H_CAL_TODAY.m}월 ${b.dataset.o2hedDay}일`; render();
-  });
-  const edPrev=$('#o2hEdPrev'); if(edPrev) edPrev.onclick=()=>{ S.o2hEditMonth=(S.o2hEditMonth||O2H_CAL_TODAY.m)-1; render(); };
-  const edNext=$('#o2hEdNext'); if(edNext) edNext.onclick=()=>{ S.o2hEditMonth=(S.o2hEditMonth||O2H_CAL_TODAY.m)+1; render(); };
-  screen.querySelectorAll('[data-o2hed-link]').forEach(l=> l.onclick=()=>{
-    const k = l.dataset.o2hedLink;
-    S.o2hLink = {...(S.o2hLink||{}), [k]: !(S.o2hLink||{})[k]};
-    render();
-  });
-  const done=$('#o2hDone'); if(done) done.onclick=()=>{
-    if(!o2hInfoReady())return;
-    S.o2hProgress=true;
-    if(!S.o2hChecked) S.o2hChecked = new Set(o2hQuotablePicked());
-    go('o2hOrder');
-  };
-};
+VIEW.o2hForm = ()=> o2hRenderFunnel();
 
 /* ── 세부 항목 추가 입력 BottomSheet ────────────────────
    ODS BottomSheet(.bsheet) 골격에 RadioGroup·Chip·Calendar 를 얹어 구성한다.
@@ -4515,7 +4887,12 @@ VIEW.o2hOrder = ()=>{
   const sheet = S.o2hSheet ? o2hExtraSheet() : (S.o2hPeriodOpen ? o2hPeriodSheet() : '');
   screen.innerHTML = `<div class="o2h-order-screen">${o2hOrderHeader(tab)}${body}</div>${sheet}`;
   screen.classList.toggle('has-sheet', !!sheet);
-  $('#bk').onclick = ()=>{ S.o2hSub='info'; go('o2hForm'); };
+  $('#bk').onclick = ()=>{
+    const plan = o2hFunnelPlan();
+    S.o2hFunnelI = Math.max(plan.length-1, 0);
+    o2hEnterStage(plan[S.o2hFunnelI] || plan[0]);
+    go('o2hForm');
+  };
   screen.querySelectorAll('[data-o2htab]').forEach(b=> b.onclick=()=>{ S.o2hOrderTab=b.dataset.o2htab; render(); });
   screen.querySelectorAll('[data-o2h-check]').forEach(l=> l.onclick=()=>{
     const k=l.dataset.o2hCheck;

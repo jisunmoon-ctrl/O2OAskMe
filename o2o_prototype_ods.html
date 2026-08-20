@@ -1502,7 +1502,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 }
 </style>
 </head>
-<body class="view3">
+<body class="view3 preview-only">
 
 <div class="stage">
   <nav class="panel">
@@ -5027,7 +5027,7 @@ const CASES = [
   {id:'C12', n:'전체 선택',             s:['full','part','move','clean','net','rent','fix']}
 ];
 function bootFlowB(){
-  document.body.classList.add('view3');
+  document.body.classList.add('view3','preview-only');
   resetO2h(['full','move']);
   S.screen = 'o2hHome';
 }

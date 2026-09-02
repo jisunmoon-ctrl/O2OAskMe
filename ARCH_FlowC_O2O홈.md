@@ -146,7 +146,11 @@ Figma 가 노출한 legacy palette 신호(`base_1[light] #2F3438` · `neutral500
 Figma 의 배너는 캠페인 배경색 + 삽입 이미지를 갖지만, 프로토타입에서는
 **메뉴 asset 과 같은 방침으로 콘텐츠 슬롯을 비운다.**
 
-- 배경 `--ods-background-weak`, 삽입 이미지 없음, 카피 색 `--ods-foreground`
+- 삽입 이미지 없음, 카피 색 `--ods-foreground`, **그림자 없음**(컨테이너 drop-shadow·배너 box-shadow 제거)
+- 슬라이드 배경은 지정 4색 `#E8EAEE · #CDEBC0 · #D7DBE1 · #C3E2F8` 중 랜덤 배치.
+  `resetFlowC()` 에서 한 번 추첨해 `S.cOfferBg` 에 보관하므로 칩 클릭 등 재렌더에도 바뀌지 않는다.
+  [토큰 예외] ODS semantic 대응이 없는 지정 색상이다.
+- 전체시공·부분시공은 디자인상 카피가 같아, 같은 문구가 연달아 오지 않도록 중복 슬라이드를 뒤로 보낸다
 - `CH_OFFERS` 5개(디자인의 5개 화면 배너 카피)를 `.cb-track` 으로 가로 롤링,
   현재 탭의 카피가 1번 슬라이드. `indicatorNumber` 는 `1/5` 로 동기화
 - `chStartOfferRoll()` 이 3초 간격 `setInterval`. `track.isConnected` 로 재렌더 시 자동 해제하고

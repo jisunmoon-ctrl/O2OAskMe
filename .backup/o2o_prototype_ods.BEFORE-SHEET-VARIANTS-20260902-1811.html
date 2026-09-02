@@ -1519,7 +1519,8 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   background:var(--ods-background)}
 .md-map{flex:1;min-height:0;position:relative;overflow:hidden;background:var(--ods-background-weak)}
 /* 지도 판 — 지도 이미지와 핀이 함께 움직인다 (917:14693 → 917:14669 는 +110px 팬) */
-.md-plane{position:absolute;inset:0}
+.md-plane{position:absolute;inset:0;transform:translateY(var(--md-pan,0px));
+  transition:transform .28s cubic-bezier(.2,0,.2,1)}
 .md-plane .md-img{position:absolute;left:-130px;top:-211px;width:881px;height:881px;
   max-width:none;pointer-events:none;user-select:none}
 
@@ -1610,31 +1611,28 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 /* Map Discovery 안의 지도 액션 — 홈(837:14497)과 같은 스펙 */
 .md-map .ch-mapact{bottom:16px;padding:0 16px 0 0;z-index:4}
 
-/* 라운지 정보 BottomSheet — 핀 선택 시 시트 본문이 이 내용으로 바뀐다 */
-.ms-lounge{display:flex;flex-direction:column;padding:0 16px 20px}
-.ms-lounge .ml-name{display:flex;align-items:center;gap:6px;color:var(--ods-foreground)}
-.ms-lounge .ml-addr{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.ms-lounge .ml-addr .ma-t{color:var(--ods-foreground)}
-.ms-lounge .ml-addr .ma-dot{color:var(--ods-foreground-weak)}
-.ms-lounge .ml-copy{display:inline-flex;align-items:center;gap:2px;border:0;background:none;padding:0;
+/* 판교라운지 popover (917:14686) — px16 py12 · gap10 · r12 · Depth20 */
+.md-pop{position:absolute;left:70px;bottom:314px;width:292px;z-index:6;box-sizing:border-box;
+  display:flex;flex-direction:column;gap:2px;align-items:stretch;
+  padding:12px 16px;border-radius:12px;background:var(--ods-background);
+  box-shadow:0 2px 5px 0 rgba(63,71,77,.15);overflow:hidden}
+.md-pop .mp-head{display:flex;align-items:center;justify-content:space-between;padding:4px 0}
+.md-pop .mp-name{display:flex;align-items:center;gap:6px;min-width:0;color:var(--ods-foreground)}
+.md-pop .mp-x{width:20px;height:20px;flex:0 0 auto;display:grid;place-items:center;padding:0;
+  border:0;background:none;cursor:pointer;color:var(--ods-foreground)}
+.md-pop .mp-addr{display:flex;align-items:center;gap:4px;padding-right:20px;flex-wrap:wrap}
+.md-pop .mp-addr .ma-t{color:var(--ods-foreground)}
+.md-pop .mp-addr .ma-dot{color:var(--ods-foreground-weak)}
+.md-pop .mp-copy{display:inline-flex;align-items:center;gap:2px;border:0;background:none;padding:0;
   cursor:pointer;font-family:inherit;color:var(--ods-foreground-weak)}
 /* [Icon] Square On Square — ODS 아이콘 SVG 를 mask 로 얹어 토큰 색을 입힌다 */
-.ms-lounge .ml-copy i{width:14px;height:14px;display:block;background:var(--ods-foreground-weak);
+.md-pop .mp-copy i{width:14px;height:14px;display:block;background:var(--ods-foreground-weak);
   -webkit-mask:url('assets/mapdisc/icon-square-on-square.svg') no-repeat center/12px 12px;
   mask:url('assets/mapdisc/icon-square-on-square.svg') no-repeat center/12px 12px}
-.ms-lounge .ml-img{margin-top:12px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;
-  background:var(--ods-background-weak)}
-.ms-lounge .ml-img img{width:100%;height:100%;object-fit:cover;display:block}
-.ms-lounge .ml-more{align-self:center;justify-content:center;margin-top:10px}
-
-/* 콘텐츠 리스트 BottomSheet — 단지 시공사례 2열 그리드 */
-.ms-cts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 8px;padding:0 16px 20px}
-.ms-cts .mc-item{display:flex;flex-direction:column;gap:6px;border:0;background:none;padding:0;
-  cursor:pointer;font-family:inherit;text-align:left}
-.ms-cts .mc-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--ods-background-weak)}
-.ms-cts .mc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.ms-cts .mc-t{color:var(--ods-foreground)}
-.ms-cts .mc-by{color:var(--ods-foreground-weak)}
+.md-pop .mp-img{height:146px;border-radius:8px;overflow:hidden;background:var(--ods-background-weak);
+  margin-top:12px}
+.md-pop .mp-img img{width:100%;height:100%;object-fit:cover;display:block}
+.md-pop .mp-more{align-self:center;justify-content:center;margin-top:10px}
 
 /* Floating BottomSheet (917:14710) — Handle 24 + Scroll */
 .md-sheet{position:absolute;left:0;right:0;bottom:0;height:var(--ms-h,356px);z-index:5;
@@ -1653,7 +1651,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .ms-top{height:40px;box-sizing:border-box;padding:10px 16px;display:flex;align-items:center;
   position:sticky;top:0;z-index:2;background:var(--ods-background)}
 .ms-top .mt-txt{display:flex;gap:6px;align-items:center;color:var(--ods-foreground);min-width:0}
-.ms-top .mt-txt img{flex:0 0 auto}
 .ms-top .mt-txt b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Filter Container — pt8 pb24 px16 */
 .ms-filter{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 16px 24px}
@@ -2504,7 +2501,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:356};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPop:false, mdPin:null, mdCard:null, mapAddr:null, msH:356};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -2846,17 +2843,15 @@ function renderO2hBottomBar(){
 function renderCases(){
   const menu = $('#caseMenu');
   if(isViewC()){
-    const cur = C_CASES.find(c=>(c.pin||null)===(S.mdPin||null)) || C_CASES[0];
+    const cur = C_CASES.find(c=>!!c.pop===!!S.mdPop) || C_CASES[0];
     menu.innerHTML = C_CASES.map(c=>{
       const on = cur && cur.id===c.id;
       return `<li><button data-case="${c.id}"${on?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`;
     }).join('');
     menu.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
       const c = C_CASES.find(x=>x.id===b.dataset.case);
-      const p = c.pin ? MD_PINS.find(x=>x.id===c.pin) : null;
-      S.mdPin  = c.pin;
-      S.mdCard = p ? (p.card || null) : null;
-      S.msH = MS_FULL;
+      S.mdPop = c.pop;
+      S.mdPin = null; S.mdCard = null;
       if(S.screen!=='cMapDisc') go('cMapDisc');
       else render();
       setMenuOpen(false);
@@ -5644,23 +5639,7 @@ const CASES = [
    좌표계: Figma 375×812 프레임의 지도 뷰포트 원점은 (0,130)이다.
    392 폰에 옮기며 x +8.5(중앙정렬), y −115(헤더 130 제외 + 지도 하단 여백 15 보정)를 적용했다. */
 const MD_ASSET = 'assets/mapdisc/';
-/* 콘텐츠 핀 시트 — 단지 시공사례 리스트 */
-const MD_CONTENTS = {
-  ct1:{name:'봇들마을', cases:[
-    {img:'case_1.png', t:'34평 · 전체시공', by:'토니인테리어'},
-    {img:'case_2.png', t:'42평 · 주방·도배', by:'조이디자인'},
-    {img:'case_3.png', t:'25평 · 전체시공', by:'리라인테리어'},
-    {img:'case_4.png', t:'34평 · 욕실·마루', by:'라인디자인'},
-    {img:'case_5.png', t:'49평 · 전체시공', by:'어반시크디자인'},
-    {img:'case_6.png', t:'32평 · 부분시공', by:'디자인덕'}
-  ]},
-  ct2:{name:'산운마을', cases:[
-    {img:'case_4.png', t:'32평 · 전체시공', by:'디자인덕'},
-    {img:'case_5.png', t:'38평 · 주방·욕실', by:'토니인테리어'},
-    {img:'case_2.png', t:'25평 · 도배·마루', by:'조이디자인'},
-    {img:'case_1.png', t:'44평 · 전체시공', by:'라인디자인'}
-  ]}
-};
+const MD_PAN   = 110;   /* popover 열림 시 지도 판이 내려가는 양 (917:14669) */
 /* x·y 는 폴백(정적 지도)용 Figma 좌표, lat·lng 는 실지도용 좌표다.
    lat·lng 는 우리집(판교로 50) 실좌표를 원점으로 Figma 배치를 1.9m/px 로 환산해 뽑았다. */
 const MD_PINS = [
@@ -5680,8 +5659,8 @@ const MD_PINS = [
   {id:'dot1',   kind:'dot',        x:89,  y:369, lat:37.388265, lng:127.085498},
   {id:'dot2',   kind:'dot',        x:344, y:387, lat:37.387958, lng:127.090976},
   /* Pin/Contents (917:18032 active · 917:18033 default) — 단지 시공사례 콘텐츠 핀 */
-  {id:'ct1',    kind:'contents',   x:252, y:38,  lat:37.393676, lng:127.089408, label:'봇들마을', img:'contents-1.png'},
-  {id:'ct2',    kind:'contents',   x:97,  y:52,  lat:37.393437, lng:127.086078, label:'산운마을', img:'contents-1.png'}
+  {id:'ct1',    kind:'contents',   x:252, y:38,  lat:37.393676, lng:127.089408, label:'봇들마을', n:'12', img:'contents-1.png'},
+  {id:'ct2',    kind:'contents',   x:97,  y:52,  lat:37.393437, lng:127.086078, label:'산운마을', n:'8',  img:'contents-1.png'}
 ];
 /* Map Marker Icon 앵커 — 마커 지점에서 요소 상단까지의 거리(default/active).
    teardrop·contents(active) 는 꼭짓점이, 나머지는 아이콘 중심이 지점에 온다. */
@@ -5712,12 +5691,9 @@ const MD_PARTNERS = [
 const MD_TITLE = '판교원마을1단지 주변 업체';
 const MD_COUNT = 20;
 /* 패널 CASE 메뉴 — 두 Figma 화면 분기 */
-/* 패널 CASE 메뉴 — 핀 선택에 따른 BottomSheet 분기 */
 const C_CASES = [
-  {id:'L1', n:'기본 · 주변 업체',   pin:null},
-  {id:'L2', n:'업체 핀 선택',       pin:'joy'},
-  {id:'L3', n:'콘텐츠 핀 선택',     pin:'ct1'},
-  {id:'L4', n:'라운지 핀 선택',     pin:'lounge'}
+  {id:'L1', n:'기본 · 주변 업체 시트',  pop:false},
+  {id:'L2', n:'판교라운지 popover',     pop:true}
 ];
 function resetFlowC(){
   S.cTab = 'home';
@@ -5728,6 +5704,7 @@ function resetFlowC(){
   S.cScrap = new Set();
   if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer=null; }
   S.cOfferBg = chPickOfferBg(5);   /* 배너 슬라이드 배경 랜덤 배치 */
+  S.mdPop = false;
   S.mdPin = null;
   S.mdCard = null;
   S.msH = MS_FULL;
@@ -6303,7 +6280,7 @@ const MAP_HOME = {lat:37.3913544, lng:127.0871091};
 const MAP_ZOOM = 16;
 const MAP_RESEARCH_M = 180;   /* 이 거리(m) 넘게 움직이면 '이 지역에서 검색' 노출 */
 const MAP = {node:null, map:null, markers:[], status:'idle', home:MAP_HOME,
-             anchor:null, center:null, resizing:false, screen:null, auto:0, revealed:null};
+             anchor:null, panned:false, popPan:0, center:null, resizing:false, screen:null, auto:0};
 
 /* Nominatim 은 '경기도 …' 를 붙이면 못 찾는다 — 괄호·광역단체 접두를 떼고 질의한다 */
 function mapGeoQuery(addr){
@@ -6395,7 +6372,9 @@ function mapMount(){
     mapResize();
     mapShiftForSheet();
     mapSyncMarkers();
-    mapRevealPin();
+    mapSyncPan();
+    mdPopPlace();
+    setTimeout(mdPopPlace, 300);
     return;
   }
   if(MAP.status==='idle') mapInit();
@@ -6403,11 +6382,13 @@ function mapMount(){
 /* 폴백 — Figma 지도 에셋 + Figma 좌표 핀 */
 function mapRenderFallback(slot){
   slot.innerHTML = `<img class="md-img" src="${MD_ASSET}map.png" alt="우리집 주변 지도">
-    <div class="md-plane">${MD_PINS.map(p=>mdPin(p)).join('')}</div>`;
+    <div class="md-plane" style="--md-pan:${S.mdPop?MD_PAN:0}px">
+      ${MD_PINS.map(p=>mdPin(p)).join('')}
+    </div>`;
   slot.querySelector('.md-img').style.cssText += ';z-index:0';
   bindPinTaps(slot);
   bindMapActions();
-  slot.onclick = e=>{ if(!e.target.closest('[data-mdpin]')) mdDeselect(); };
+  mdPopPlace();
 }
 
 async function mapInit(){
@@ -6432,8 +6413,6 @@ async function mapInit(){
     MAP.screen = S.screen;
     MAP.status = 'ready';
     MAP.map.on('moveend', mapOnMoveEnd);
-    /* 핀이 아닌 지도 영역을 누르면 선택을 풀고 기본 시트로 돌아간다 */
-    MAP.map.on('click', mdDeselect);
     $('#mapNote')?.remove();
     mapResize();
     mapSyncMarkers();
@@ -6485,24 +6464,42 @@ function mapShiftForSheet(){
   });
   MAP.center = MAP.map.getCenter();
 }
-/* 선택한 핀이 BottomSheet 에 가리면 가시 영역 안으로 끌어올린다 */
-function mapRevealPin(){
+/* popover 가 열리면 지도를 아래로 밀어 핀 위에 카드 자리를 만든다 (917:14669) */
+function mapSyncPan(){
   if(!mapLive()) return;
-  if(!S.mdPin){ MAP.revealed = null; return; }
-  if(MAP.revealed === S.mdPin) return;
-  MAP.revealed = S.mdPin;
-  const p = MD_PINS.find(x=>x.id===S.mdPin);
-  const box = screen.querySelector('.md-map');
-  if(!p || !box) return;
-  const H = box.clientHeight, visible = H - (S.msH || MS_FULL), m = 84;
-  const y = MAP.map.latLngToContainerPoint([p.lat, p.lng]).y;
-  let dy = 0;
-  if(y > visible - m) dy = y - (visible - m);   /* 시트에 가림 → 위로 */
-  else if(y < m)      dy = y - m;               /* 헤더에 가림 → 아래로 */
-  if(Math.abs(dy) > 8) mapAuto(()=> MAP.map.panBy([0, dy], {animate:true}));
+  /* panBy 의 +y 는 시야를 내려 핀을 위로 올린다 — 핀을 내리려면 -y.
+     내리는 양은 popover 가 핀 위에 딱 들어갈 만큼 계산한다 (Figma 는 110px 고정). */
+  if(S.mdPop && !MAP.panned){
+    const pin = MD_PINS.find(p=>p.id==='lounge');
+    const pop = $('#mdPop');
+    const top = MAP.map.latLngToContainerPoint([pin.lat, pin.lng]).y - MD_ANCHOR_Y.selected[1];
+    const want = (pop ? pop.offsetHeight : 250) + 12;
+    MAP.popPan = Math.max(0, Math.round(want - top));
+    if(MAP.popPan) mapAuto(()=> MAP.map.panBy([0, -MAP.popPan], {animate:true}));
+    MAP.panned = true;
+  } else if(!S.mdPop && MAP.panned){
+    if(MAP.popPan) mapAuto(()=> MAP.map.panBy([0, MAP.popPan], {animate:true}));
+    MAP.popPan = 0; MAP.panned = false;
+  }
+}
+/* popover 를 라운지 핀 바로 위에 붙인다 — 지도를 움직여도 따라간다 (917:14669) */
+function mdPopPlace(){
+  const pop = $('#mdPop'); if(!pop) return;
+  const box = screen.querySelector('.md-map'); if(!box) return;
+  const p = MD_PINS.find(x=>x.id==='lounge');
+  let x = p.x + 16, y = p.y + MD_PAN;          /* 폴백(정적 지도) 좌표 */
+  if(mapLive()){
+    const pt = MAP.map.latLngToContainerPoint([p.lat, p.lng]);
+    x = pt.x;
+    y = pt.y - MD_ANCHOR_Y.selected[1];        /* teardrop 꼭짓점 위 = 아이콘 상단 */
+  }
+  const w = pop.offsetWidth || 292, W = box.clientWidth, H = box.clientHeight;
+  pop.style.left   = Math.max(8, Math.min(x - w/2, W - w - 8)) + 'px';
+  pop.style.bottom = Math.max(8, Math.min(H - y, H - pop.offsetHeight - 8)) + 'px';
 }
 function mapOnMoveEnd(){
   if(!MAP.resizing) MAP.center = MAP.map.getCenter();
+  mdPopPlace();
   const btn = $('#mapResearch');
   if(!btn || !MAP.anchor) return;
   if(MAP.auto || MAP.resizing){ btn.dataset.on = '0'; MAP.anchor = MAP.map.getCenter(); return; }
@@ -6517,6 +6514,7 @@ function bindMapActions(){
         MAP.map.setView([MAP.home.lat, MAP.home.lng], MAP_ZOOM);
         if(screen.querySelector('.md-sheet')) MAP.map.panBy([0, (S.msH||MS_FULL)/2], {animate:false});
       });
+      MAP.panned = false;
       return;
     }
     if(!navigator.geolocation) return;
@@ -6544,13 +6542,11 @@ const mapAddr = () => S.mapAddr || CH_ADDR;
 
 /* Pin (892:15014) — kind 별 Map Marker Icon 내용물.
    on(=active)이면 sheet 2행 크기를 쓴다. */
-/* PillBadge 수치 = 그 단지의 시공사례 개수 (시트 제목과 같은 소스) */
-const mdPinCount = p => (MD_CONTENTS[p.id]||{cases:[]}).cases.length || 0;
 function mdPinInner(p, on){
   if(p.kind==='contents'){
     return `<span class="mpc-box">
         <span class="mpc-img"><img src="${MD_ASSET}${p.img}" alt=""></span>
-        ${mdPinCount(p)?`<span class="mp-pill t-detail10L14 w-semibold">${mdPinCount(p)}</span>`:''}
+        ${p.n?`<span class="mp-pill t-detail10L14 w-semibold">${p.n}</span>`:''}
       </span>
       ${on?`<img class="mpc-tip" src="${MD_ASSET}pin-contents-tip.svg" width="14" height="10" alt="">`:''}`;
   }
@@ -6571,10 +6567,7 @@ function mdPinInner(p, on){
   return `<span class="mp-in"></span>`;   /* light · dot */
 }
 /* 상호작용하는 핀 — 라운지(popover) · 업체 카드 연결 핀 · 콘텐츠 핀 */
-const mdPinActive = p => S.mdPin===p.id;
-const mdSelPin = () => MD_PINS.find(p=>p.id===S.mdPin) || null;
-/* 선택한 핀 종류가 BottomSheet 본문을 정한다 — 업체/미선택=주변업체 · 콘텐츠=사례목록 · 라운지=라운지정보 */
-const mdSheetKind = () => { const p = mdSelPin(); return p && (p.kind==='contents' || p.kind==='lounge') ? p.kind : 'partners'; };
+const mdPinActive = p => p.kind==='lounge' ? S.mdPop : (S.mdPin===p.id);
 const mdPinTappable = p => p.kind==='lounge' || !!p.card || p.kind==='contents';
 function mdPin(p, marker){
   const act = mdPinTappable(p);
@@ -6662,7 +6655,7 @@ function bindHomeHandleDrag(){
       ch.dataset.drag = '0';
       ch.style.removeProperty('--chm-h');
       if(dy > DRAG_GO){
-        S.mdPin=null; S.mdCard=null; S.msH = MS_FULL;
+        S.mdPop=false; S.mdPin=null; S.mdCard=null; S.msH = MS_FULL;
         go('cMapDisc');
         return;
       }
@@ -6696,48 +6689,43 @@ function bindSheetDrag(){
 function mdPinTap(id){
   const p = MD_PINS.find(x=>x.id===id);
   if(!p) return;
-  /* 선택은 한 번에 하나. 다시 누르면 해제되고 기본 시트로 돌아간다. */
+  if(p.kind==='lounge'){
+    /* 선택은 한 번에 하나 — 라운지 popover 를 열면 다른 핀 선택은 해제한다 */
+    S.mdPop = !S.mdPop; S.mdPin = null; S.mdCard = null;
+    if(S.screen!=='cMapDisc') go('cMapDisc'); else render();
+    return;
+  }
+  S.mdPop = false;
   const off = S.mdPin===p.id;
   S.mdPin  = off ? null : p.id;
   S.mdCard = off ? null : (p.card || null);
-  S.msH    = MS_FULL;      /* 시트를 접어둔 상태였다면 다시 펼친다 */
   if(S.screen!=='cMapDisc') go('cMapDisc'); else render();
   screen.querySelector('.ms-card[aria-current="true"]')?.scrollIntoView({block:'nearest'});
-}
-/* 핀 바깥(지도 배경)을 누르면 선택 해제 → 기본 container BottomSheet */
-function mdDeselect(){
-  if(!S.mdPin) return;
-  S.mdPin = null; S.mdCard = null; S.msH = MS_FULL;
-  render();
 }
 function bindPinTaps(root){
   root.querySelectorAll('[data-mdpin][data-act="1"]').forEach(b=> b.onclick=()=> mdPinTap(b.dataset.mdpin));
 }
 
-/* 라운지 정보 BottomSheet 본문 (내용은 917:14686 popover 와 동일) */
-function mdLoungeBody(){
-  return `<div class="ms-lounge">
-    <div class="ml-addr">
+/* 판교라운지 popover (917:14686) */
+function mdPopover(){
+  if(!S.mdPop) return '';
+  return `<div class="md-pop" id="mdPop" role="dialog" aria-label="${MD_LOUNGE.name}">
+    <div class="mp-head">
+      <div class="mp-name">
+        ${chOdsSvg('AssetOhouseSymbol/ohouse-symbol.svg', 20)}
+        <b class="t-body16L20 w-bold">${MD_LOUNGE.name}</b>
+      </div>
+      <button class="mp-x" id="mdPopX" type="button" aria-label="닫기">${ic('IconX',20)}</button>
+    </div>
+    <div class="mp-addr">
       <span class="ma-t t-detail13L18 w-regular">${MD_LOUNGE.addr}</span>
       <span class="ma-dot t-body14L18 w-regular">·</span>
-      <button class="ml-copy" type="button"><i aria-hidden="true"></i><span class="t-detail12L16 w-medium">복사</span></button>
+      <button class="mp-copy" type="button"><i aria-hidden="true"></i><span class="t-detail12L16 w-medium">복사</span></button>
     </div>
-    <div class="ml-img"><img src="${MD_LOUNGE.img}" alt="${MD_LOUNGE.name}"></div>
-    <button class="ods-textbtn ml-more" data-size="14" data-variant="neutral-600" type="button">
+    <div class="mp-img"><img src="${MD_LOUNGE.img}" alt="${MD_LOUNGE.name}"></div>
+    <button class="ods-textbtn mp-more" data-size="14" data-variant="neutral-600" type="button">
       자세히 보기 ${ic('IconChevronRight',14)}
     </button>
-  </div>`;
-}
-/* 콘텐츠 리스트 BottomSheet 본문 — 단지 시공사례 */
-function mdContentsBody(){
-  const c = MD_CONTENTS[S.mdPin];
-  if(!c) return '';
-  return `<div class="ms-cts">
-    ${c.cases.map(x=>`<button class="mc-item" type="button">
-      <span class="mc-thumb"><img src="${CH_ASSET}${x.img}" alt=""></span>
-      <span class="mc-t t-body14L18 w-semibold">${x.t}</span>
-      <span class="mc-by t-detail12L16 w-regular">${x.by}</span>
-    </button>`).join('')}
   </div>`;
 }
 
@@ -6769,51 +6757,36 @@ function mdCard(p){
   </button>`;
 }
 
-/* Floating BottomSheet (917:14710) — 선택한 핀 종류에 따라 본문이 바뀐다.
-   기본(미선택)·업체 핀 = 주변 업체 목록 / 콘텐츠 핀 = 시공사례 목록 / 라운지 핀 = 라운지 정보 */
-function mdSheetTitle(){
-  const kind = mdSheetKind();
-  if(kind==='lounge')   return {t:MD_LOUNGE.name, n:'', icon:true};
-  if(kind==='contents') return {t:`${(MD_CONTENTS[S.mdPin]||{}).name||''} 시공사례`,
-                                n:String((MD_CONTENTS[S.mdPin]||{cases:[]}).cases.length)};
-  return {t:MD_TITLE, n:String(MD_COUNT)};
-}
-function mdSheetBody(){
-  const kind = mdSheetKind();
-  if(kind==='lounge')   return mdLoungeBody();
-  if(kind==='contents') return mdContentsBody();
-  return `<div class="ms-filter">
-      <button class="ms-sort t-body14L18 w-regular" type="button">추천순${ic('IconChevronDown',18)}</button>
-      <button class="ms-std" type="button">
-        ${cbxIndicator(false,'medium')}
-        <img class="msd-logo" src="${MD_ASSET}logo-standard-blue.svg" alt="오늘의집 스탠다드" width="121" height="20">
-        ${ic('IconInfoCircle',16)}
-      </button>
-    </div>
-    <div class="ms-list">
-      <div class="ms-adhead">
-        <div class="ms-adrow">
-          <span class="t-detail12L16 w-bold">프리미엄</span>
-          <span class="ods-sqbadge" data-size="16" data-variant="base2_outline">광고${ic('IconInfoCircle',12)}</span>
-        </div>
-        <div class="ms-div" aria-hidden="true"></div>
-      </div>
-      <div class="ms-cards">${MD_PARTNERS.map(mdCard).join('')}</div>
-    </div>`;
-}
+/* Floating BottomSheet (917:14710) */
 function mdSheet(){
-  const {t, n, icon} = mdSheetTitle();
-  return `<div class="md-sheet" role="region" aria-label="${t}" style="--ms-h:${S.msH||MS_FULL}px">
+  if(S.mdPop) return '';   /* popover 가 열리면 시트는 닫힌다 */
+  return `<div class="md-sheet" role="region" aria-label="주변 업체 목록" style="--ms-h:${S.msH||MS_FULL}px">
     <div class="ms-handle" aria-hidden="true"><i></i></div>
     <div class="ms-scroll">
       <div class="ms-top">
         <div class="mt-txt">
-          ${icon?chOdsSvg('AssetOhouseSymbol/ohouse-symbol.svg', 20):''}
-          <b class="t-body16L20 w-bold">${t}</b>
-          ${n?`<span class="t-body16L20 w-semibold">${n}</span>`:''}
+          <b class="t-body16L20 w-bold">${MD_TITLE}</b>
+          <span class="t-body16L20 w-semibold">${MD_COUNT}</span>
         </div>
       </div>
-      ${mdSheetBody()}
+      <div class="ms-filter">
+        <button class="ms-sort t-body14L18 w-regular" type="button">추천순${ic('IconChevronDown',18)}</button>
+        <button class="ms-std" type="button">
+          ${cbxIndicator(false,'medium')}
+          <img class="msd-logo" src="${MD_ASSET}logo-standard-blue.svg" alt="오늘의집 스탠다드" width="121" height="20">
+          ${ic('IconInfoCircle',16)}
+        </button>
+      </div>
+      <div class="ms-list">
+        <div class="ms-adhead">
+          <div class="ms-adrow">
+            <span class="t-detail12L16 w-bold">프리미엄</span>
+            <span class="ods-sqbadge" data-size="16" data-variant="base2_outline">광고${ic('IconInfoCircle',12)}</span>
+          </div>
+          <div class="ms-div" aria-hidden="true"></div>
+        </div>
+        <div class="ms-cards">${MD_PARTNERS.map(mdCard).join('')}</div>
+      </div>
     </div>
   </div>`;
 }
@@ -6841,6 +6814,7 @@ VIEW.cMapDisc = ()=>{
       ${mapSlot()}
       ${mapResearchBtn()}
       ${mapActions()}
+      ${mdPopover()}
       ${mdSheet()}
     </div>
   </div>`;
@@ -6860,9 +6834,7 @@ VIEW.cMapDisc = ()=>{
     S.mdPin  = off ? null : (MD_PINS.find(p=>p.card===S.mdCard)||{}).id || null;
     rerender(true);
   });
-  /* 폴백(정적 지도)에서도 핀 바깥 탭으로 해제되게 한다 — 실지도는 Leaflet click 이 처리 */
-  const slot = $('#mapSlot');
-  if(slot && MAP.status!=='ready') slot.onclick = e=>{ if(!e.target.closest('[data-mdpin]')) mdDeselect(); };
+  const x = $('#mdPopX'); if(x) x.onclick=()=>{ S.mdPop=false; render(); };
 };
 
 /* ══════════ 03 시공 신청폼 ════════════════════════════════════════

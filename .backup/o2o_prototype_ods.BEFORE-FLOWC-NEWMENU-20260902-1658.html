@@ -51,7 +51,6 @@
   --ods-border-brand:#00A1FF;               /* colors.borderBrand       = genuineBlue.350 */
   --ods-border-critical:#FD3D4A;            /* colors.borderCritical    = red.400 */
   --ods-border-attention:#D19506;           /* colors.borderAttention   = yellow.350 */
-  --ods-border-inverse:#FFFFFF;             /* colors.borderInverse     = white */
   /* foreground */
   --ods-foreground:#141414;                 /* colors.foreground        = gray.900 */
   --ods-foreground-weak:#8C8C8C;            /* colors.foregroundWeak    = gray.400 */
@@ -155,8 +154,6 @@ body{
 .flow-views{display:flex;gap:6px;flex-wrap:wrap}
 .flow-views.hidden{display:none}
 .flow-views .preview-toggle{margin:0}
-/* Flow A·B 숨김 — .flow-tab/.flow-views 가 display 를 갖고 있어 UA 의 [hidden] 규칙을 이긴다 */
-.flow-tab[hidden],.flow-views[hidden]{display:none}
 
 #rail{position:relative}
 #rail::before{content:"";position:absolute;left:5px;top:8px;bottom:12px;width:1px;background:var(--hz-line)}
@@ -1506,194 +1503,64 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   color:rgba(255,255,255,.68)}
 .runknown b,.rdelta b{color:var(--ods-foreground-brand);font-weight:600}
 
-/* ═══ FLOW C · 02 Map Discovery ══════════════════════════
-   Figma 917:14693(기본 · 주변 업체 BottomSheet) / 917:14669(판교라운지 popover).
-   구성: Search Top Navigation + Location(공통 chrome) → 전체 지도 + Pin
-        → Floating BottomSheet(주변 업체 목록).
-   라운지 핀을 누르면 지도 판이 110px 내려가고 popover 가 열리며 시트는 닫힌다(917:14669).
-   [토큰 매핑] Figma 원본은 legacy BDS 팔레트다 — base_1 #2F3438→foreground,
-   base_2 #828C94→foregroundWeak, base_3 #C2C8CC→foregroundDisabled,
-   divider #EAEDEF→border, badge bg #F3F4F6→backgroundWeak, badge fg #595959→foregroundWeak. */
-.screen:has(.md-page){overflow:hidden;display:flex;flex-direction:column}
-.md-page{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;
-  background:var(--ods-background)}
-.md-map{flex:1;min-height:0;position:relative;overflow:hidden;background:var(--ods-background-weak)}
-/* 지도 판 — 지도 이미지와 핀이 함께 움직인다 (917:14693 → 917:14669 는 +110px 팬) */
-.md-plane{position:absolute;inset:0}
-.md-plane .md-img{position:absolute;left:-130px;top:-211px;width:881px;height:881px;
-  max-width:none;pointer-events:none;user-select:none}
-
-/* Pin (892:15014) — Map Marker Icon(흰 박스 + Depth20) + 라벨.
-   크기 축: data-state="default"(sheet 1행) / "active"(2행). 타입 축: data-kind. */
-.md-pin{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;
-  background:none;border:0;padding:0;font-family:inherit;color:var(--ods-foreground)}
-.md-pin[data-state="active"]{gap:4px}
-.md-pin[data-act="1"]{cursor:pointer}
-.md-pin .mp-ic{display:flex;align-items:center;justify-content:center;padding:2px;
-  background:var(--ods-background);filter:drop-shadow(0 2px 5px rgba(63,71,77,.25))}
-.md-pin .mp-ic img{display:block}
-.md-pin .mp-lb{max-width:72px;max-height:36px;overflow:hidden;text-align:center;
-  color:var(--ods-foreground)}
-.md-pin:focus-visible{outline:2px solid var(--ods-foreground-brand);outline-offset:3px;border-radius:8px}
-/* standard — r8 박스 + backgroundBrand r6 이너(22→24) + 심볼(16→18) */
-.md-pin[data-kind="standard"] .mp-ic{border-radius:8px}
-.md-pin[data-kind="standard"] .mp-in{width:22px;height:22px;border-radius:6px;overflow:hidden;
-  background:var(--ods-background-brand);display:grid;place-items:center}
-.md-pin[data-state="active"][data-kind="standard"] .mp-in{width:24px;height:24px}
-/* lightplus · membership — r22 박스 + 이너(20→22) */
-.md-pin[data-kind="lightplus"] .mp-ic,.md-pin[data-kind="membership"] .mp-ic{border-radius:22px}
-/* light — r18 박스 + backgroundBrand 원(12→14) */
-.md-pin[data-kind="light"] .mp-ic{border-radius:18px}
-.md-pin[data-kind="light"] .mp-in{width:12px;height:12px;border-radius:21px;background:var(--ods-background-brand)}
-.md-pin[data-state="active"][data-kind="light"] .mp-in{width:14px;height:14px}
-/* common — r18 박스 + backgroundBrand 10 원 (라벨 없음) */
-.md-pin[data-kind="dot"] .mp-ic{border-radius:18px}
-.md-pin[data-kind="dot"] .mp-in{width:10px;height:10px;border-radius:21px;background:var(--ods-background-brand)}
-/* 오늘의집 라운지 — r8 박스(26→28) + Ohouse 심볼(22→24) */
-.md-pin[data-kind="lounge"] .mp-ic{border-radius:8px;width:26px;height:26px}
-.md-pin[data-state="active"][data-kind="lounge"] .mp-ic{width:28px;height:28px}
-/* 선택된업체 — pin container teardrop (32×41 → 36×46).
-   지면에서는 라운지 핀이 선택되면 이 타입으로 교체된다 (917:14669) */
-.md-pin[data-kind="selected"] .mp-ic{width:32px;height:41px;padding:0;background:none;
-  filter:drop-shadow(0 2px 5px rgba(63,71,77,.25));border-radius:0}
-.md-pin[data-state="active"][data-kind="selected"] .mp-ic{width:36px;height:46px}
-/* 우리집 — backgroundInverse 원형(32→36) + PlaceHouseFilled (2460:15638 / 2460:17071) */
-.md-pin[data-kind="home"] .mp-ic{width:32px;height:32px;border-radius:24px;padding:0;filter:none;
-  background:var(--ods-background-inverse);color:var(--ods-foreground-inverse)}
-.md-pin[data-state="active"][data-kind="home"] .mp-ic{width:36px;height:36px}
-
-/* Pin/Contents (917:18033 default / 917:18032 active) — 단지 콘텐츠 썸네일 핀.
-   pin container w52 · px2 py3 · drop-shadow(0 3px 2px #3F474D45).
-   default: img36 · 라벨/tip 없음 / active: img48 + tip(14×10) + 라벨 */
-.md-pin[data-kind="contents"] .mp-ic{position:relative;flex-direction:column;width:52px;
-  padding:3px 2px;background:none;border-radius:0;
-  filter:drop-shadow(0 3px 2px rgba(63,71,77,.27))}
-.md-pin[data-kind="contents"] .mpc-box{position:relative;display:block}
-.md-pin[data-kind="contents"] .mpc-img{display:block;width:36px;height:36px;box-sizing:border-box;
-  border:2px solid var(--ods-background);border-radius:8px;overflow:hidden;
-  background:var(--ods-background-weak)}
-.md-pin[data-state="active"][data-kind="contents"] .mpc-img{width:48px;height:48px}
-.md-pin[data-kind="contents"] .mpc-img img{width:100%;height:100%;object-fit:cover;display:block}
-.md-pin[data-kind="contents"] .mpc-tip{width:14px;height:10px}
-/* PillBadge size=16 (100:74323) — 썸네일 우상단에 겹친다 */
-.md-pin .mp-pill{position:absolute;top:-5px;right:-6px;z-index:1;box-sizing:border-box;
-  display:flex;align-items:center;justify-content:center;min-height:16px;max-height:16px;padding:0 6px;
-  border-radius:15px;background:var(--ods-background-inverse);
-  border:1.5px solid var(--ods-border-inverse);color:var(--ods-foreground-inverse)}
-
-/* ═══ 실시간 지도 (Leaflet + OpenStreetMap) ═══════════════════════════
-   ODS 에는 지도 컴포넌트가 없어 오픈소스 타일을 쓰되, 그 위의 Pin·BottomSheet·
-   popover 는 모두 ODS 스펙 그대로다. 네트워크가 없으면 Figma 지도 에셋으로 폴백한다. */
-.map-slot{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--ods-background-weak)}
-.live-map{position:absolute;inset:0}
-.leaflet-container{font-family:inherit;background:var(--ods-background-weak)}
-.leaflet-control-attribution{font-size:9px;line-height:14px;background:rgba(255,255,255,.72);
-  color:var(--ods-foreground-weak)}
-.leaflet-control-attribution a{color:var(--ods-foreground-weak)}
-/* divIcon — 마커 지점에 Map Marker Icon 중심(또는 tip 끝)이 오도록 되돌린다 */
-.leaflet-div-icon.mk-wrap{width:0;height:0;background:none;border:0;margin:0!important}
-.mk-pin{position:absolute;left:0;top:0;transform:translate(-50%,calc(-1 * var(--mk-y,0px)));
-  white-space:nowrap}
-.mk-pin .md-pin{position:static}
-/* 지도 로딩 · 폴백 안내 */
-.map-note{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
-  display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:100px;
-  background:var(--ods-background);border:1px solid var(--ods-border);
-  color:var(--ods-foreground-weak);box-shadow:0 2px 5px rgba(63,71,77,.15)}
-/* '이 지역에서 검색' — 지도를 옮기면 나타난다 (917:14686 개발 어노테이션) */
-.map-research{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:4;
-  display:none;align-items:center;gap:4px;padding:8px 14px;border:1px solid var(--ods-border);
-  border-radius:100px;background:var(--ods-background);color:var(--ods-foreground);
-  box-shadow:0 2px 5px rgba(63,71,77,.15);cursor:pointer;font-family:inherit}
-.map-research[data-on="1"]{display:inline-flex}
-.map-research svg{color:var(--ods-foreground-brand)}
-/* Map Discovery 안의 지도 액션 — 홈(837:14497)과 같은 스펙 */
-.md-map .ch-mapact{bottom:16px;padding:0 16px 0 0;z-index:4}
-
-/* 라운지 정보 BottomSheet — 핀 선택 시 시트 본문이 이 내용으로 바뀐다 */
-.ms-lounge{display:flex;flex-direction:column;padding:0 16px 20px}
-.ms-lounge .ml-name{display:flex;align-items:center;gap:6px;color:var(--ods-foreground)}
-.ms-lounge .ml-addr{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.ms-lounge .ml-addr .ma-t{color:var(--ods-foreground)}
-.ms-lounge .ml-addr .ma-dot{color:var(--ods-foreground-weak)}
-.ms-lounge .ml-copy{display:inline-flex;align-items:center;gap:2px;border:0;background:none;padding:0;
-  cursor:pointer;font-family:inherit;color:var(--ods-foreground-weak)}
-/* [Icon] Square On Square — ODS 아이콘 SVG 를 mask 로 얹어 토큰 색을 입힌다 */
-.ms-lounge .ml-copy i{width:14px;height:14px;display:block;background:var(--ods-foreground-weak);
-  -webkit-mask:url('assets/mapdisc/icon-square-on-square.svg') no-repeat center/12px 12px;
-  mask:url('assets/mapdisc/icon-square-on-square.svg') no-repeat center/12px 12px}
-.ms-lounge .ml-img{margin-top:12px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;
-  background:var(--ods-background-weak)}
-.ms-lounge .ml-img img{width:100%;height:100%;object-fit:cover;display:block}
-.ms-lounge .ml-more{align-self:center;justify-content:center;margin-top:10px}
-
-/* 콘텐츠 리스트 BottomSheet — 단지 시공사례 2열 그리드 */
-.ms-cts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 8px;padding:0 16px 20px}
-.ms-cts .mc-item{display:flex;flex-direction:column;gap:6px;border:0;background:none;padding:0;
-  cursor:pointer;font-family:inherit;text-align:left}
-.ms-cts .mc-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--ods-background-weak)}
-.ms-cts .mc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.ms-cts .mc-t{color:var(--ods-foreground)}
-.ms-cts .mc-by{color:var(--ods-foreground-weak)}
-
-/* Floating BottomSheet (917:14710) — Handle 24 + Scroll */
-.md-sheet{position:absolute;left:0;right:0;bottom:0;height:var(--ms-h,356px);z-index:5;
-  transition:height .24s cubic-bezier(.2,0,.2,1);
-  display:flex;flex-direction:column;background:var(--ods-background);
-  border-radius:var(--ods-radius-16) var(--ods-radius-16) 0 0;
-  box-shadow:0 -2px 10px 0 rgba(63,71,77,.15)}
-.md-sheet[data-drag="1"]{transition:none}
-.md-sheet .ms-handle{flex:0 0 24px;height:24px;display:flex;align-items:center;justify-content:center;
-  cursor:grab;touch-action:none}
-.md-sheet[data-drag="1"] .ms-handle{cursor:grabbing}
-.md-sheet .ms-handle i{display:block;width:32px;height:4px;border-radius:6px;background:var(--ods-border)}
-.md-sheet .ms-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
-.md-sheet .ms-scroll::-webkit-scrollbar{display:none}
-/* Sticky Top — h40 px16 py10 */
-.ms-top{height:40px;box-sizing:border-box;padding:10px 16px;display:flex;align-items:center;
-  position:sticky;top:0;z-index:2;background:var(--ods-background)}
-.ms-top .mt-txt{display:flex;gap:6px;align-items:center;color:var(--ods-foreground);min-width:0}
-.ms-top .mt-txt img{flex:0 0 auto}
-.ms-top .mt-txt b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* Filter Container — pt8 pb24 px16 */
-.ms-filter{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 16px 24px}
-.ms-sort{display:inline-flex;align-items:center;gap:0;border:0;background:none;padding:0;
-  cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
-.ms-std{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:0;
-  cursor:pointer;font-family:inherit;color:var(--ods-foreground-weak)}
-.ms-std .msd-logo{height:20px;display:block}
-/* Product List Container */
-.ms-list{display:flex;flex-direction:column;gap:20px;padding:0 16px 24px}
-.ms-adhead{display:flex;flex-direction:column;gap:12px}
-.ms-adrow{display:flex;align-items:center;gap:4px;color:var(--ods-foreground-weak)}
-.ms-adrow .ods-sqbadge{gap:2px}
-.ms-div{height:1px;background:var(--ods-border)}
-.ms-cards{display:flex;flex-direction:column;gap:36px}
-.ms-card{display:flex;flex-direction:column;gap:8px;width:100%;text-align:left;
-  border:0;background:none;padding:0;cursor:pointer;font-family:inherit}
-.ms-card[aria-current="true"] .msc-nm b{text-decoration:underline;text-underline-offset:3px}
-.ms-card .msc-info{display:flex;flex-direction:column;gap:8px}
-.ms-card .msc-nm{display:flex;flex-wrap:wrap;align-items:center;gap:4px;color:var(--ods-foreground)}
-.ms-card .msc-nm .msc-std{height:18px;display:block}
-.ms-card .msc-det{display:flex;flex-direction:column;gap:2px}
-.ms-card .msc-row{display:flex;align-items:center;gap:6px;height:20px;color:var(--ods-foreground)}
-.ms-card .msc-row .msc-star{display:inline-flex;align-items:center;gap:2px}
-.ms-card .msc-row .msc-star svg{color:var(--ods-accent-yellow)}
-.ms-card .msc-row .msc-sep{color:var(--ods-foreground-disabled)}
-.ms-card .msc-badges{display:flex;gap:4px;flex-wrap:wrap}
-.ms-card .msc-price{display:inline-flex;align-items:center;gap:2px;color:var(--ods-foreground-weak)}
-.ms-card .msc-price svg{color:var(--ods-foreground-weak)}
-/* 캐로셀 — 이미지 리스트 gap4 r10, item h140 */
-.ms-card .msc-rail{display:flex;gap:4px;border-radius:10px;overflow-x:auto;scrollbar-width:none}
-.ms-card .msc-rail::-webkit-scrollbar{display:none}
-.ms-card .msc-rail img{flex:0 0 auto;height:140px;object-fit:cover;display:block;
-  background:var(--ods-background-weak)}
-
-/* 03 시공 신청폼 — 메뉴만 신설된 단계(플로우 미연결) */
-.md-todo{min-height:100%;display:flex;flex-direction:column;background:var(--ods-background)}
-.md-todo .mt-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;padding:48px 24px;text-align:center;color:var(--ods-foreground)}
-.md-todo .mt-body p{color:var(--ods-foreground-weak)}
+/* ═══ FLOW C · 칩 필터 업체 목록 / 견적 / 매칭 / 지도 ═══
+   Figma 731:56703 · 726:3367 · 732:56959 (시공 생활서비스탭 개선).
+   이 세션에서 Figma MCP 가 연결되지 않아, 유저 스토리(칩 목록 · 견적 입력 · 주소 지도)와
+   기존 시공탭 패턴(Chip · BoxButton · TopNavigation · pcard 모자이크)으로 구성한다. */
+.c-page{min-height:100%;display:flex;flex-direction:column;background:var(--ods-background)}
+.c-chips{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;
+  position:sticky;top:44px;z-index:4;background:var(--ods-background);border-bottom:1px solid var(--ods-border)}
+.c-chips::-webkit-scrollbar{display:none}
+.c-chips>*{flex:0 0 auto}
+.c-addr{display:flex;align-items:center;gap:8px;padding:10px 16px 4px;color:var(--ods-foreground)}
+.c-addr svg{flex:0 0 auto;color:var(--ods-foreground-brand)}
+.c-addr .c-addr-t{flex:1;min-width:0}
+.c-mode-row{display:flex;padding:4px 16px 8px}
+.c-mode{display:flex;gap:4px}
+.c-list{padding:12px 16px 24px;display:flex;flex-direction:column;gap:12px;background:var(--ods-background-weak);flex:1}
+.c-row{background:var(--ods-background);border:1px solid var(--ods-border);border-radius:12px;overflow:hidden}
+.c-row .pc-thumb{height:140px}
+.c-row-info{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.c-row-nm{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.c-row-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--ods-foreground)}
+.c-row-cta{margin-top:4px}
+.c-empty{padding:48px 16px;text-align:center;color:var(--ods-foreground-weak)}
+.c-quote{background:var(--ods-background-weak);min-height:100%;display:flex;flex-direction:column}
+.c-quote .form{flex:1}
+.c-quote-lead{padding:4px 0 8px}
+.c-match-note{padding:16px 16px 0}
+.c-match-wait{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:48px 24px;background:var(--ods-background-weak);color:var(--ods-foreground);text-align:center}
+.screen:has(.c-map-page){overflow:hidden;display:flex;flex-direction:column}
+.c-map-page{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--ods-background)}
+.c-map-page .c-chips{position:static;border-bottom:0}
+.c-layers{display:flex;gap:8px;padding:0 16px 10px;overflow-x:auto;scrollbar-width:none;flex:0 0 auto}
+.c-layers::-webkit-scrollbar{display:none}
+.c-layers>*{flex:0 0 auto}
+.c-map{flex:1;min-height:0;position:relative;background:var(--ods-background-weak);overflow:hidden}
+.c-map-grid{position:absolute;inset:0;
+  background-image:linear-gradient(var(--ods-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ods-border) 1px, transparent 1px);
+  background-size:40px 40px}
+.c-road{position:absolute;background:var(--ods-background);border:1px solid var(--ods-border)}
+.c-road-h1{left:0;right:0;top:46%;height:18px}
+.c-road-v1{top:0;bottom:0;left:42%;width:18px}
+.c-road-h2{left:8%;right:10%;top:72%;height:12px}
+.c-me{position:absolute;left:50%;top:52%;width:14px;height:14px;border-radius:50%;
+  background:var(--ods-foreground-brand);border:3px solid var(--ods-background);transform:translate(-50%,-50%);z-index:2}
+.c-me-lab{position:absolute;left:50%;top:52%;transform:translate(-50%,14px);z-index:2;
+  padding:2px 6px;border-radius:4px;background:var(--ods-background);border:1px solid var(--ods-border);
+  color:var(--ods-foreground);white-space:nowrap}
+.c-pin{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:0;padding:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground);z-index:3}
+.c-pin[aria-pressed="true"]{color:var(--ods-foreground-brand);z-index:4}
+.c-pin-lab{padding:2px 6px;border-radius:4px;background:var(--ods-background);border:1px solid var(--ods-border);
+  color:var(--ods-foreground);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c-pin[aria-pressed="true"] .c-pin-lab{border-color:var(--ods-border-strong)}
+.c-sheet{flex:0 0 auto;padding:12px 16px 16px;background:var(--ods-background);border-top:1px solid var(--ods-border)}
+.c-sheet-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.c-sheet-h .c-sheet-ic{flex:0 0 auto;color:var(--ods-foreground-brand)}
+.c-sheet-h .c-sheet-t{flex:1;min-width:0}
 
 /* Phase 2 안내 */
 .ask{margin:0 16px;padding:16px}
@@ -1738,10 +1605,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* 지도 (837:14495) — 375×240, 배경 이미지는 1800×1040 을 (-1161,-134) 에 배치 */
-.ch-map{position:sticky;top:86px;z-index:1;height:var(--chm-h,240px);overflow:hidden;
-  background:var(--ods-background-weak);transition:height .24s cubic-bezier(.2,0,.2,1)}
-.ch[data-drag="1"] .ch-map{transition:none}
-.ch-map .map-slot{z-index:0}
+.ch-map{position:sticky;top:86px;z-index:1;height:240px;overflow:hidden;background:var(--ods-background-weak)}
 .ch-map .cm-img{position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;pointer-events:none;user-select:none}
 
@@ -1778,8 +1642,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .ch-tab{position:sticky;top:86px;z-index:8;background:var(--ods-background);
   border-radius:16px 16px 0 0;padding-bottom:16px}
 .ch-tab .ct-handle{height:24px;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;cursor:grab;touch-action:none}
-.ch[data-drag="1"] .ct-handle{cursor:grabbing}
+  overflow:hidden}
 .ch-tab .ct-handle i{display:block;width:32px;height:4px;border-radius:6px;background:var(--ods-border)}
 .ch-tab.is-stuck{border-radius:0}
 .ch-tab.is-stuck .ct-handle{height:0}
@@ -2053,11 +1916,11 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
     </div>
     <div class="flow-panel">
       <div class="flow-tabs" role="tablist" aria-label="플로우 그룹">
-        <button class="flow-tab" id="flowTabA" type="button" role="tab" data-flow="A" aria-pressed="false" hidden>Flow A</button>
-        <button class="flow-tab" id="flowTabB" type="button" role="tab" data-flow="B" aria-pressed="false" hidden>Flow B</button>
+        <button class="flow-tab" id="flowTabA" type="button" role="tab" data-flow="A" aria-pressed="false">Flow A</button>
+        <button class="flow-tab" id="flowTabB" type="button" role="tab" data-flow="B" aria-pressed="false">Flow B</button>
         <button class="flow-tab" id="flowTabC" type="button" role="tab" data-flow="C" aria-pressed="true">Flow C</button>
       </div>
-      <div class="flow-views hidden" id="flowViewsA" hidden>
+      <div class="flow-views hidden" id="flowViewsA">
         <button class="preview-toggle" id="previewToggle1" type="button" title="Flow A · 기본 진입(상단 종합 상담 인풋)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
           화면 보기 - 1
@@ -2067,7 +1930,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
           화면 보기 - 2
         </button>
       </div>
-      <div class="flow-views hidden" id="flowViewsB" hidden>
+      <div class="flow-views hidden" id="flowViewsB">
         <button class="preview-toggle" id="previewToggle3" type="button" title="Flow B · O2H 통합 비교견적 (Figma 8/6)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
           화면 보기 - 3
@@ -2492,19 +2355,18 @@ const isReserve = () => { const d=dday(); return d==null || d>45; };
 const LABELS = {entry:'진입',select:'서비스 선택',loading:'정보 항목 구성',form:'정보 입력',
   branch:'견적서 확인',list:'상담 내역'};
 const O2H_LABELS = {o2hHome:'O2O 홈', o2hSelect:'서비스 선택', o2hForm:'주소·일정', o2hOrder:'예상견적 확인', o2hApply:'비교견적 신청'};
-/* Flow C — 01 O2O Home → 02 Map Discovery → 03 시공 신청폼(메뉴만, 플로우 미연결) */
-const C_LABELS = {cHome:'O2O Home', cMapDisc:'Map Discovery', cApply:'시공 신청폼'};
+const C_LABELS = {cHome:'O2O 홈', cList:'업체 목록', cQuote:'견적 신청', cMatch:'파트너 매칭', cMap:'지도'};
 /* 02 서비스 선택 ~ 06 상담 내역. 견적서 확인 → 상담 신청 완료 → 상담 내역(매칭 리스트). */
 const PHASE1 = ['entry','select','loading','form','branch','list'];
 const PHASE3 = ['o2hHome','o2hSelect','o2hForm','o2hOrder','o2hApply'];
-const PHASE4 = ['cHome','cMapDisc','cApply'];
+const PHASE4 = ['cHome','cList','cQuote','cMatch','cMap'];
 const isView3 = () => document.body.classList.contains('view3');
 const isViewC = () => document.body.classList.contains('view4');
 const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:356};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cChip:'all', cLayer:'partners', cQuoteSvc:'full', cMatchReady:false, cMatchTimer:null, cPin:null, cQuotePartner:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cScrap:new Set(), cOfferTimer:null, cOfferBg:[]};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -2846,18 +2708,16 @@ function renderO2hBottomBar(){
 function renderCases(){
   const menu = $('#caseMenu');
   if(isViewC()){
-    const cur = C_CASES.find(c=>(c.pin||null)===(S.mdPin||null)) || C_CASES[0];
+    const cur = C_CASES.find(c=>c.chip===S.cChip) || C_CASES.find(c=>c.chip==='all');
     menu.innerHTML = C_CASES.map(c=>{
       const on = cur && cur.id===c.id;
       return `<li><button data-case="${c.id}"${on?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`;
     }).join('');
     menu.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
       const c = C_CASES.find(x=>x.id===b.dataset.case);
-      const p = c.pin ? MD_PINS.find(x=>x.id===c.pin) : null;
-      S.mdPin  = c.pin;
-      S.mdCard = p ? (p.card || null) : null;
-      S.msH = MS_FULL;
-      if(S.screen!=='cMapDisc') go('cMapDisc');
+      S.cChip = c.chip;
+      S.cPin = null;
+      if(!PHASE4.includes(S.screen)) go('cList');
       else render();
       setMenuOpen(false);
     });
@@ -5639,98 +5499,131 @@ const CASES = [
   {id:'C11', n:'이사 + 청소 + 인터넷',    s:['move','clean','net']},
   {id:'C12', n:'전체 선택',             s:['full','part','move','clean','net','rent','fix']}
 ];
-/* ══════════ FLOW C · 02 Map Discovery ═══════════════════════════════
-   Figma 917:14693(기본) / 917:14669(판교라운지 popover) 구현.
-   좌표계: Figma 375×812 프레임의 지도 뷰포트 원점은 (0,130)이다.
-   392 폰에 옮기며 x +8.5(중앙정렬), y −115(헤더 130 제외 + 지도 하단 여백 15 보정)를 적용했다. */
-const MD_ASSET = 'assets/mapdisc/';
-/* 콘텐츠 핀 시트 — 단지 시공사례 리스트 */
-const MD_CONTENTS = {
-  ct1:{name:'봇들마을', cases:[
-    {img:'case_1.png', t:'34평 · 전체시공', by:'토니인테리어'},
-    {img:'case_2.png', t:'42평 · 주방·도배', by:'조이디자인'},
-    {img:'case_3.png', t:'25평 · 전체시공', by:'리라인테리어'},
-    {img:'case_4.png', t:'34평 · 욕실·마루', by:'라인디자인'},
-    {img:'case_5.png', t:'49평 · 전체시공', by:'어반시크디자인'},
-    {img:'case_6.png', t:'32평 · 부분시공', by:'디자인덕'}
-  ]},
-  ct2:{name:'산운마을', cases:[
-    {img:'case_4.png', t:'32평 · 전체시공', by:'디자인덕'},
-    {img:'case_5.png', t:'38평 · 주방·욕실', by:'토니인테리어'},
-    {img:'case_2.png', t:'25평 · 도배·마루', by:'조이디자인'},
-    {img:'case_1.png', t:'44평 · 전체시공', by:'라인디자인'}
-  ]}
-};
-/* x·y 는 폴백(정적 지도)용 Figma 좌표, lat·lng 는 실지도용 좌표다.
-   lat·lng 는 우리집(판교로 50) 실좌표를 원점으로 Figma 배치를 1.9m/px 로 환산해 뽑았다. */
-const MD_PINS = [
-  {id:'lounge', kind:'lounge',     x:188, y:204, lat:37.390979, lng:127.088119, label:'오늘의집<br>판교라운지'},
-  {id:'home',   kind:'home',       x:155, y:179, lat:37.391354, lng:127.087109},
-  {id:'joy',    kind:'standard',   x:65,  y:164, lat:37.391662, lng:127.085476, label:'조이디자인',  card:'m2'},
-  {id:'rira',   kind:'standard',   x:310, y:164, lat:37.391662, lng:127.090847, label:'리라인테리어', card:'m3'},
-  {id:'std',    kind:'standard',   x:284, y:338, lat:37.388692, lng:127.090052, label:'스탠다드'},
-  {id:'lp1',    kind:'lightplus',  x:64,  y:277, lat:37.389750, lng:127.085562, label:'라이트플러스'},
-  {id:'lp2',    kind:'lightplus',  x:276, y:251, lat:37.390194, lng:127.090117, label:'라이트플러스'},
-  {id:'lp3',    kind:'lightplus',  x:136, y:342, lat:37.388641, lng:127.087109, label:'라이트플러스'},
-  {id:'mem',    kind:'membership', x:297, y:395, lat:37.387736, lng:127.090460, label:'라인디자인'},
-  {id:'lt1',    kind:'light',      x:222, y:313, lat:37.389204, lng:127.088591, label:'라이트'},
-  {id:'lt2',    kind:'light',      x:222, y:166, lat:37.391713, lng:127.088591, label:'라이트'},
-  {id:'lt3',    kind:'light',      x:227, y:141, lat:37.392140, lng:127.088699, label:'라이트'},
-  {id:'lt4',    kind:'light',      x:305, y:148, lat:37.392020, lng:127.090374, label:'라이트'},
-  {id:'dot1',   kind:'dot',        x:89,  y:369, lat:37.388265, lng:127.085498},
-  {id:'dot2',   kind:'dot',        x:344, y:387, lat:37.387958, lng:127.090976},
-  /* Pin/Contents (917:18032 active · 917:18033 default) — 단지 시공사례 콘텐츠 핀 */
-  {id:'ct1',    kind:'contents',   x:252, y:38,  lat:37.393676, lng:127.089408, label:'봇들마을', img:'contents-1.png'},
-  {id:'ct2',    kind:'contents',   x:97,  y:52,  lat:37.393437, lng:127.086078, label:'산운마을', img:'contents-1.png'}
+/* ══════════ FLOW C · 칩 필터 목록 / 견적 / 매칭 / 지도
+   유저 스토리: 상단 칩으로 O2O 업체 목록 · 견적 받기 입력 후 매칭 · 주소 기반 지도(업체/사례/매장) */
+const C_ADDR = '서울 송파구 올림픽로 135';
+const C_CHIPS = [
+  {k:'all', n:'전체'},
+  {k:'full', n:'집 전체 시공'},
+  {k:'part', n:'부분 시공'},
+  {k:'move', n:'이사'},
+  {k:'clean', n:'이사청소'},
+  {k:'net', n:'인터넷'},
+  {k:'rent', n:'렌탈'}
 ];
-/* Map Marker Icon 앵커 — 마커 지점에서 요소 상단까지의 거리(default/active).
-   teardrop·contents(active) 는 꼭짓점이, 나머지는 아이콘 중심이 지점에 온다. */
-const MD_ANCHOR_Y = {
-  light:[8,9], dot:[7,7], lightplus:[12,13], membership:[12,13], standard:[13,14],
-  lounge:[13,14], home:[16,18], selected:[41,46], contents:[21,64]
-};
-/* 판교라운지 popover 내용 (917:14686) */
-const MD_LOUNGE = {
-  name:'오늘의집 판교라운지',
-  addr:'운중로 172 트윈플라자-1 101호, 02호',
-  img:MD_ASSET+'lounge-2.png'
-};
-/* 주변 업체 목록 (917:14710 › list). 첫 카드는 Figma 원본 값 그대로,
-   2·3번째는 지도 핀(조이디자인·리라인테리어)과 맞춰 이름만 바꿨다. */
-const MD_PHOTOS = ['photo-1.png','photo-3.png','photo-2.png','photo-4.png'];
-const MD_BADGES = ['우리 아파트 1회 시공','책임보장','원가검수','이벤트'];
-const MD_PARTNERS = [
-  {id:'m1', name:'토니인테리어',  star:'4.9', reviews:28, contracts:8, dist:'0.5km', area:'구의동',
-   badges:MD_BADGES, price:'중저가 시공 위주 (평당 110~139만원)'},
-  {id:'m2', name:'조이디자인',    star:'4.9', reviews:28, contracts:8, dist:'0.5km', area:'구의동',
-   badges:MD_BADGES, price:'중저가 시공 위주 (평당 110~139만원)'},
-  {id:'m3', name:'리라인테리어',  star:'4.9', reviews:28, contracts:8, dist:'0.5km', area:'구의동',
-   badges:MD_BADGES, price:'중저가 시공 위주 (평당 110~139만원)'}
-];
-/* 시트 제목 — Figma 원본은 '운중동 산운판교포레라움 11단지'이나
-   상단 Location(CH_ADDR)과 어긋나므로 우리집 단지명으로 맞춘다. */
-const MD_TITLE = '판교원마을1단지 주변 업체';
-const MD_COUNT = 20;
-/* 패널 CASE 메뉴 — 두 Figma 화면 분기 */
-/* 패널 CASE 메뉴 — 핀 선택에 따른 BottomSheet 분기 */
 const C_CASES = [
-  {id:'L1', n:'기본 · 주변 업체',   pin:null},
-  {id:'L2', n:'업체 핀 선택',       pin:'joy'},
-  {id:'L3', n:'콘텐츠 핀 선택',     pin:'ct1'},
-  {id:'L4', n:'라운지 핀 선택',     pin:'lounge'}
+  {id:'L1', n:'집 전체 시공', chip:'full'},
+  {id:'L2', n:'부분 시공', chip:'part'},
+  {id:'L3', n:'이사', chip:'move'},
+  {id:'L4', n:'전체', chip:'all'}
 ];
+const C_LAYERS = [
+  {k:'partners', n:'가까운 업체'},
+  {k:'cases', n:'아파트 사례'},
+  {k:'stores', n:'오프라인 매장'}
+];
+const C_PARTNERS = [
+  {id:'p1', svc:'full', name:'토니인테리어', dist:'0.8km', star:'5.0', reviews:24, contracts:8, badge:'책임보장', quote:'1,200~1,800만',
+    imgs:['photoKitchen','photoWall','photoFloor']},
+  {id:'p2', svc:'full', name:'보운디자인', dist:'1.4km', star:'4.9', reviews:41, contracts:12, badge:'책임보장', quote:'1,400~2,100만',
+    imgs:['photoWall','photoKitchen','photoBasin']},
+  {id:'p3', svc:'part', name:'키친랩', dist:'0.6km', star:'4.8', reviews:18, contracts:6, badge:'', quote:'180~320만',
+    imgs:['photoKitchen','photoBasin','photoFloor']},
+  {id:'p4', svc:'part', name:'월앤플로어', dist:'1.9km', star:'4.7', reviews:33, contracts:9, badge:'', quote:'90~210만',
+    imgs:['photoWall','photoFloor','photoVinyl']},
+  {id:'p5', svc:'move', name:'오늘의집 이사', dist:'2.1km', star:'4.7', reviews:132, contracts:40, badge:'검증', quote:'45~78만',
+    imgs:['photoFloor','photoWall','photoKitchen']},
+  {id:'p6', svc:'clean', name:'클린하우스', dist:'1.1km', star:'4.9', reviews:56, contracts:19, badge:'', quote:'18~32만',
+    imgs:['photoBasin','photoWall','photoKitchen']},
+  {id:'p7', svc:'net', name:'KT 제휴점 송파', dist:'0.4km', star:'4.6', reviews:88, contracts:0, badge:'', quote:'상담 후 확정',
+    imgs:['photoKitchen','photoFloor','photoWall']},
+  {id:'p8', svc:'rent', name:'코웨이 송파', dist:'1.9km', star:'4.5', reviews:27, contracts:0, badge:'', quote:'월 1.9만~',
+    imgs:['photoBasin','photoKitchen','photoFloor']}
+];
+const C_MAP_PINS = {
+  partners: [
+    {id:'p1', x:'28%', y:'38%'}, {id:'p2', x:'62%', y:'30%'}, {id:'p3', x:'40%', y:'62%'},
+    {id:'p5', x:'72%', y:'58%'}, {id:'p6', x:'22%', y:'70%'}, {id:'p7', x:'55%', y:'46%'}
+  ],
+  cases: [
+    {id:'a1', name:'잠실파크리오 32평', sub:'전체 시공 · 2026.03', x:'34%', y:'40%'},
+    {id:'a2', name:'리센츠 45평', sub:'주방·도배 · 2026.01', x:'68%', y:'48%'},
+    {id:'a3', name:'레이크팰리스 28평', sub:'부분 시공 · 2025.11', x:'48%', y:'68%'}
+  ],
+  stores: [
+    {id:'s1', name:'오늘의집 잠실점', sub:'올림픽로 300 · 10:00–21:00', x:'52%', y:'36%'},
+    {id:'s2', name:'오늘의집 송파점', sub:'송파대로 111 · 10:30–20:30', x:'30%', y:'64%'}
+  ]
+};
+function cPartners(){
+  if(S.cChip==='all') return C_PARTNERS;
+  return C_PARTNERS.filter(p=>p.svc===S.cChip);
+}
+function cPhoto(key){ return `${ODS_ASSET_BASE}/${ODS_ASSET[key]}`; }
+function cThumb(imgs){
+  return imgs.map((k,i)=>`<img class="pc-im${i===0?' pc-main':''}" src="${cPhoto(k)}" alt="">`).join('');
+}
+function cChipBar(){
+  return `<div class="c-chips">${C_CHIPS.map(c=>
+    chip({label:c.n, size:'sm', variant:S.cChip===c.k?'outlined':'normal', attrs:`data-cchip="${c.k}"`, pressed:S.cChip===c.k})
+  ).join('')}</div>`;
+}
+function bindCChips(){
+  screen.querySelectorAll('[data-cchip]').forEach(b=> b.onclick=()=>{ S.cChip=b.dataset.cchip; S.cPin=null; render(); });
+}
+function cModeToggle(mode){
+  return `<div class="c-mode-row" role="tablist" aria-label="보기 전환">
+    <div class="c-mode">
+    ${chip({label:'목록', size:'sm', variant:mode==='list'?'outlined':'normal', attrs:'data-cmode="list"', pressed:mode==='list'})}
+    ${chip({label:'지도', size:'sm', variant:mode==='map'?'outlined':'normal', attrs:'data-cmode="map"', pressed:mode==='map'})}
+    </div>
+  </div>`;
+}
+function bindCMode(){
+  screen.querySelectorAll('[data-cmode]').forEach(b=> b.onclick=()=>{
+    if(b.dataset.cmode==='map') go('cMap'); else go('cList');
+  });
+}
+function cOpenQuote(svc, partner){
+  S.cQuoteSvc = svc;
+  S.cQuotePartner = partner || null;
+  S.picked = new Set([svc]);
+  S.cMatchReady = false;
+  if(S.cMatchTimer){ clearTimeout(S.cMatchTimer); S.cMatchTimer=null; }
+  if(!S.ans.addr?.length) S.ans.addr = ['서울/경기'];
+  go('cQuote');
+}
+function cQuoteFields(svc){
+  const size = COMMON.find(q=>q.id==='size');
+  const addr = COMMON.find(q=>q.id==='addr');
+  const dday = COMMON.find(q=>q.id==='dday');
+  if(svc==='net') return [...Q.net];
+  if(svc==='rent') return [addr, ...Q.rent];
+  if(svc==='move') return [addr, size, Q.move.find(q=>q.id==='type'), Q.move.find(q=>q.id==='mdate')].filter(Boolean);
+  if(svc==='clean') return [addr, size, Q.clean.find(q=>q.id==='cday')].filter(Boolean);
+  return [addr, size, (Q[svc]||[]).find(q=>q.id==='area'), dday].filter(Boolean);
+}
+function cFieldOpts(f){ return typeof f.opts==='function' ? f.opts() : (f.opts||[]); }
+function cFieldReady(f){
+  const v = S.ans[f.id]||[];
+  return v.length>0;
+}
 function resetFlowC(){
+  S.cChip = 'all';
   S.cTab = 'home';
   S.cPChip = 0;      /* 집 전체시공 (846:52869 selected) */
   S.cCChip = 1;      /* 부분시공 (868:14733 selected) */
   S.cCFilter = 0;    /* 주방 (868:14741 selected) */
   S.cTabChip = {full:1, part:0};   /* 전체시공=모던(893:16520) · 부분시공=전체(892:14431) */
   S.cScrap = new Set();
+  S.cLayer = 'partners';
+  S.cQuoteSvc = 'full';
+  S.cMatchReady = false;
+  if(S.cMatchTimer){ clearTimeout(S.cMatchTimer); S.cMatchTimer=null; }
   if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer=null; }
   S.cOfferBg = chPickOfferBg(5);   /* 배너 슬라이드 배경 랜덤 배치 */
-  S.mdPin = null;
-  S.mdCard = null;
-  S.msH = MS_FULL;
+  S.cPin = null;
+  S.cQuotePartner = null;
   S.ans = {addr:['서울/경기'], size:['30평대']};
   S.picked = new Set(['full']);
 }
@@ -5770,6 +5663,12 @@ const CH_MENU = [
   ['전체시공','부분시공','단지시공사례','직시공','견적계산기'],
   ['이사','이사청소','인터넷','렌탈구독','설치수리'],
 ];
+/* Pin (892:15014) — kind: lounge(오늘의집 심볼) · house(단지) · brand(스탠다드) */
+const CH_PINS = [
+  {id:'lounge',   kind:'lounge', x:67,  y:144, w:60, label:'오늘의집<br>판교라운지'},
+  {id:'complex',  kind:'house',  x:168, y:84,  w:32, label:''},
+  {id:'standard', kind:'brand',  x:258, y:80,  w:48, label:'스탠다드'},
+];
 /* 파트너 카드 (846:52878) */
 const CH_QUOTE = '가격도 조금  빼주시고 남자2명, 주방 짐 챙겨주시는  여자1명 오셔서 착착 꼼꼼하고 깔끔하게 진행해주셨어요~! 꼼꼼히 잘 챙겨주셔서 추천 드립니다!!!!!!!';
 const CH_PARTNERS = [
@@ -5793,14 +5692,26 @@ const chOdsSvg = (path, size) =>
   `<img src="${ODS_ASSET_BASE}/${path}" alt="" width="${size}" height="${size}"
      style="width:${size}px;height:${size}px;display:block">`;
 
-/* ── 지도 (837:14495) — 실제 주소 좌표 기준의 실시간 지도.
-   핀은 Map Discovery 와 같은 MD_PINS 를 마커로 공유해, 홈 → Map Discovery 전환에서
-   같은 지도·같은 핀·같은 중심이 그대로 이어진다. */
+/* ── 지도 (837:14495) ── */
 function chMap(){
+  const pin = p => {
+    let icon;
+    if(p.kind==='lounge')      icon = chOdsSvg('AssetOhouseSymbol/ohouse-symbol.svg', 22);
+    else if(p.kind==='brand')  icon = `<span class="chp-inner">${chOdsSvg('AssetOhouseStandardSymbolWhite/ohouse-standard-symbol-white.svg',16)}</span>`;
+    else                       icon = ic('IconPlaceHouseFilled',20);
+    return `<button class="ch-pin" data-kind="${p.kind}" data-pin="${p.id}" type="button"
+      style="left:${p.x}px;top:${p.y}px;width:${p.w}px"${p.label?'':` aria-label="단지"`}>
+      <span class="chp-ic">${icon}</span>
+      ${p.label?`<span class="chp-lb t-body14L18 w-semibold">${p.label}</span>`:''}
+    </button>`;
+  };
   return `<div class="ch-map">
-    ${mapSlot()}
-    ${mapResearchBtn()}
-    ${mapActions()}
+    <img class="cm-img" src="${CH_ASSET}map.jpg" alt="주변 지도">
+    ${CH_PINS.map(pin).join('')}
+    <div class="ch-mapact">
+      <button type="button" aria-label="우리집으로 이동">${ic('IconHouse',20)}</button>
+      <button type="button" aria-label="현재 위치로 이동">${ic('IconScope',20)}</button>
+    </div>
   </div>`;
 }
 
@@ -6204,7 +6115,7 @@ VIEW.cHome = ()=>{
       <div class="ch-loc">
         <div class="cl-label">
           ${ic('IconLocationPinDot',18)}
-          <span class="cl-txt t-body14L20 w-regular">${mapAddr()}</span>
+          <span class="cl-txt t-body14L20 w-regular">${CH_ADDR}</span>
         </div>
         ${textButton({label:'주소변경', size:14, variant:'primary'})}
       </div>
@@ -6244,8 +6155,6 @@ function chCompareBar(){
 
 function bindCHome(){
   chStartOfferRoll();
-  mapMount();
-  bindHomeHandleDrag();
   /* tab — ODS Tab value 변경 (sticky 여부와 무관한 같은 컴포넌트) */
   screen.querySelectorAll('[data-chtab]').forEach(b=> b.onclick=()=>{
     S.cTab = b.dataset.chtab;
@@ -6265,6 +6174,8 @@ function bindCHome(){
     const id=b.dataset.scrap;
     S.cScrap.has(id) ? S.cScrap.delete(id) : S.cScrap.add(id);
   }));
+  /* 핀 선택 — 선택된 업체 목록으로 진입 */
+  screen.querySelectorAll('[data-pin]').forEach(b=> b.onclick=()=>{ S.cPin=b.dataset.pin; go('cList'); });
   /* sticky 전환 — tab 이 헤더(86px) 에 붙으면 Handle 을 접는다 (892:15275) */
   /* 콘텐츠가 짧은 탭(인터넷·렌탈)도 tab 이 헤더에 붙을 수 있도록 스크롤 여유를 만든다.
      탭 페이지 노드의 Top Navigation 이 h196(헤더 86 + tab 60)로 항상 sticky 인 상태를 재현. */
@@ -6290,593 +6201,174 @@ function bindCHome(){
   }
 }
 
-/* ══════════ 실시간 지도 (Leaflet + OpenStreetMap · Nominatim 지오코딩) ══════════
-   ODS 에는 지도 컴포넌트가 없어 오픈소스 타일을 쓰고, 그 위의 Pin·BottomSheet·popover 는
-   ODS 스펙 그대로 얹는다. 스크립트/타일/지오코딩이 실패하면 Figma 지도 에셋으로 폴백한다.
-   지도 노드는 화면마다 다시 만들지 않고 하나를 옮겨 붙여, 홈 ↔ Map Discovery 전환에서
-   지도 중심·줌이 그대로 이어진다. */
-const LEAFLET_JS  = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
-const LEAFLET_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';
-const NOMINATIM   = 'https://nominatim.openstreetmap.org';
-/* CH_ADDR 지오코딩 실패 시 폴백 — 판교원마을1단지 휴먼시아아파트(판교로 50) */
-const MAP_HOME = {lat:37.3913544, lng:127.0871091};
-const MAP_ZOOM = 16;
-const MAP_RESEARCH_M = 180;   /* 이 거리(m) 넘게 움직이면 '이 지역에서 검색' 노출 */
-const MAP = {node:null, map:null, markers:[], status:'idle', home:MAP_HOME,
-             anchor:null, center:null, resizing:false, screen:null, auto:0, revealed:null};
-
-/* Nominatim 은 '경기도 …' 를 붙이면 못 찾는다 — 괄호·광역단체 접두를 떼고 질의한다 */
-function mapGeoQuery(addr){
-  return addr.replace(/\s*\([^)]*\)\s*/g, ' ')
-             .replace(/^\s*[가-힣]+(?:특별자치도|특별자치시|특별시|광역시|도)\s+/, '')
-             .replace(/\s+/g, ' ').trim();
-}
-function mapCacheGet(k){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } }
-function mapCacheSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
-
-/* 주소 → 좌표 */
-async function mapGeocode(addr){
-  const q = mapGeoQuery(addr), key = 'o2o.geo:'+q;
-  const hit = mapCacheGet(key); if(hit) return hit;
-  const url = `${NOMINATIM}/search?format=json&limit=1&accept-language=ko&q=${encodeURIComponent(q)}`;
-  const r = await fetch(url, {headers:{'Accept':'application/json'}});
-  const j = await r.json();
-  if(!j || !j.length) throw new Error('no geocode result');
-  const out = {lat:+j[0].lat, lng:+j[0].lon, display:j[0].display_name};
-  mapCacheSet(key, out);
-  return out;
-}
-/* 좌표 → 주소 (지도를 옮긴 뒤 '이 지역에서 검색') */
-async function mapReverse(lat, lng){
-  const key = `o2o.rev:${lat.toFixed(4)},${lng.toFixed(4)}`;
-  const hit = mapCacheGet(key); if(hit) return hit;
-  const url = `${NOMINATIM}/reverse?format=json&accept-language=ko&lat=${lat}&lon=${lng}`;
-  const r = await fetch(url, {headers:{'Accept':'application/json'}});
-  const j = await r.json();
-  if(!j || !j.display_name) throw new Error('no reverse result');
-  /* '대한민국 / 우편번호' 꼬리를 떼고 읽기 좋은 순서로 뒤집는다 */
-  const parts = j.display_name.split(',').map(t=>t.trim())
-    .filter(t=> t!=='대한민국' && !/^\d{5}$/.test(t));
-  const out = parts.reverse().join(' ');
-  mapCacheSet(key, out);
-  return out;
-}
-
-let leafletPromise = null;
-function loadLeaflet(){
-  if(window.L) return Promise.resolve(window.L);
-  if(leafletPromise) return leafletPromise;
-  leafletPromise = new Promise((res, rej)=>{
-    const css = document.createElement('link');
-    css.rel = 'stylesheet'; css.href = LEAFLET_CSS;
-    document.head.appendChild(css);
-    const js = document.createElement('script');
-    js.src = LEAFLET_JS;
-    js.onload  = ()=> window.L ? res(window.L) : rej(new Error('leaflet missing'));
-    js.onerror = ()=> rej(new Error('leaflet load failed'));
-    document.head.appendChild(js);
-  });
-  return leafletPromise;
-}
-
-const mapLive = () => MAP.status==='ready';
-function mapNode(){
-  if(!MAP.node){ MAP.node = document.createElement('div'); MAP.node.className = 'live-map'; }
-  return MAP.node;
-}
-/* 지도 슬롯 — 화면 템플릿에 넣고, 렌더 후 mapMount() 로 지도 노드를 옮겨 붙인다 */
-function mapSlot(){
-  return `<div class="map-slot" id="mapSlot">
-    ${MAP.status==='failed' ? '' : `<div class="map-note t-detail13L18" id="mapNote">${spinner(16)}지도를 불러오는 중</div>`}
-  </div>`;
-}
-function mapActions(){
-  return `<div class="ch-mapact">
-    <button type="button" aria-label="우리집으로 이동" data-mapact="home">${ic('IconHouse',20)}</button>
-    <button type="button" aria-label="현재 위치로 이동" data-mapact="me">${ic('IconScope',20)}</button>
-  </div>`;
-}
-function mapResearchBtn(){
-  return `<button class="map-research t-body14L18 w-semibold" id="mapResearch" type="button" data-on="0">
-    ${ic('IconMagnifyingGlass',16)}이 지역에서 검색</button>`;
-    /* [예외] 통상 새로고침 아이콘(IconArrowTriangleHeadClockwise)을 쓰지만
-       프로토타입 ODS_ICON 레지스트리에 원본 path 가 없어 IconMagnifyingGlass 로 대체 */
-}
-
-/* 화면 템플릿을 새로 그린 뒤 호출 — 지도 노드를 현재 슬롯으로 옮기고 마커를 다시 얹는다 */
-function mapMount(){
-  const slot = $('#mapSlot');
-  if(!slot) return;
-  if(MAP.status==='failed'){ mapRenderFallback(slot); return; }
-  slot.appendChild(mapNode());
-  bindMapActions();
-  if(MAP.status==='ready'){
-    $('#mapNote')?.remove();
-    mapResize();
-    mapShiftForSheet();
-    mapSyncMarkers();
-    mapRevealPin();
-    return;
-  }
-  if(MAP.status==='idle') mapInit();
-}
-/* 폴백 — Figma 지도 에셋 + Figma 좌표 핀 */
-function mapRenderFallback(slot){
-  slot.innerHTML = `<img class="md-img" src="${MD_ASSET}map.png" alt="우리집 주변 지도">
-    <div class="md-plane">${MD_PINS.map(p=>mdPin(p)).join('')}</div>`;
-  slot.querySelector('.md-img').style.cssText += ';z-index:0';
-  bindPinTaps(slot);
-  bindMapActions();
-  slot.onclick = e=>{ if(!e.target.closest('[data-mdpin]')) mdDeselect(); };
-}
-
-async function mapInit(){
-  MAP.status = 'loading';
-  try{
-    const L = await loadLeaflet();
-    /* 실제 주소 API — 우리집 주소를 좌표로 바꿔 지도 중심을 잡는다 */
-    try{
-      const g = await mapGeocode(CH_ADDR);
-      MAP.home = {lat:g.lat, lng:g.lng};
-    }catch(e){ MAP.home = MAP_HOME; }
-    MAP.map = L.map(mapNode(), {
-      center:[MAP.home.lat, MAP.home.lng], zoom:MAP_ZOOM,
-      zoomControl:false, attributionControl:true, tap:true
-    });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom:19, minZoom:12,
-      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(MAP.map);
-    MAP.anchor = MAP.map.getCenter();
-    MAP.center = MAP.anchor;
-    MAP.screen = S.screen;
-    MAP.status = 'ready';
-    MAP.map.on('moveend', mapOnMoveEnd);
-    /* 핀이 아닌 지도 영역을 누르면 선택을 풀고 기본 시트로 돌아간다 */
-    MAP.map.on('click', mdDeselect);
-    $('#mapNote')?.remove();
-    mapResize();
-    mapSyncMarkers();
-  }catch(e){
-    MAP.status = 'failed';
-    const slot = $('#mapSlot');
-    if(slot){ slot.innerHTML=''; mapRenderFallback(slot); }
-  }
-}
-
-/* 마커 — Pin 컴포넌트를 divIcon 으로 얹는다 */
-function mapSyncMarkers(){
-  if(!mapLive()) return;
-  MAP.markers.forEach(m=> m.remove());
-  MAP.markers = MD_PINS.map(p=>{
-    const on   = mdPinTappable(p) && mdPinActive(p);
-    const kind = (p.kind==='lounge' && on) ? 'selected' : p.kind;
-    const ay   = (MD_ANCHOR_Y[kind] || [12,12])[on?1:0];
-    const icon = L.divIcon({
-      className:'mk-wrap', iconSize:[0,0], iconAnchor:[0,0],
-      html:`<div class="mk-pin" style="--mk-y:${ay}px">${mdPin(p, true)}</div>`
-    });
-    const m = L.marker([p.lat, p.lng], {icon, riseOnHover:true, keyboard:false,
-      zIndexOffset: on ? 1000 : (p.kind==='contents' ? 400 : 0)});
-    m.on('click', ()=> mdPinTap(p.id));
-    return m.addTo(MAP.map);
-  });
-}
-/* 코드가 옮긴 이동(전환 보정·popover 팬·버튼)은 '이 지역에서 검색' 대상이 아니다 */
-function mapAuto(fn){
-  MAP.auto++;
-  fn();
-  setTimeout(()=>{
-    MAP.auto = Math.max(0, MAP.auto-1);
-    if(!MAP.auto && mapLive()) MAP.anchor = MAP.map.getCenter();
-  }, 420);
-}
-/* 화면이 바뀌면 BottomSheet 가 가리는 만큼 시야를 위로 올려, 우리집 주변이
-   시트 위쪽 가시 영역의 한가운데 오게 한다. */
-function mapShiftForSheet(){
-  if(!mapLive() || MAP.screen===S.screen) return;
-  const prev = MAP.screen;
-  MAP.screen = S.screen;
-  if(prev===null) return;                       /* 최초 마운트는 그대로 */
-  const h = (S.msH || MS_FULL) / 2;
-  mapAuto(()=>{
-    if(prev==='cHome' && S.screen==='cMapDisc')      MAP.map.panBy([0,  h], {animate:false});
-    else if(prev==='cMapDisc' && S.screen==='cHome') MAP.map.panBy([0, -h], {animate:false});
-  });
-  MAP.center = MAP.map.getCenter();
-}
-/* 선택한 핀이 BottomSheet 에 가리면 가시 영역 안으로 끌어올린다 */
-function mapRevealPin(){
-  if(!mapLive()) return;
-  if(!S.mdPin){ MAP.revealed = null; return; }
-  if(MAP.revealed === S.mdPin) return;
-  MAP.revealed = S.mdPin;
-  const p = MD_PINS.find(x=>x.id===S.mdPin);
-  const box = screen.querySelector('.md-map');
-  if(!p || !box) return;
-  const H = box.clientHeight, visible = H - (S.msH || MS_FULL), m = 84;
-  const y = MAP.map.latLngToContainerPoint([p.lat, p.lng]).y;
-  let dy = 0;
-  if(y > visible - m) dy = y - (visible - m);   /* 시트에 가림 → 위로 */
-  else if(y < m)      dy = y - m;               /* 헤더에 가림 → 아래로 */
-  if(Math.abs(dy) > 8) mapAuto(()=> MAP.map.panBy([0, dy], {animate:true}));
-}
-function mapOnMoveEnd(){
-  if(!MAP.resizing) MAP.center = MAP.map.getCenter();
-  const btn = $('#mapResearch');
-  if(!btn || !MAP.anchor) return;
-  if(MAP.auto || MAP.resizing){ btn.dataset.on = '0'; MAP.anchor = MAP.map.getCenter(); return; }
-  const far = MAP.map.distance(MAP.map.getCenter(), MAP.anchor) > MAP_RESEARCH_M;
-  btn.dataset.on = far ? '1' : '0';
-}
-function bindMapActions(){
-  screen.querySelectorAll('[data-mapact]').forEach(b=> b.onclick=()=>{
-    if(!mapLive()) return;
-    if(b.dataset.mapact==='home'){
-      mapAuto(()=>{
-        MAP.map.setView([MAP.home.lat, MAP.home.lng], MAP_ZOOM);
-        if(screen.querySelector('.md-sheet')) MAP.map.panBy([0, (S.msH||MS_FULL)/2], {animate:false});
-      });
-      return;
-    }
-    if(!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      pos=> mapAuto(()=> MAP.map.setView([pos.coords.latitude, pos.coords.longitude], MAP_ZOOM)),
-      ()=>  mapAuto(()=> MAP.map.setView([MAP.home.lat, MAP.home.lng], MAP_ZOOM)),
-      {timeout:5000});
-  });
-  const rs = $('#mapResearch');
-  if(rs) rs.onclick = async ()=>{
-    if(!mapLive()) return;
-    const c = MAP.map.getCenter();
-    MAP.anchor = c;
-    rs.dataset.on = '0';
-    try{ S.mapAddr = await mapReverse(c.lat, c.lng); }
-    catch(e){ S.mapAddr = null; }
-    document.querySelectorAll('.cl-txt').forEach(el=> el.textContent = mapAddr());
-  };
-}
-/* 화면에 표시할 주소 — '이 지역에서 검색' 으로 역지오코딩한 값이 있으면 그것을 쓴다 */
-const mapAddr = () => S.mapAddr || CH_ADDR;
-
-/* ══════════ 02 Map Discovery ══════════════════════════════════════
-   Figma 917:14693(기본 · 주변 업체 BottomSheet) / 917:14669(판교라운지 popover) */
-
-/* Pin (892:15014) — kind 별 Map Marker Icon 내용물.
-   on(=active)이면 sheet 2행 크기를 쓴다. */
-/* PillBadge 수치 = 그 단지의 시공사례 개수 (시트 제목과 같은 소스) */
-const mdPinCount = p => (MD_CONTENTS[p.id]||{cases:[]}).cases.length || 0;
-function mdPinInner(p, on){
-  if(p.kind==='contents'){
-    return `<span class="mpc-box">
-        <span class="mpc-img"><img src="${MD_ASSET}${p.img}" alt=""></span>
-        ${mdPinCount(p)?`<span class="mp-pill t-detail10L14 w-semibold">${mdPinCount(p)}</span>`:''}
-      </span>
-      ${on?`<img class="mpc-tip" src="${MD_ASSET}pin-contents-tip.svg" width="14" height="10" alt="">`:''}`;
-  }
-  if(p.kind==='selected'){
-    const w = on?36:32, h = on?46:41;
-    return `<img src="${MD_ASSET}pin-lounge-selected.svg" alt="" width="${w}" height="${h}">`;
-  }
-  if(p.kind==='lounge') return chOdsSvg('AssetOhouseSymbol/ohouse-symbol.svg', on?24:22);
-  if(p.kind==='home')      return ic('IconPlaceHouseFilled', on?22:20);
-  if(p.kind==='standard'){
-    const n = on?18:16;
-    return `<span class="mp-in"><img src="${MD_ASSET}pin-standard-label.svg" alt="" width="${n}" height="${n}"></span>`;
-  }
-  if(p.kind==='lightplus' || p.kind==='membership'){
-    const n = on?22:20;
-    return `<img src="${MD_ASSET}pin-lightplus.svg" alt="" width="${n}" height="${n}">`;
-  }
-  return `<span class="mp-in"></span>`;   /* light · dot */
-}
-/* 상호작용하는 핀 — 라운지(popover) · 업체 카드 연결 핀 · 콘텐츠 핀 */
-const mdPinActive = p => S.mdPin===p.id;
-const mdSelPin = () => MD_PINS.find(p=>p.id===S.mdPin) || null;
-/* 선택한 핀 종류가 BottomSheet 본문을 정한다 — 업체/미선택=주변업체 · 콘텐츠=사례목록 · 라운지=라운지정보 */
-const mdSheetKind = () => { const p = mdSelPin(); return p && (p.kind==='contents' || p.kind==='lounge') ? p.kind : 'partners'; };
-const mdPinTappable = p => p.kind==='lounge' || !!p.card || p.kind==='contents';
-function mdPin(p, marker){
-  const act = mdPinTappable(p);
-  const on  = act && mdPinActive(p);
-  const tag = act ? 'button' : 'div';
-  /* 라운지가 선택되면 선택된업체(teardrop) 타입으로 교체된다 (917:14669) */
-  const kind = (p.kind==='lounge' && on) ? 'selected' : p.kind;
-  /* contents 는 active 일 때만 라벨을 노출한다 (917:18033 default 는 라벨 없음) */
-  const lb  = p.kind==='contents' ? (on ? p.label : '') : p.label;
-  return `<${tag} class="md-pin" data-kind="${kind}" data-state="${on?'active':'default'}"
-    data-mdpin="${p.id}"
-    ${act?`type="button" data-act="1" aria-pressed="${on}"`:'aria-hidden="true"'}
-    style="${marker?'':`left:${p.x}px;top:${p.y}px`}">
-    <span class="mp-ic">${mdPinInner({...p, kind}, on)}</span>
-    ${lb?`<span class="mp-lb t-body14L18 w-semibold">${lb}</span>`:''}
-  </${tag}>`;
-}
-
-
-/* ══════════ 시트 핸들 드래그 ══════════════════════════════════════
-   O2O 홈: Container 핸들을 아래로 끌면 지도가 커지며 드러나고, 임계치를 넘기면
-   같은 지도 위에 Map Discovery 컴포넌트(주변 업체 시트·핀·popover)가 올라온다.
-   Map Discovery: 시트 핸들로 높이를 조절하고, peek 아래로 더 내리면 홈으로 돌아온다. */
-const DRAG_GO  = 72;    /* 화면 전환 임계치(px) */
-const CHM_BASE = 240;   /* 홈 지도 기본 높이 (837:14495) */
-const MS_FULL  = 356;   /* BottomSheet 기본 높이 (917:14710) */
-const MS_PEEK  = 120;
-
-function dragHandle(el, onMove, onEnd, onStart){
-  if(!el) return;
-  let id = null, y0 = 0;
-  el.addEventListener('pointerdown', e=>{
-    if(id!==null) return;
-    id = e.pointerId; y0 = e.clientY;
-    try{ el.setPointerCapture(id); }catch(_){}
-    e.preventDefault();
-    onStart && onStart();
-  });
-  el.addEventListener('pointermove', e=>{
-    if(e.pointerId!==id) return;
-    onMove(e.clientY - y0);
-  });
-  const end = e=>{
-    if(e.pointerId!==id) return;
-    const dy = e.clientY - y0;
-    try{ el.releasePointerCapture(id); }catch(_){}
-    id = null;
-    onEnd(dy);
-  };
-  el.addEventListener('pointerup', end);
-  el.addEventListener('pointercancel', end);
-}
-/* 컨테이너 크기가 바뀌면 Leaflet 은 좌상단을 고정해 중심이 밀린다 —
-   논리 중심(MAP.center)을 다시 잡아준다. */
-function mapResize(){
-  if(!mapLive()) return;
-  const c = MAP.center || MAP.map.getCenter();
-  MAP.resizing = true;
-  MAP.map.invalidateSize({animate:false});
-  MAP.map.setView(c, MAP.map.getZoom(), {animate:false});
-  MAP.resizing = false;
-  MAP.center = c;
-}
-/* 지도 크기가 연속으로 바뀌는 동안 프레임마다 한 번만 갱신한다 */
-let mapResizeRaf = 0;
-function mapNudge(){
-  if(!mapLive() || mapResizeRaf) return;
-  mapResizeRaf = requestAnimationFrame(()=>{ mapResizeRaf = 0; mapResize(); });
-}
-
-function bindHomeHandleDrag(){
-  const ch = screen.querySelector('.ch');
-  const handle = screen.querySelector('.ch-tab .ct-handle');
-  if(!ch || !handle) return;
-  dragHandle(handle,
-    dy=>{
-      if(dy <= 0){ ch.dataset.drag='0'; ch.style.removeProperty('--chm-h'); mapNudge(); return; }
-      ch.dataset.drag = '1';
-      /* 임계치를 넘으면 저항을 줘 전환이 임박했음을 알린다 */
-      const v = dy <= DRAG_GO ? dy : DRAG_GO + (dy-DRAG_GO)*0.35;
-      ch.style.setProperty('--chm-h', (CHM_BASE + Math.min(v, 200))+'px');
-      mapNudge();
-    },
-    dy=>{
-      ch.dataset.drag = '0';
-      ch.style.removeProperty('--chm-h');
-      if(dy > DRAG_GO){
-        S.mdPin=null; S.mdCard=null; S.msH = MS_FULL;
-        go('cMapDisc');
-        return;
-      }
-      setTimeout(mapNudge, 260);
-    });
-}
-
-function bindSheetDrag(){
-  const sheet = screen.querySelector('.md-sheet');
-  const handle = sheet && sheet.querySelector('.ms-handle');
-  if(!handle) return;
-  let base = S.msH || MS_FULL;
-  dragHandle(handle,
-    dy=>{
-      sheet.dataset.drag = '1';
-      sheet.style.setProperty('--ms-h', Math.max(24, Math.min(MS_FULL, base - dy))+'px');
-      mapNudge();
-    },
-    dy=>{
-      sheet.dataset.drag = '0';
-      /* peek 보다 더 내리면 O2O 홈으로 돌아간다 */
-      if(base - dy < MS_PEEK - DRAG_GO){ S.msH = MS_FULL; go('cHome'); return; }
-      S.msH = dy > DRAG_GO ? MS_PEEK : (dy < -DRAG_GO ? MS_FULL : base);
-      sheet.style.setProperty('--ms-h', S.msH+'px');
-      setTimeout(mapNudge, 260);
-    },
-    ()=>{ base = S.msH || MS_FULL; });
-}
-
-/* 핀 탭 — 라운지는 popover, 콘텐츠·업체 핀은 active 토글(+ 카드 동기화) */
-function mdPinTap(id){
-  const p = MD_PINS.find(x=>x.id===id);
-  if(!p) return;
-  /* 선택은 한 번에 하나. 다시 누르면 해제되고 기본 시트로 돌아간다. */
-  const off = S.mdPin===p.id;
-  S.mdPin  = off ? null : p.id;
-  S.mdCard = off ? null : (p.card || null);
-  S.msH    = MS_FULL;      /* 시트를 접어둔 상태였다면 다시 펼친다 */
-  if(S.screen!=='cMapDisc') go('cMapDisc'); else render();
-  screen.querySelector('.ms-card[aria-current="true"]')?.scrollIntoView({block:'nearest'});
-}
-/* 핀 바깥(지도 배경)을 누르면 선택 해제 → 기본 container BottomSheet */
-function mdDeselect(){
-  if(!S.mdPin) return;
-  S.mdPin = null; S.mdCard = null; S.msH = MS_FULL;
-  render();
-}
-function bindPinTaps(root){
-  root.querySelectorAll('[data-mdpin][data-act="1"]').forEach(b=> b.onclick=()=> mdPinTap(b.dataset.mdpin));
-}
-
-/* 라운지 정보 BottomSheet 본문 (내용은 917:14686 popover 와 동일) */
-function mdLoungeBody(){
-  return `<div class="ms-lounge">
-    <div class="ml-addr">
-      <span class="ma-t t-detail13L18 w-regular">${MD_LOUNGE.addr}</span>
-      <span class="ma-dot t-body14L18 w-regular">·</span>
-      <button class="ml-copy" type="button"><i aria-hidden="true"></i><span class="t-detail12L16 w-medium">복사</span></button>
+VIEW.cList = ()=>{
+  const rows = cPartners();
+  screen.innerHTML = `<div class="c-page">
+    ${topNav({title:'내 주변 업체'})}
+    <div class="c-addr">
+      ${ic('IconLocationPinDot',18)}
+      <div class="c-addr-t">
+        <div class="t-detail12L16 c-fg-weak">설정된 주소</div>
+        <div class="t-body14L18 w-semibold">${C_ADDR}</div>
+      </div>
     </div>
-    <div class="ml-img"><img src="${MD_LOUNGE.img}" alt="${MD_LOUNGE.name}"></div>
-    <button class="ods-textbtn ml-more" data-size="14" data-variant="neutral-600" type="button">
-      자세히 보기 ${ic('IconChevronRight',14)}
-    </button>
-  </div>`;
-}
-/* 콘텐츠 리스트 BottomSheet 본문 — 단지 시공사례 */
-function mdContentsBody(){
-  const c = MD_CONTENTS[S.mdPin];
-  if(!c) return '';
-  return `<div class="ms-cts">
-    ${c.cases.map(x=>`<button class="mc-item" type="button">
-      <span class="mc-thumb"><img src="${CH_ASSET}${x.img}" alt=""></span>
-      <span class="mc-t t-body14L18 w-semibold">${x.t}</span>
-      <span class="mc-by t-detail12L16 w-regular">${x.by}</span>
-    </button>`).join('')}
-  </div>`;
-}
-
-/* 업체 카드 (917:14710 › 업체 리스트 483:38628) */
-function mdCard(p){
-  const on = S.mdCard===p.id;
-  const photos = MD_PHOTOS.map((f,n)=>
-    `<img src="${MD_ASSET}${f}" alt="" style="width:${n<2?249:70}px">`).join('');
-  return `<button class="ms-card" type="button" data-mdcard="${p.id}"${on?' aria-current="true"':''}>
-    <span class="msc-info">
-      <span class="msc-nm">
-        <b class="t-body16L20 w-bold">${p.name}</b>
-        <img class="msc-std" src="${MD_ASSET}badge-standard.svg" alt="오늘의집 스탠다드" width="109" height="18">
-      </span>
-      <span class="msc-det">
-        <span class="msc-row t-detail12L16">
-          <span class="msc-star">${ic('IconStarFilled',12)}<b class="w-bold">${p.star}</b></span>
-          <span class="w-bold">리뷰 ${p.reviews}</span>
-          <span class="msc-sep">・</span>
-          <span class="w-bold">최근계약 ${p.contracts}</span>
-          <span class="msc-sep">・</span>
-          <span class="w-bold">${p.dist} (${p.area})</span>
-        </span>
-        <span class="msc-badges">${p.badges.map(b=>sqBadge(b,'neutral300','16')).join('')}</span>
-      </span>
-      <span class="msc-price t-detail12L16 w-regular">${p.price}${ic('IconInfoCircle',14)}</span>
-    </span>
-    <span class="msc-rail">${photos}</span>
-  </button>`;
-}
-
-/* Floating BottomSheet (917:14710) — 선택한 핀 종류에 따라 본문이 바뀐다.
-   기본(미선택)·업체 핀 = 주변 업체 목록 / 콘텐츠 핀 = 시공사례 목록 / 라운지 핀 = 라운지 정보 */
-function mdSheetTitle(){
-  const kind = mdSheetKind();
-  if(kind==='lounge')   return {t:MD_LOUNGE.name, n:'', icon:true};
-  if(kind==='contents') return {t:`${(MD_CONTENTS[S.mdPin]||{}).name||''} 시공사례`,
-                                n:String((MD_CONTENTS[S.mdPin]||{cases:[]}).cases.length)};
-  return {t:MD_TITLE, n:String(MD_COUNT)};
-}
-function mdSheetBody(){
-  const kind = mdSheetKind();
-  if(kind==='lounge')   return mdLoungeBody();
-  if(kind==='contents') return mdContentsBody();
-  return `<div class="ms-filter">
-      <button class="ms-sort t-body14L18 w-regular" type="button">추천순${ic('IconChevronDown',18)}</button>
-      <button class="ms-std" type="button">
-        ${cbxIndicator(false,'medium')}
-        <img class="msd-logo" src="${MD_ASSET}logo-standard-blue.svg" alt="오늘의집 스탠다드" width="121" height="20">
-        ${ic('IconInfoCircle',16)}
-      </button>
-    </div>
-    <div class="ms-list">
-      <div class="ms-adhead">
-        <div class="ms-adrow">
-          <span class="t-detail12L16 w-bold">프리미엄</span>
-          <span class="ods-sqbadge" data-size="16" data-variant="base2_outline">광고${ic('IconInfoCircle',12)}</span>
+    ${cModeToggle('list')}
+    ${cChipBar()}
+    <div class="c-list">
+      ${rows.length? rows.map(p=>`<article class="c-row">
+        <div class="pc-thumb">${cThumb(p.imgs)}</div>
+        <div class="c-row-info">
+          <div class="c-row-nm">
+            <b class="t-body16L20 w-bold">${p.name}</b>
+            ${p.badge?sqBadge(p.badge,'brand-weak','16'):''}
+            <span class="t-detail12L16 c-fg-weak">${p.dist}</span>
+          </div>
+          <div class="t-detail12L16 c-fg-weak">${label(p.svc)}</div>
+          <div class="c-row-meta t-detail12L16">
+            <span class="pc-star">${ic('IconStarFilled',12)}<b class="w-bold">${p.star}</b></span>
+            <span>계약자리뷰 <b class="w-bold">${p.reviews}</b></span>
+            ${p.contracts?`<span class="pc-dot">·</span><span>최근계약 <b class="w-bold">${p.contracts}</b></span>`:''}
+          </div>
+          <div class="c-row-cta">${boxButton({label:'견적 받기', size:'medium', variant:'brand-solid', attrs:`data-cquote="${p.id}"`, full:true})}</div>
         </div>
-        <div class="ms-div" aria-hidden="true"></div>
-      </div>
-      <div class="ms-cards">${MD_PARTNERS.map(mdCard).join('')}</div>
-    </div>`;
-}
-function mdSheet(){
-  const {t, n, icon} = mdSheetTitle();
-  return `<div class="md-sheet" role="region" aria-label="${t}" style="--ms-h:${S.msH||MS_FULL}px">
-    <div class="ms-handle" aria-hidden="true"><i></i></div>
-    <div class="ms-scroll">
-      <div class="ms-top">
-        <div class="mt-txt">
-          ${icon?chOdsSvg('AssetOhouseSymbol/ohouse-symbol.svg', 20):''}
-          <b class="t-body16L20 w-bold">${t}</b>
-          ${n?`<span class="t-body16L20 w-semibold">${n}</span>`:''}
-        </div>
-      </div>
-      ${mdSheetBody()}
+      </article>`).join('') : `<div class="c-empty t-body14L18">이 카테고리의 업체가 없어요</div>`}
     </div>
+    ${bottomGnb()}
   </div>`;
-}
-
-VIEW.cMapDisc = ()=>{
-  screen.innerHTML = `<div class="md-page">
-    <div class="search-nav" role="navigation" aria-label="글로벌 내비게이션">
-      <button class="sn-icon" type="button" aria-label="메뉴">${ic('IconLine3Horizontal',24)}</button>
-      <div class="sn-search">
-        <span class="sn-ic">${ic('IconMagnifyingGlass',18)}</span>
-        <span class="sn-ph t-body14L20 w-regular">오늘의집 통합검색</span>
-      </div>
-      <button class="sn-icon" type="button" aria-label="알림">${ic('IconBell',24)}</button>
-      <button class="sn-icon" type="button" aria-label="북마크">${ic('IconBookmark',24)}</button>
-      <button class="sn-icon" type="button" aria-label="장바구니">${ic('IconCart',24)}</button>
-    </div>
-    <div class="ch-loc">
-      <div class="cl-label">
-        ${ic('IconLocationPinDot',18)}
-        <span class="cl-txt t-body14L20 w-regular">${mapAddr()}</span>
-      </div>
-      ${textButton({label:'주소변경', size:14, variant:'primary'})}
-    </div>
-    <div class="md-map" aria-label="우리집 주변 지도">
-      ${mapSlot()}
-      ${mapResearchBtn()}
-      ${mapActions()}
-      ${mdSheet()}
-    </div>
-  </div>`;
-
-  mapMount();
-  bindSheetDrag();
-  const rerender = keepScroll => {
-    const sc = screen.querySelector('.ms-scroll');
-    const y = keepScroll && sc ? sc.scrollTop : 0;
-    render();
-    const sc2 = screen.querySelector('.ms-scroll');
-    if(sc2 && y) sc2.scrollTop = y;
-  };
-  screen.querySelectorAll('[data-mdcard]').forEach(b=> b.onclick=()=>{
-    const off = S.mdCard===b.dataset.mdcard;
-    S.mdCard = off ? null : b.dataset.mdcard;
-    S.mdPin  = off ? null : (MD_PINS.find(p=>p.card===S.mdCard)||{}).id || null;
-    rerender(true);
+  bindCChips(); bindCMode();
+  screen.querySelectorAll('[data-cquote]').forEach(b=> b.onclick=()=>{
+    const p = C_PARTNERS.find(x=>x.id===b.dataset.cquote);
+    cOpenQuote(p.svc, p);
   });
-  /* 폴백(정적 지도)에서도 핀 바깥 탭으로 해제되게 한다 — 실지도는 Leaflet click 이 처리 */
-  const slot = $('#mapSlot');
-  if(slot && MAP.status!=='ready') slot.onclick = e=>{ if(!e.target.closest('[data-mdpin]')) mdDeselect(); };
 };
 
-/* ══════════ 03 시공 신청폼 ════════════════════════════════════════
-   메뉴만 신설한 단계 — 플로우(문항·제출)는 아직 연결하지 않는다. */
-VIEW.cApply = ()=>{
-  screen.innerHTML = `<div class="md-todo">
-    ${topNav({title:'시공 신청폼', backId:'mdBack2'})}
-    <div class="mt-body">
-      ${asset('houseDrill',96)}
-      <b class="t-heading18 w-semibold">시공 신청폼</b>
-      <p class="t-body14L18">메뉴만 먼저 신설한 단계예요.<br>입력 플로우는 아직 연결하지 않았습니다.</p>
+VIEW.cQuote = ()=>{
+  const svc = S.cQuoteSvc || 'full';
+  const fields = cQuoteFields(svc);
+  const ready = fields.every(cFieldReady);
+  const who = S.cQuotePartner ? S.cQuotePartner.name : label(svc);
+  screen.innerHTML = `<div class="c-quote">
+    ${topNav({title:'견적 신청', backId:'bk'})}
+    <div class="form">
+      <div class="c-quote-lead">
+        <p class="t-heading18 w-semibold">${who}</p>
+        <p class="t-body14L18 c-fg-weak">${C_ADDR} 기준 · ${label(svc)} 파트너 매칭에 필요한 정보를 알려주세요.</p>
+      </div>
+      ${fields.map(f=>{
+        const sel = S.ans[f.id]||[];
+        const opts = cFieldOpts(f);
+        return `<div class="field">
+          <div class="lb t-body14L18">${f.label||f.q}</div>
+          ${f.why?`<p class="why t-detail13L18">${f.why}</p>`:''}
+          <div class="opts">${opts.map(o=>selChip(o, f.multi?sel.includes(o):sel[0]===o, `data-fid="${f.id}" data-o="${o}"`)).join('')}</div>
+        </div>`;
+      }).join('')}
     </div>
+    ${actionDock({pattern:'single', children: boxButton({label:'파트너 매칭 받기', size:'large', variant:'brand-solid', id:'cGoMatch', full:true, disabled:!ready})})}
   </div>`;
-  $('#mdBack2').onclick = ()=> go('cMapDisc');
+  $('#bk').onclick=()=>go('cList');
+  screen.querySelectorAll('[data-fid]').forEach(b=> b.onclick=()=>{
+    const f = fields.find(x=>x.id===b.dataset.fid);
+    const o = b.dataset.o;
+    if(!f) return;
+    if(f.multi){
+      const cur = new Set(S.ans[f.id]||[]);
+      if(cur.has(o)) cur.delete(o); else cur.add(o);
+      S.ans[f.id]=[...cur];
+    } else S.ans[f.id]=[o];
+    render();
+  });
+  const goM=$('#cGoMatch'); if(goM) goM.onclick=()=>{ if(!ready) return; S.cMatchReady=false; go('cMatch'); };
+};
+
+VIEW.cMatch = ()=>{
+  if(!S.cMatchReady){
+    screen.innerHTML = `${topNav({title:'파트너 매칭', backId:'bk'})}
+      <div class="c-match-wait">
+        ${spinner(40)}
+        <b class="t-heading18 w-semibold">딱 맞는 파트너를 찾고 있어요</b>
+        <p class="t-body14L18 c-fg-weak">${C_ADDR} 근처 · ${label(S.cQuoteSvc||'full')}</p>
+      </div>`;
+    $('#bk').onclick=()=>go('cQuote');
+    if(!S.cMatchTimer){
+      S.cMatchTimer = setTimeout(()=>{
+        S.cMatchTimer=null;
+        if(S.screen==='cMatch' && !S.cMatchReady){ S.cMatchReady=true; render(); }
+      }, 900);
+    }
+    return;
+  }
+  const svc = S.cQuoteSvc||'full';
+  const matched = C_PARTNERS.filter(p=>p.svc===svc).slice(0,3);
+  screen.innerHTML = `
+    ${topNav({title:'받은 견적', backId:'bk'})}
+    <div class="mlist">
+      <p class="c-match-note t-body14L18">${matched.length}곳의 파트너가 견적을 보냈어요.</p>
+      <div class="ml-cards">${matched.map(p=>`<div class="ml-card">
+        <span class="ml-ic">${asset(PRICE_ART[p.svc]||'houseDrill',28)}</span>
+        <div class="ml-body">
+          <b class="ml-nm t-body16L20 w-semibold">${p.name}</b>
+          <span class="ml-stat t-detail13L18">${p.quote}</span>
+          <span class="ml-sub t-detail13L18">${p.dist} · 별점 ${p.star}</span>
+        </div>
+        <span class="ml-time t-detail11L14">방금</span>
+      </div>`).join('')}</div>
+    </div>
+    ${actionDock({pattern:'single', children: boxButton({label:'목록으로', size:'large', variant:'outlined', id:'cBackList', full:true})})}`;
+  $('#bk').onclick=()=>go('cQuote');
+  $('#cBackList').onclick=()=>go('cList');
+};
+
+VIEW.cMap = ()=>{
+  const layer = S.cLayer || 'partners';
+  let pins = [];
+  if(layer==='partners'){
+    const allow = new Set(cPartners().map(p=>p.id));
+    pins = C_MAP_PINS.partners.filter(x=>allow.has(x.id)).map(x=>{
+      const p = C_PARTNERS.find(pp=>pp.id===x.id);
+      return {kind:'partners', id:p.id, x:x.x, y:x.y, name:p.name, sub:`${label(p.svc)} · ${p.dist}`, ic:'IconLocationPinDot', partner:p};
+    });
+  } else if(layer==='cases'){
+    pins = C_MAP_PINS.cases.map(x=>({kind:'cases', id:x.id, x:x.x, y:x.y, name:x.name, sub:x.sub, ic:'IconHouse'}));
+  } else {
+    pins = C_MAP_PINS.stores.map(x=>({kind:'stores', id:x.id, x:x.x, y:x.y, name:x.name, sub:x.sub, ic:'IconStore'}));
+  }
+  if(!S.cPin || !pins.some(p=>p.id===S.cPin)) S.cPin = pins[0]?.id || null;
+  const sel = pins.find(p=>p.id===S.cPin);
+  screen.innerHTML = `<div class="c-map-page">
+    ${topNav({title:'내 주변'})}
+    ${cModeToggle('map')}
+    ${cChipBar()}
+    <div class="c-layers">${C_LAYERS.map(l=>
+      chip({label:l.n, size:'sm', variant:layer===l.k?'outlined':'normal', attrs:`data-clayer="${l.k}"`, pressed:layer===l.k})
+    ).join('')}</div>
+    <div class="c-map" aria-label="내 주소 주변 지도">
+      <div class="c-map-grid"></div>
+      <div class="c-road c-road-h1"></div>
+      <div class="c-road c-road-v1"></div>
+      <div class="c-road c-road-h2"></div>
+      <div class="c-me" aria-hidden="true"></div>
+      <span class="c-me-lab t-detail11L14">현재 위치</span>
+      ${pins.map(p=>`<button type="button" class="c-pin" style="left:${p.x};top:${p.y}" data-cpin="${p.id}" aria-pressed="${S.cPin===p.id}">
+        ${ic(p.ic,24)}<span class="c-pin-lab t-detail11L14">${p.name}</span>
+      </button>`).join('')}
+    </div>
+    ${sel?`<div class="c-sheet">
+      <div class="c-sheet-h">
+        <span class="c-sheet-ic">${ic(sel.ic,24)}</span>
+        <div class="c-sheet-t">
+          <b class="t-body16L20 w-semibold">${sel.name}</b>
+          <div class="t-detail13L18 c-fg-weak">${sel.sub}</div>
+        </div>
+      </div>
+      ${sel.partner? boxButton({label:'견적 받기', size:'large', variant:'brand-solid', id:'cMapQuote', full:true})
+        : `<p class="t-detail13L18 c-fg-weak">${layer==='cases'?'이 단지의 시공 사례입니다.':'방문 가능한 오프라인 매장입니다.'}</p>`}
+    </div>`:''}
+  </div>`;
+  bindCChips(); bindCMode();
+  screen.querySelectorAll('[data-clayer]').forEach(b=> b.onclick=()=>{ S.cLayer=b.dataset.clayer; S.cPin=null; render(); });
+  screen.querySelectorAll('[data-cpin]').forEach(b=> b.onclick=()=>{ S.cPin=b.dataset.cpin; render(); });
+  const mq=$('#cMapQuote'); if(mq && sel?.partner) mq.onclick=()=> cOpenQuote(sel.partner.svc, sel.partner);
 };
 
 function bootFlowC(){

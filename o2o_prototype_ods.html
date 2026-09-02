@@ -61,6 +61,8 @@
   --ods-foreground-attention:#B27800;       /* colors.foregroundAttention = yellow.450 */
   /* accent */
   --ods-accent-purple:#6F3DDE;              /* colors.accentPurple      = purple.550 */
+  --ods-accent-blue:#0079FA;                /* colors.accentBlue        = @bucketplace/tokens 3.12.0 */
+  --ods-accent-yellow:#FFC300;              /* colors.accentYellow      = 별점(리뷰) */
   /* palette — theme 미지원 컨텍스트(그라데이션·투명도)에서만 사용 */
   --ods-palette-gray-100:#EDEDED;
   --ods-palette-gray-200:#CECECE;
@@ -145,8 +147,8 @@ body{
 /* Flow A/B 토글 + 화면 보기 서브 옵션 */
 .flow-panel{display:flex;flex-direction:column;gap:10px;align-self:stretch}
 .flow-tabs{display:flex;gap:4px;padding:3px;border:1px solid var(--hz-line);border-radius:10px;background:var(--hz-hover)}
-.flow-tab{flex:1;padding:7px 6px;border:0;border-radius:7px;background:transparent;color:var(--hz-chalk-dim);
-  font-family:var(--hz-mono);font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:.14s}
+.flow-tab{flex:1;padding:7px 4px;border:0;border-radius:7px;background:transparent;color:var(--hz-chalk-dim);
+  font-family:var(--hz-mono);font-size:10px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:.14s}
 .flow-tab:hover{color:var(--hz-chalk)}
 .flow-tab[aria-pressed="true"]{background:var(--hz-canvas);color:var(--hz-chalk);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .flow-views{display:flex;gap:6px;flex-wrap:wrap}
@@ -199,6 +201,28 @@ body.preview-only .preview-exit{display:inline-flex;align-items:center;justify-c
   cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 8px 22px -8px rgba(0,0,0,.55)}
 body.preview-only .preview-exit:hover{background:rgba(20,20,20,.92)}
 body.preview-only .preview-exit svg{opacity:.9}
+/* Simple Browser — 프리뷰 위에 프로토타입 메뉴 오버레이 */
+.panel-head{display:none}
+body.preview-only.menu-open .preview-exit{display:none}
+body.preview-only.menu-open .panel{
+  display:flex;flex-direction:column;gap:22px;
+  position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:min(100vw,420px);height:100vh;height:100dvh;max-width:none;
+  z-index:40;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px 16px calc(28px + env(safe-area-inset-bottom,0px));
+  background:var(--hz-canvas);box-shadow:none;
+}
+body.preview-only.menu-open .panel section{flex:none;width:100%;min-width:0}
+body.preview-only.menu-open .panel-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  position:sticky;top:0;z-index:1;margin:-16px -16px 0;padding:16px 16px 12px;
+  background:var(--hz-canvas);
+}
+.panel-head h2{font-size:15px;font-weight:700;letter-spacing:-.02em;color:var(--hz-chalk)}
+.panel-close{display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;padding:0;border:0;border-radius:9999px;
+  background:var(--hz-hover);color:var(--hz-chalk);cursor:pointer}
+.panel-close:hover{background:var(--hz-accent-weak)}
 /* 엔트리 헤더(navi + 주소변경)는 스크롤 고정, 아래 block container 만 스크롤 */
 body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background:var(--ods-background)}
 
@@ -206,6 +230,7 @@ body.preview-only .o2o-home .home-top{position:sticky;top:0;z-index:6;background
    90:35960 에서 상단 totalConsulting(종합 상담 인풋) 은 hidden 이고, 진입점이 이 버튼으로 대체된다. */
 body.view2 .offering{display:none}
 body.view3 .offering{display:none}
+body.view4 .offering{display:none}
 
 /* ═══ 화면 보기-3 · O2H 통합 비교견적 플로우 (Figma 340:39827 · 홈 402:34413 · 430:93197) ═══ */
 body.view3 .o2o-home{padding-bottom:120px}
@@ -1478,6 +1503,65 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   color:rgba(255,255,255,.68)}
 .runknown b,.rdelta b{color:var(--ods-foreground-brand);font-weight:600}
 
+/* ═══ FLOW C · 칩 필터 업체 목록 / 견적 / 매칭 / 지도 ═══
+   Figma 731:56703 · 726:3367 · 732:56959 (시공 생활서비스탭 개선).
+   이 세션에서 Figma MCP 가 연결되지 않아, 유저 스토리(칩 목록 · 견적 입력 · 주소 지도)와
+   기존 시공탭 패턴(Chip · BoxButton · TopNavigation · pcard 모자이크)으로 구성한다. */
+.c-page{min-height:100%;display:flex;flex-direction:column;background:var(--ods-background)}
+.c-chips{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;
+  position:sticky;top:44px;z-index:4;background:var(--ods-background);border-bottom:1px solid var(--ods-border)}
+.c-chips::-webkit-scrollbar{display:none}
+.c-chips>*{flex:0 0 auto}
+.c-addr{display:flex;align-items:center;gap:8px;padding:10px 16px 4px;color:var(--ods-foreground)}
+.c-addr svg{flex:0 0 auto;color:var(--ods-foreground-brand)}
+.c-addr .c-addr-t{flex:1;min-width:0}
+.c-mode-row{display:flex;padding:4px 16px 8px}
+.c-mode{display:flex;gap:4px}
+.c-list{padding:12px 16px 24px;display:flex;flex-direction:column;gap:12px;background:var(--ods-background-weak);flex:1}
+.c-row{background:var(--ods-background);border:1px solid var(--ods-border);border-radius:12px;overflow:hidden}
+.c-row .pc-thumb{height:140px}
+.c-row-info{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.c-row-nm{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.c-row-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--ods-foreground)}
+.c-row-cta{margin-top:4px}
+.c-empty{padding:48px 16px;text-align:center;color:var(--ods-foreground-weak)}
+.c-quote{background:var(--ods-background-weak);min-height:100%;display:flex;flex-direction:column}
+.c-quote .form{flex:1}
+.c-quote-lead{padding:4px 0 8px}
+.c-match-note{padding:16px 16px 0}
+.c-match-wait{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:48px 24px;background:var(--ods-background-weak);color:var(--ods-foreground);text-align:center}
+.screen:has(.c-map-page){overflow:hidden;display:flex;flex-direction:column}
+.c-map-page{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--ods-background)}
+.c-map-page .c-chips{position:static;border-bottom:0}
+.c-layers{display:flex;gap:8px;padding:0 16px 10px;overflow-x:auto;scrollbar-width:none;flex:0 0 auto}
+.c-layers::-webkit-scrollbar{display:none}
+.c-layers>*{flex:0 0 auto}
+.c-map{flex:1;min-height:0;position:relative;background:var(--ods-background-weak);overflow:hidden}
+.c-map-grid{position:absolute;inset:0;
+  background-image:linear-gradient(var(--ods-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ods-border) 1px, transparent 1px);
+  background-size:40px 40px}
+.c-road{position:absolute;background:var(--ods-background);border:1px solid var(--ods-border)}
+.c-road-h1{left:0;right:0;top:46%;height:18px}
+.c-road-v1{top:0;bottom:0;left:42%;width:18px}
+.c-road-h2{left:8%;right:10%;top:72%;height:12px}
+.c-me{position:absolute;left:50%;top:52%;width:14px;height:14px;border-radius:50%;
+  background:var(--ods-foreground-brand);border:3px solid var(--ods-background);transform:translate(-50%,-50%);z-index:2}
+.c-me-lab{position:absolute;left:50%;top:52%;transform:translate(-50%,14px);z-index:2;
+  padding:2px 6px;border-radius:4px;background:var(--ods-background);border:1px solid var(--ods-border);
+  color:var(--ods-foreground);white-space:nowrap}
+.c-pin{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:0;padding:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground);z-index:3}
+.c-pin[aria-pressed="true"]{color:var(--ods-foreground-brand);z-index:4}
+.c-pin-lab{padding:2px 6px;border-radius:4px;background:var(--ods-background);border:1px solid var(--ods-border);
+  color:var(--ods-foreground);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c-pin[aria-pressed="true"] .c-pin-lab{border-color:var(--ods-border-strong)}
+.c-sheet{flex:0 0 auto;padding:12px 16px 16px;background:var(--ods-background);border-top:1px solid var(--ods-border)}
+.c-sheet-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.c-sheet-h .c-sheet-ic{flex:0 0 auto;color:var(--ods-foreground-brand)}
+.c-sheet-h .c-sheet-t{flex:1;min-width:0}
+
 /* Phase 2 안내 */
 .ask{margin:0 16px;padding:16px}
 .ask-h{color:var(--ods-foreground);margin-bottom:12px}
@@ -1500,16 +1584,353 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   *{animation-duration:.01ms!important;animation-iteration-count:1!important;
     transition-duration:.01ms!important}
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Flow C — O2O 홈  (Figma 868:18466 default / 892:15126 sticky)
+   레이아웃: 상단 고정 헤더 → sticky 지도(240) → 그 위로 스크롤되는 Container.
+   sticky 노드에서 container 만 -504px 이동하고 map-view-wrapper 는 y=136 그대로이므로
+   지도는 고정(sticky)이고 Container 가 그 위를 덮으며 올라온다.
+   statusbar / Search Top Navigation / Bottom Navigation 은 공통 chrome(CLAUDE.md §2).
+   ═══════════════════════════════════════════════════════════ */
+.ch{position:relative;min-height:100%;background:var(--ods-background);display:flex;flex-direction:column;
+  /* Handle(24px) 접힘을 Chrome scroll anchoring 이 보정해 스크롤이 24px 되감기므로 앵커링을 끈다. */
+  overflow-anchor:none}
+
+/* 상단 고정 — Search Top Navigation(44) + Location(42) = 86 */
+.ch-top{position:sticky;top:0;z-index:9;background:var(--ods-background)}
+/* Location 행 (868:14832) — px16 py8 gap12 · label gap4 · body14L20 regular */
+.ch-loc{display:flex;align-items:center;gap:12px;padding:8px 16px;background:var(--ods-background)}
+.ch-loc .cl-label{flex:1;min-width:0;display:flex;align-items:center;gap:4px;color:var(--ods-foreground)}
+.ch-loc .cl-txt{flex:1;min-width:0;color:var(--ods-foreground);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 지도 (837:14495) — 375×240, 배경 이미지는 1800×1040 을 (-1161,-134) 에 배치 */
+.ch-map{position:sticky;top:86px;z-index:1;height:240px;overflow:hidden;background:var(--ods-background-weak)}
+.ch-map .cm-img{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;pointer-events:none;user-select:none}
+
+/* Pin (892:15014) — 아이콘 박스 + 라벨(선택) */
+.ch-pin{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
+.ch-pin .chp-ic{display:flex;align-items:center;justify-content:center;padding:2px;
+  background:var(--ods-background);border-radius:8px;box-shadow:0 2px 5px rgba(63,71,77,.25)}
+.ch-pin .chp-lb{max-width:72px;text-align:center;color:var(--ods-foreground);
+  text-shadow:0 0 3px var(--ods-background),0 0 3px var(--ods-background)}
+/* 오늘의집 라운지 — 흰 박스 26×26 안에 Ohouse 심볼 */
+.ch-pin[data-kind="lounge"] .chp-ic{width:26px;height:26px}
+/* 스탠다드 — 흰 박스 안에 brand 22×22 이너박스 */
+.ch-pin .chp-inner{width:22px;height:22px;border-radius:6px;background:var(--ods-background-brand);
+  display:grid;place-items:center}
+/* 단지(집) — backgroundInverse 32 원형 + PlaceHouseFilled */
+.ch-pin[data-kind="house"] .chp-ic{width:32px;height:32px;padding:0;border-radius:9999px;
+  background:var(--ods-background-inverse);color:var(--ods-foreground-inverse);box-shadow:none}
+.ch-pin:focus-visible{outline:2px solid var(--ods-foreground-brand);outline-offset:3px;border-radius:8px}
+
+/* 지도 액션 (837:14497) — 우하단 34 원형 2개 */
+.ch-mapact{position:absolute;right:0;bottom:40px;padding:0 16px 16px 0;
+  display:flex;flex-direction:column;gap:6px}
+.ch-mapact button{width:34px;height:34px;display:grid;place-items:center;padding:0;cursor:pointer;
+  background:var(--ods-background);border:1px solid var(--ods-border);border-radius:100px;
+  color:var(--ods-foreground);box-shadow:0 2px 2.5px rgba(63,71,77,.15)}
+
+/* Container (837:14494) — 지도 위로 30px 겹쳐 올라오는 흰 시트 */
+.ch-body{position:relative;z-index:2;margin-top:-30px;background:var(--ods-background);
+  border-radius:16px 16px 0 0;flex:1 0 auto}
+
+/* tab (837:16396) — Handle(24) + ODS Tab(44) + pb16.
+   sticky 상태(892:15275)에서는 Handle 이 숨고 헤더 바로 아래 고정된다. */
+.ch-tab{position:sticky;top:86px;z-index:8;background:var(--ods-background);
+  border-radius:16px 16px 0 0;padding-bottom:16px}
+.ch-tab .ct-handle{height:24px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;transition:height .16s ease}
+.ch-tab .ct-handle i{display:block;width:32px;height:4px;border-radius:6px;background:var(--ods-border)}
+.ch-tab.is-stuck{border-radius:0}
+.ch-tab.is-stuck .ct-handle{height:0}
+/* ODS Tab — mode="fixed" 5 items · active foreground / inactive foregroundWeak · indicator 2px */
+.ct-tablist{display:flex;position:relative;height:44px}
+.ct-tablist::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ods-border)}
+.ct-item{flex:1;min-width:0;position:relative;height:44px;padding:0 6px;border:0;background:none;
+  cursor:pointer;font-family:inherit;color:var(--ods-foreground-weak);
+  display:flex;align-items:center;justify-content:center;white-space:nowrap}
+.ct-item[aria-selected="true"]{color:var(--ods-foreground)}
+.ct-item[aria-selected="true"]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--ods-foreground);z-index:1}
+
+/* Bundle_Menu (837:14502) — 5열 × 2행, asset 52 r16, label detail13L18 medium */
+.ch-menu{display:flex;flex-direction:column;gap:12px;padding-bottom:16px;background:var(--ods-background)}
+.ch-menu .cm-row{display:flex;padding:0 16px}
+.ch-menu .cm-item{flex:1;min-width:63px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
+.ch-menu .cm-asset{width:52px;height:52px;border-radius:16px;background:rgba(0,0,0,.04);
+  display:grid;place-items:center;overflow:hidden}
+.ch-menu .cm-lb{width:100%;text-align:center;color:var(--ods-foreground)}
+
+/* Bundle_Offering (837:14525) — 343×72 배너 r12
+   [토큰 예외] #172F47 은 캠페인 브랜드 색으로 ODS semantic 대응이 없다(가이드 §7). */
+.ch-offering{padding:0 16px 16px;background:var(--ods-background);
+  filter:drop-shadow(2px 2px 10px rgba(194,200,204,.2))}
+.ch-banner{position:relative;height:72px;border-radius:12px;overflow:hidden;background:#172F47;
+  box-shadow:0 2px 5px rgba(63,71,77,.05);width:100%;border:0;padding:0;cursor:pointer;
+  font-family:inherit;display:block;text-align:left}
+.ch-banner .cb-imgbox{position:absolute;right:-7px;top:0;width:118px;height:73px;overflow:hidden}
+/* Figma I837:14527;732:57612 의 이미지 크롭 — w153.22% h152.16% / left -63.08% top -46.56% */
+.ch-banner .cb-img{position:absolute;left:-63.08%;top:-46.56%;width:153.22%;height:152.16%;max-width:none}
+.ch-banner .cb-dim{position:absolute;left:232px;top:-2px;width:65px;height:74px;
+  background:linear-gradient(to left,rgba(23,47,71,0),#172F47)}
+.ch-banner .cb-tt{position:absolute;left:15px;top:15px;display:flex;flex-direction:column;gap:5px;
+  color:var(--ods-foreground-inverse)}
+.ch-banner .cb-ind{position:absolute;right:12px;bottom:10px;padding:4px 8px;border-radius:30px;
+  background:rgba(33,38,41,.5);color:var(--ods-foreground-inverse)}
+
+/* Bundle/partner (846:52866 · 846:52885) */
+.ch-bundle{background:var(--ods-background);padding-top:12px}
+/* ModuleTitle — ODS Section(medium) + Section Arrow Button 28 */
+.ch-mtitle{display:flex;align-items:center;gap:8px;padding:0 16px 12px}
+.ch-mtitle .mt-t{flex:1;min-width:0;color:var(--ods-foreground)}
+.ch-mtitle .mt-t em{font-style:normal;color:var(--ods-accent-blue)}
+.ch-mtitle .mt-arrow{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;padding:0;
+  border:0;border-radius:9999px;background:var(--ods-background-weak);color:var(--ods-foreground);cursor:pointer}
+/* ChipGroup Rail */
+.ch-chips{display:flex;gap:4px;padding:0 16px 16px;overflow-x:auto;scrollbar-width:none}
+.ch-chips::-webkit-scrollbar{display:none}
+.ch-chips > *{flex:0 0 auto}
+/* 2DepthFilter — ODS BoxButton xs, 선택 ghost(foreground) / 미선택 weak-ghost(foregroundWeak) */
+.ch-filter2{display:flex;gap:0;padding:0 16px 12px}
+.ch-filter2 button{height:28px;padding:0 8px;border:0;background:none;cursor:pointer;font-family:inherit;
+  border-radius:6px;color:var(--ods-foreground-weak)}
+.ch-filter2 button[aria-pressed="true"]{color:var(--ods-foreground);font-weight:600}
+/* carousel — 파트너: 320 폭 페이지(3장 세로) 가로 스크롤 */
+.ch-rail{display:flex;gap:16px;padding:0 16px 0;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-padding-left:16px;scrollbar-width:none}
+.ch-rail::-webkit-scrollbar{display:none}
+.ch-page{flex:0 0 320px;display:flex;flex-direction:column;scroll-snap-align:start}
+/* partner card (846:52878) — 320×130, info + thumb 80×110 */
+.ch-pcard{display:flex;gap:12px;align-items:flex-start;padding:0 0 20px;background:none;border:0;
+  width:100%;text-align:left;cursor:pointer;font-family:inherit;border-radius:12px}
+.ch-pcard .chc-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+.ch-pcard .chc-ttl{display:flex;flex-direction:column;gap:4px}
+.ch-pcard .chc-nm{display:flex;align-items:center;gap:4px;height:24px}
+.ch-pcard .chc-nm b{color:var(--ods-foreground);white-space:nowrap}
+.ch-pcard .chc-bd{display:flex;align-items:center;gap:2px;flex:0 0 auto}
+.ch-pcard .chc-meta{display:flex;align-items:center;gap:4px;height:18px;color:var(--ods-foreground-weak)}
+.ch-pcard .chc-meta .chc-star{display:flex;align-items:center;gap:4px;color:var(--ods-accent-yellow)}
+.ch-pcard .chc-meta .chc-star b{color:var(--ods-foreground)}
+.chc-sep{width:2px;height:2px;border-radius:9999px;background:var(--ods-foreground-weak);
+  flex:0 0 auto;display:inline-block}
+.ch-pcard .chc-quote{padding:8px;border-radius:8px;background:var(--ods-background-weak);
+  color:var(--ods-foreground);height:52px;overflow:hidden}
+.ch-pcard .chc-quote span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden}
+.ch-pcard .chc-thumb{position:relative;flex:0 0 80px;width:80px;height:110px;border-radius:8px;overflow:hidden}
+.ch-pcard .chc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+/* ODS ScrapButton variant="media" — 썸네일 우하단 */
+.ods-scrap{position:absolute;right:4px;bottom:4px;width:24px;height:24px;display:grid;place-items:center;
+  padding:0;border:0;background:none;cursor:pointer;color:var(--ods-foreground-inverse);
+  filter:drop-shadow(0 0 2px rgba(0,0,0,.25))}
+.ods-scrap[aria-pressed="true"]{color:var(--ods-foreground-brand);filter:none}
+/* review-card (863:10948) — 159 폭 */
+.ch-rrail{display:flex;gap:8px;padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.ch-rrail::-webkit-scrollbar{display:none}
+.ch-rcard{flex:0 0 159px;display:flex;flex-direction:column;gap:8px;background:none;border:0;padding:0;
+  text-align:left;cursor:pointer;font-family:inherit}
+.ch-rcard .chr-im{width:159px;height:159px;border-radius:8px;overflow:hidden;background:var(--ods-background-weak)}
+.ch-rcard .chr-im img{width:100%;height:100%;object-fit:cover;display:block}
+.ch-rcard .chr-nm{color:var(--ods-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-rcard .chr-tx{color:var(--ods-foreground);height:60px;overflow:hidden}
+.ch-rcard .chr-tx span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+  overflow:hidden}
+.ch-rcard .chr-by{color:var(--ods-foreground-weak)}
+/* more-button (863:10969) — 343×44 */
+.ch-more{display:flex;align-items:center;justify-content:center;gap:2px;height:44px;margin:16px 16px 0;
+  border:1px solid var(--ods-border);border-radius:8px;background:var(--ods-background);
+  color:var(--ods-foreground);cursor:pointer;font-family:inherit;width:calc(100% - 32px)}
+
+/* 비교 Snackbar (892:15251) — 스크랩 1개 이상일 때 GNB 위에 노출 */
+.ch-compare{position:sticky;bottom:88px;z-index:7;margin:0 0 8px;display:flex;align-items:center;gap:8px;
+  height:48px;padding:0 12px 0 16px;background:var(--ods-background-inverse);color:var(--ods-foreground-inverse)}
+.ch-compare .cc-av{display:flex;flex:0 0 auto}
+.ch-compare .cc-av i{display:block;width:24px;height:24px;border-radius:9999px;background:var(--ods-foreground-weak);
+  border:1px solid var(--ods-background-inverse);margin-right:-8px;background-size:cover;background-position:center}
+.ch-compare .cc-t{flex:1;min-width:0;display:flex;align-items:center;gap:2px;margin-left:12px}
+.ch-compare .cc-btn{flex:0 0 auto;height:32px;padding:0 12px;border-radius:6px;border:0;cursor:pointer;
+  font-family:inherit;background:var(--ods-background);color:var(--ods-foreground)}
+
+/* SquareBadge subtle green/blue — Figma ODS Square Badge 변수 실측
+   green  fg #15b869 / bg #15b86921 · blue fg #0079fa / bg #0079fa14
+   [토큰 예외] ODS 코드 토큰에 subtle 배경 alias 가 없어 컴포넌트 변수값을 그대로 재현한다. */
+.ods-sqbadge[data-variant="green-subtle"]{background:#15b86921;color:#15b869}
+.ods-sqbadge[data-variant="blue-subtle"]{background:#0079fa14;color:var(--ods-accent-blue)}
+
+
+/* ═══════════════════════════════════════════════════════════
+   Flow C — 탭별 개별 페이지
+   전체시공 837:17410 · 부분시공 868:11034 · 이사·청소 837:16817 · 인터넷·렌탈 837:17088
+   공통 구조: ATF(-Grid) → Bundle_Offering → BTFcontainer(Bundle = ModuleTitle + card group)
+   탭 페이지 노드의 Top Navigation 은 h196(= 86 + tab 60)이라 tab 이 항상 sticky 상태다.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Bundle_Offering 배너 테마 (탭별 배경/전경) ──
+   [토큰 예외] 캠페인 배경색은 ODS semantic 대응이 없어 Figma 실측값을 둔다. */
+.ch-banner[data-theme="wood"]{background:#E3D6C5}
+.ch-banner[data-theme="wood"] .cb-dim{background:linear-gradient(to left,rgba(227,214,197,0),#E3D6C5)}
+.ch-banner[data-theme="move"]{background:#F0F3F6}
+.ch-banner[data-theme="move"] .cb-dim{background:linear-gradient(to left,rgba(240,243,246,0),rgba(240,243,246,.43))}
+.ch-banner[data-theme="rental"]{background:#E1EEFB}
+.ch-banner[data-theme="rental"] .cb-dim{background:linear-gradient(to left,rgba(240,243,246,0),rgba(240,243,246,.43))}
+.ch-banner[data-theme="wood"] .cb-tt,
+.ch-banner[data-theme="move"] .cb-tt,
+.ch-banner[data-theme="rental"] .cb-tt{color:var(--ods-foreground)}
+.ch-offering[data-pb="24"]{padding-bottom:24px}
+
+/* ── ODS Card (compound: Root / Media / Content) ──
+   design-system 11.5.1 Card 스펙 재현 — type vertical|horizontal, gap, Media(aspectRatio), Content(padding) */
+.ods-card{display:flex;flex-direction:column;width:100%;background:none;border:0;padding:0;
+  text-align:left;font-family:inherit;cursor:pointer}
+.ods-card[data-type="horizontal"]{flex-direction:row;align-items:flex-start}
+.ods-card-media{width:100%;overflow:hidden}
+.ods-card-content{width:100%;display:flex;flex-direction:column}
+
+/* ── ODS GridThumbnail (layout="left-1-right-2", shape="rectangle") ── */
+.ods-gridthumb{display:grid;grid-template-columns:226fr 92fr;gap:2px;width:100%;
+  border-radius:8px;overflow:hidden;background:var(--ods-background)}
+.ods-gridthumb .gt-side{display:grid;grid-template-rows:1fr 1fr;gap:2px;min-width:0}
+.ods-gridthumb img{width:100%;height:100%;object-fit:cover;display:block;background:var(--ods-background-weak)}
+.ods-gridthumb .gt-main{position:relative;min-width:0}
+
+/* ── ATF-Grid (전체시공 837:17675) — hero 169 + 2×2 셀 ── */
+.cta-grid{display:flex;gap:6px;align-items:center;padding:0 16px}
+.cta-hero{position:relative;flex:0 0 169px;height:168px;border-radius:12px;overflow:hidden;
+  background:var(--ods-background-weak);border:0;padding:0;cursor:pointer;font-family:inherit;text-align:left}
+.cta-hero .ch-ttl{position:absolute;left:12px;right:12px;top:12px;display:flex;flex-direction:column}
+.cta-hero .ch-ttl em{font-style:normal;color:var(--ods-accent-blue)}
+.cta-hero .ch-ttl b{display:block;color:var(--ods-foreground);font-weight:600}
+.cta-hero img{position:absolute;left:92px;top:91px;width:65px;height:65px;object-fit:contain}
+.cta-cells{flex:1;min-width:0;height:168px;display:flex;flex-wrap:wrap;gap:6px;align-content:center}
+.cta-cell{flex:0 0 calc(50% - 3px);height:76px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
+.cta-cell .cc-a{width:52px;height:52px;border-radius:16px;background:rgba(0,0,0,.04);
+  display:grid;place-items:center;overflow:hidden;flex:0 0 auto}
+.cta-cell[data-accent="yellow"] .cc-a{background:rgba(255,255,0,.25)}
+.cta-cell .cc-l{width:100%;text-align:center;color:var(--ods-foreground)}
+
+/* ── ATF 가로 메뉴 (부분시공 868:11416 / 이사·청소 837:16836) ── */
+.cta-row{display:flex;justify-content:space-between;padding:0 16px}
+.cta-row[data-fill]{justify-content:flex-start}
+.cta-row[data-fill] .cta-mi{flex:1;min-width:0;width:auto}
+.cta-mi{width:56px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
+.cta-mi .cm-a{position:relative;display:grid;place-items:center;flex:0 0 auto}
+.cta-mi .cm-badge{position:absolute;right:-4px;top:-4px;width:16px;height:16px;border-radius:9999px;
+  background:var(--ods-background-critical);color:var(--ods-foreground-inverse);
+  display:grid;place-items:center;font-size:10px;line-height:14px;font-weight:600}
+.cta-mi .cm-l{width:100%;text-align:center;color:var(--ods-foreground)}
+
+/* ── ATF (인터넷·렌탈 837:17301) ── */
+.cta-rental{display:flex;flex-direction:column;gap:6px;padding:0 16px 16px}
+.cta-rrow{display:flex;gap:6px}
+.cta-rrow[data-gap="4"]{gap:4px}
+.cta-rcard{position:relative;flex:1;min-width:0;border-radius:12px;overflow:hidden;padding:12px;
+  background:var(--ods-background-weak);border:0;cursor:pointer;font-family:inherit;text-align:left;
+  display:flex;flex-direction:column;gap:4px}
+.cta-rcard[data-h="184"]{height:184px}
+.cta-rcard[data-h="88"]{height:88px}
+.cta-rcard b{display:block;color:var(--ods-foreground);font-weight:600}
+.cta-rcard b em{font-style:normal;color:var(--ods-accent-blue)}
+.cta-rcard span{color:var(--ods-foreground)}
+.cta-rcard img{position:absolute;right:10px;bottom:10px;width:92px;height:92px;object-fit:contain}
+.cta-ls{border-radius:12px;background:var(--ods-background-weak);padding:16px 12px;display:flex;gap:10px;
+  filter:drop-shadow(2px 2px 10px rgba(194,200,204,.2))}
+.cta-ls .ls-i{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;
+  background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
+.cta-ls .ls-a{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;overflow:hidden;flex:0 0 auto}
+.cta-ls .ls-i[data-box] .ls-a{background:var(--ods-background-weak);padding:8px}
+.cta-ls .ls-l{width:100%;text-align:center;color:var(--ods-foreground)}
+
+/* ── ModuleTitle 좌측 위치 아이콘 슬롯 ── */
+.ch-mtitle .mt-pin{flex:0 0 20px;width:20px;height:20px;display:block}
+.ch-mtitle .mt-t{display:flex;align-items:center;gap:4px}
+
+/* ── 시공사례 card (837:17439) — Card + GridThumbnail ── */
+.ccase{gap:10px;padding-bottom:20px}
+.ccase .ods-card-content{padding-right:10px;gap:4px}
+.ccase .cc-tx{color:var(--ods-foreground);overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ccase .cc-info{display:flex;flex-wrap:wrap;align-items:center;gap:2px;color:var(--ods-foreground-weak)}
+.ccase .cc-info .cc-d{display:flex;align-items:center;gap:2px}
+
+/* ── 시공업체 card (893:16193) ── */
+.cfirm{padding-bottom:20px;border-radius:12px;background:var(--ods-background)}
+.cfirm .cf-info{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;gap:8px}
+.cfirm .cf-t{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cfirm .cf-nm{display:flex;align-items:center;gap:4px;height:20px}
+.cfirm .cf-nm b{color:var(--ods-foreground);white-space:nowrap}
+.cfirm .cf-bd{display:flex;align-items:center;gap:2px}
+.cfirm .cf-rv{display:flex;align-items:center;gap:4px;color:var(--ods-foreground)}
+.cfirm .cf-rv .chc-star{display:flex;align-items:center;gap:4px;color:var(--ods-accent-yellow)}
+.cfirm .cf-rv .chc-star b{color:var(--ods-foreground)}
+.cfirm .cf-scrap{flex:0 0 24px;width:24px;height:24px;display:grid;place-items:center;padding:0;border:0;
+  background:none;cursor:pointer;color:var(--ods-foreground-weak)}
+.cfirm .cf-scrap[aria-pressed="true"]{color:var(--ods-foreground-brand)}
+.cfirm .cf-th{height:140px;border-radius:7px;overflow:hidden}
+
+/* ── 부분시공 before/after card (868:11081) ── */
+.cba{padding-bottom:20px;gap:8px}
+.cba .cb-pair{display:flex;gap:2px;border-radius:4px;overflow:hidden;width:100%}
+.cba .cb-half{position:relative;flex:1;min-width:0;height:96px;overflow:hidden}
+.cba .cb-half img{width:100%;height:100%;object-fit:cover;display:block}
+.cba .cb-half .ods-sqbadge{position:absolute;left:6px;top:6px}
+.cba .cb-half[data-side="after"] .ods-sqbadge{left:auto;right:6px}
+.cba .ods-card-content{gap:6px}
+.cba .cb-ti{color:var(--ods-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cba .cb-tx{color:var(--ods-foreground);height:60px;overflow:hidden}
+.cba .cb-tx span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ── 이사·청소 파트너 card (837:17070) ── */
+.cmv{padding:16px 0 0;gap:16px}
+.cmv .cm-info{display:flex;align-items:flex-start;gap:12px}
+.cmv .cm-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.cmv .cm-id{display:flex;align-items:center;gap:4px}
+.cmv .cm-id b{color:var(--ods-foreground);white-space:nowrap}
+.cmv .cm-rv{display:flex;align-items:center;gap:4px;color:var(--ods-foreground)}
+.cmv .cm-rv .chc-star{display:flex;align-items:center;gap:4px;color:var(--ods-accent-yellow)}
+.cmv .cm-rv .chc-star b{color:var(--ods-foreground)}
+.cmv .cm-sv{display:flex;align-items:center;gap:6px;color:var(--ods-foreground-weak);flex-wrap:wrap}
+.cmv .cm-cta{flex:0 0 auto;padding-top:16px}
+.cmv .cm-ph{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.cmv .cm-ph::-webkit-scrollbar{display:none}
+.cmv .cm-ph img{flex:0 0 90px;width:90px;height:90px;border-radius:8px;object-fit:cover;display:block;
+  background:var(--ods-background-weak)}
+.cmv .cm-q{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.cmv .cm-q::-webkit-scrollbar{display:none}
+.cmv .cm-q p{flex:0 0 274px;height:60px;padding:12px;border-radius:8px;background:var(--ods-background-weak);
+  color:var(--ods-foreground);overflow:hidden}
+.cmv .cm-q p span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* 세로 카드 그룹 / 가로 카드 레일 */
+.cgroup{display:flex;flex-direction:column;padding:0 16px}
+.cgroup[data-gap="8"]{gap:8px}
+.crail{display:flex;gap:8px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-padding-left:16px;scrollbar-width:none}
+.crail::-webkit-scrollbar{display:none}
+.crail > *{flex:0 0 320px;scroll-snap-align:start}
+
 </style>
 </head>
-<body class="view3 preview-only">
+<body class="view4">
 
 <div class="stage">
-  <nav class="panel">
+  <nav class="panel" id="protoMenu" aria-label="프로토타입 메뉴" aria-hidden="false">
+    <div class="panel-head">
+      <h2>프로토타입 메뉴</h2>
+      <button class="panel-close" id="panelClose" type="button" aria-label="메뉴 닫기">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
     <div class="flow-panel">
       <div class="flow-tabs" role="tablist" aria-label="플로우 그룹">
         <button class="flow-tab" id="flowTabA" type="button" role="tab" data-flow="A" aria-pressed="false">Flow A</button>
-        <button class="flow-tab" id="flowTabB" type="button" role="tab" data-flow="B" aria-pressed="true">Flow B</button>
+        <button class="flow-tab" id="flowTabB" type="button" role="tab" data-flow="B" aria-pressed="false">Flow B</button>
+        <button class="flow-tab" id="flowTabC" type="button" role="tab" data-flow="C" aria-pressed="true">Flow C</button>
       </div>
       <div class="flow-views hidden" id="flowViewsA">
         <button class="preview-toggle" id="previewToggle1" type="button" title="Flow A · 기본 진입(상단 종합 상담 인풋)">
@@ -1521,15 +1942,21 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
           화면 보기 - 2
         </button>
       </div>
-      <div class="flow-views" id="flowViewsB">
+      <div class="flow-views hidden" id="flowViewsB">
         <button class="preview-toggle" id="previewToggle3" type="button" title="Flow B · O2H 통합 비교견적 (Figma 8/6)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
           화면 보기 - 3
         </button>
       </div>
+      <div class="flow-views" id="flowViewsC">
+        <button class="preview-toggle" id="previewToggle4" type="button" title="Flow C · O2O 홈(지도+번들) → 업체 목록 / 견적 / 지도">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          화면 보기 - 4
+        </button>
+      </div>
     </div>
     <section>
-      <h3 id="flowSectionTitle">FLOW B</h3>
+      <h3 id="flowSectionTitle">FLOW C</h3>
       <ol id="rail"></ol>
     </section>
     <section>
@@ -1567,7 +1994,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
     <div id="fabSlot"></div>
     <!-- Flow B O2H 홈 하단 — 넛징(402:34413) / 예상견적 바(430:93197) -->
     <div id="o2hBottomSlot"></div>
-    <button class="preview-exit" id="previewExit" type="button" title="메뉴 보기" aria-label="메뉴 보기">
+    <button class="preview-exit" id="previewExit" type="button" title="메뉴 보기" aria-label="메뉴 보기" aria-expanded="false" aria-controls="protoMenu">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>
     </button>
   </div>
@@ -1628,7 +2055,13 @@ const ODS_ICON = {
  "IconHouse": "<path fill=\"currentColor\" d=\"M207.253 58.53a61.02 61.02 0 0 1 65.494 0l120 76.33.819.53A60.98 60.98 0 0 1 421 186.307v93.818l-.021 5v.064c-.423 51.967-7.292 90.791-32.866 115.31-22.77 21.83-57.013 29.033-102.113 30.287V431h-76c-53.884 0-93.972-6.344-119.31-31.67-24.945-24.933-31.487-64.156-31.685-116.753L59 280.062v-93.755a60.98 60.98 0 0 1 28.253-51.447zm48.319 27.002a29.02 29.02 0 0 0-31.144 0l-120 76.329A28.98 28.98 0 0 0 91 186.307v93.755l.005 2.516c.22 52.427 7.384 79.204 22.307 94.119C128.474 391.851 155.885 399 210 399h44v-.003h16c53.246 0 80.657-6.919 95.968-21.598 15.12-14.497 22.585-40.626 23.011-92.405l.021-4.935v-93.752a28.98 28.98 0 0 0-13.428-24.447z\"></path>",
  "IconSparkles": "<path fill-rule=\"evenodd\" d=\"M269.634 107c16.281.001 29.478 11.48 33.174 26.286l.169.708c7.179 31.574 18.68 54.126 35.049 70.512 16.369 16.385 38.903 27.903 70.458 35.101 15.16 3.459 27.014 16.831 27.016 33.387v.002c0 16.297-11.486 29.514-26.308 33.223l-.708.17c-31.555 7.198-54.089 18.717-70.458 35.103s-27.87 38.939-35.049 70.513c-3.446 15.147-16.804 26.994-33.343 26.995-16.542 0-29.899-11.848-33.345-26.994-7.19-31.622-18.716-54.197-35.127-70.592s-39.011-27.912-70.671-35.096c-15.144-3.436-26.991-16.787-26.991-33.322v-.002c.002-16.53 11.846-29.884 26.991-33.32 31.66-7.183 54.261-18.698 70.672-35.092s27.936-38.966 35.126-70.587v-.002C239.735 118.848 253.092 107 269.634 107m-.002 32c-.36 0-.75.114-1.162.456a3 3 0 0 0-.978 1.637c-8.101 35.627-21.847 64.284-43.714 86.128-21.866 21.842-50.55 35.57-86.207 43.66a2.95 2.95 0 0 0-1.62.967c-.339.409-.451.795-.451 1.15s.112.739.45 1.147a2.96 2.96 0 0 0 1.621.966c35.658 8.091 64.342 21.82 86.208 43.664 21.867 21.846 35.612 50.505 43.713 86.133l.07.26c.187.589.525 1.059.907 1.376.412.341.803.455 1.163.455.361 0 .752-.113 1.165-.455.437-.362.815-.925.976-1.636 8.089-35.573 21.805-64.199 43.615-86.032s50.418-35.574 85.979-43.687a3.04 3.04 0 0 0 1.665-.996c.349-.421.468-.824.468-1.195l-.006-.141c-.027-.331-.156-.685-.462-1.054a3.03 3.03 0 0 0-1.665-.996c-35.561-8.112-64.169-21.852-85.979-43.685-21.81-21.832-35.526-50.457-43.615-86.03a2.98 2.98 0 0 0-.976-1.636c-.413-.342-.805-.456-1.165-.456\" clip-rule=\"evenodd\"></path><path d=\"M114.558 48c3.715 0 6.864 2.68 7.688 6.302 6.616 29.097 21.854 44.354 50.939 50.988 3.63.828 6.314 3.984 6.315 7.708 0 3.724-2.685 6.883-6.315 7.711-29.085 6.635-44.323 21.892-50.939 50.989-.824 3.623-3.973 6.302-7.688 6.302-3.716 0-6.865-2.679-7.689-6.302-6.626-29.142-21.901-44.403-51.072-51.021-3.62-.821-6.297-3.967-6.297-7.679 0-3.711 2.678-6.857 6.297-7.678 29.17-6.618 44.446-21.877 51.072-51.018.824-3.623 3.973-6.302 7.689-6.302\"></path>",
  "IconDrywall": "<path d=\"M320.993 62c29.887 0 55.107 6.821 72.643 24.356s24.357 42.756 24.357 72.644v162c0 29.888-6.821 55.108-24.357 72.644C376.1 411.179 350.88 418 320.993 418h-29c-8.836 0-16-7.163-16-16s7.164-16 16-16h29c25.656 0 40.936-5.906 50.015-14.984 9.078-9.079 14.985-24.359 14.985-50.016V204h-91c-8.836 0-16-7.163-16-16s7.164-16 16-16h91v-13c0-25.657-5.907-40.937-14.985-50.016C361.929 99.906 346.649 94 320.993 94h-106v110.005c0 8.836-7.163 16-16 16s-16-7.164-16-16V94h-24c-25.655 0-40.936 5.906-50.014 14.984C99.9 118.063 93.993 133.343 93.993 159v123h126c8.837 0 16 7.163 16 16s-7.163 16-16 16h-126v7c0 25.657 5.907 40.937 14.986 50.016 9.078 9.078 24.359 14.984 50.014 14.984h29c8.837 0 16 7.163 16 16s-7.163 16-16 16h-29c-29.887 0-55.107-6.821-72.642-24.356C68.815 376.108 61.993 350.888 61.993 321V159c0-29.888 6.822-55.108 24.358-72.644C103.886 68.821 129.106 62 158.993 62z\"></path>",
- "IconFloorPlank": "<path fill-rule=\"evenodd\" d=\"M320.993 62c29.887 0 55.107 6.821 72.643 24.357 17.536 17.535 24.357 42.755 24.357 72.643v162c0 29.889-6.821 55.108-24.357 72.644C376.1 411.179 350.88 418 320.993 418h-162c-29.887 0-55.107-6.821-72.642-24.356C68.815 376.108 61.993 350.889 61.993 321V159c0-29.888 6.822-55.108 24.358-72.643C103.886 68.82 129.106 62 158.993 62zm-227 259c0 25.657 5.907 40.938 14.986 50.016 9.078 9.078 24.359 14.984 50.014 14.984h8v-92.5h-73zm105 65h82V201.5h-82zm114-92.5V386h8c25.656 0 40.936-5.906 50.015-14.984 9.078-9.078 14.985-24.359 14.985-50.016v-27.5zm0-32h73V159c0-25.656-5.907-40.937-14.985-50.015C361.929 99.906 346.649 94 320.993 94h-8zm-154-167.5c-25.655 0-40.936 5.906-50.014 14.985C99.9 118.063 93.993 133.344 93.993 159v102.5h73V94zm40 75.5h82V94h-82z\" clip-rule=\"evenodd\"></path>"
+ "IconFloorPlank": "<path fill-rule=\"evenodd\" d=\"M320.993 62c29.887 0 55.107 6.821 72.643 24.357 17.536 17.535 24.357 42.755 24.357 72.643v162c0 29.889-6.821 55.108-24.357 72.644C376.1 411.179 350.88 418 320.993 418h-162c-29.887 0-55.107-6.821-72.642-24.356C68.815 376.108 61.993 350.889 61.993 321V159c0-29.888 6.822-55.108 24.358-72.643C103.886 68.82 129.106 62 158.993 62zm-227 259c0 25.657 5.907 40.938 14.986 50.016 9.078 9.078 24.359 14.984 50.014 14.984h8v-92.5h-73zm105 65h82V201.5h-82zm114-92.5V386h8c25.656 0 40.936-5.906 50.015-14.984 9.078-9.078 14.985-24.359 14.985-50.016v-27.5zm0-32h73V159c0-25.656-5.907-40.937-14.985-50.015C361.929 99.906 346.649 94 320.993 94h-8zm-154-167.5c-25.655 0-40.936 5.906-50.014 14.985C99.9 118.063 93.993 133.344 93.993 159v102.5h73V94zm40 75.5h82V94h-82z\" clip-rule=\"evenodd\"></path>",
+ /* Flow C O2O 홈(868:18466) 추가 — @bucketplace/icons 3.25.0 monochrome/regular 렌더 추출 */
+ "IconScope": "<path fill-rule=\"evenodd\" d=\"M240 27c8.837 0 16 7.163 16 16v45.331c71.445 7.45 128.22 64.224 135.669 135.669H437c8.837 0 16 7.163 16 16s-7.163 16-16 16h-45.331C384.22 327.445 327.445 384.219 256 391.668V437c0 8.837-7.163 16-16 16s-16-7.163-16-16v-45.332C152.555 384.219 95.78 327.445 88.331 256H43c-8.837 0-16-7.163-16-16s7.163-16 16-16h45.331C95.781 152.555 152.555 95.78 224 88.331V43c0-8.837 7.163-16 16-16m0 92.5c-66.55 0-120.5 53.95-120.5 120.5S173.45 360.5 240 360.5 360.5 306.55 360.5 240 306.55 119.5 240 119.5\" clip-rule=\"evenodd\"></path>",
+ "IconPlaceHouseFilled": "<path fill-rule=\"evenodd\" d=\"M220.048 66.779a35.8 35.8 0 0 1 38.906 0l134.001 86.757a35.8 35.8 0 0 1 16.341 30.047v218.085c0 11.484-9.311 20.795-20.795 20.795h-298c-11.485 0-20.795-9.311-20.795-20.795V183.583a35.8 35.8 0 0 1 16.342-30.047zM216 220.001a5 5 0 0 0-5 5v48a5 5 0 0 0 5 5h48a5 5 0 0 0 5-5v-48a5 5 0 0 0-5-5z\" clip-rule=\"evenodd\"></path>",
+ "IconBookmark": "<path fill-rule=\"evenodd\" d=\"M310 60c26.116 0 48.585 5.957 64.313 21.686S396 119.883 396 146v247.889c0 10.958-5.109 20.971-13.798 26.892-8.882 6.052-20.449 7.057-30.938 1.872a15 15 0 0 1-.698-.366L240 360.687l-110.566 61.6q-.344.192-.698.366c-10.489 5.185-22.056 4.18-30.938-1.872C89.108 414.86 84 404.847 84 393.889V146c0-26.117 5.958-48.586 21.687-64.314C121.415 65.957 143.884 60 170 60zM170 92c-21.884 0-34.415 5.042-41.687 12.313S116 124.115 116 146v247.14l116.213-64.745.457-.246a16 16 0 0 1 15.117.246L364 393.14V146c0-21.885-5.042-34.415-12.313-41.687C344.415 97.043 331.884 92 310 92z\" clip-rule=\"evenodd\"></path>",
+ "IconBookmarkFilled": "<path d=\"M310 60c26.116 0 48.585 5.957 64.313 21.686S396 119.883 396 146v247.889c0 10.958-5.109 20.971-13.798 26.892-8.882 6.052-20.449 7.057-30.938 1.872a15 15 0 0 1-.698-.366L240 360.687l-110.566 61.6q-.344.192-.698.366c-10.489 5.185-22.056 4.18-30.938-1.872C89.108 414.86 84 404.847 84 393.889V146c0-26.117 5.958-48.586 21.687-64.314C121.415 65.957 143.884 60 170 60z\"></path>",
+ "IconLine3Horizontal": "<path d=\"M391 353c8.837 0 16 7.163 16 16s-7.163 16-16 16H88c-8.837 0-16-7.163-16-16s7.163-16 16-16zM391 224c8.837 0 16 7.163 16 16s-7.163 16-16 16H88c-8.837 0-16-7.163-16-16s7.163-16 16-16zM391 95c8.837 0 16 7.163 16 16s-7.163 16-16 16H88c-8.837 0-16-7.163-16-16s7.163-16 16-16z\"></path>"
 };
 const ic = (name, size=24) => {
   const p = ODS_ICON[name];
@@ -1649,6 +2082,7 @@ const ODS_ASSET = {
   photoFloor:   'AssetPhotoWoodFlooringLarge/image_240.png',
   photoFloorIso:'AssetPhotoHardwoodFlooringIsometric/image_240.webp',  /* 마루 — Figma 137:113973 */
   photoVinyl:   'AssetPhotoWoodPatternVinylLarge/image_240.png',
+  photoVinylIso:'AssetPhotoWoodPatternVinylFlooringIsometric/image_240.webp', /* 부분시공 장판 — Figma 868:11429 (png 미제공) */
   truck:        'AssetTruckLargeGenuineBlueView2/image_240.png',
   cleaningTool: 'AssetCleaningToolLargeGenuineBlueView1/image_240.png',
   movingBox:    'AssetMovingBoxLargeGenuineBlueView1/image_240.png',
@@ -1933,15 +2367,18 @@ const isReserve = () => { const d=dday(); return d==null || d>45; };
 const LABELS = {entry:'진입',select:'서비스 선택',loading:'정보 항목 구성',form:'정보 입력',
   branch:'견적서 확인',list:'상담 내역'};
 const O2H_LABELS = {o2hHome:'O2O 홈', o2hSelect:'서비스 선택', o2hForm:'주소·일정', o2hOrder:'예상견적 확인', o2hApply:'비교견적 신청'};
+const C_LABELS = {cHome:'O2O 홈', cList:'업체 목록', cQuote:'견적 신청', cMatch:'파트너 매칭', cMap:'지도'};
 /* 02 서비스 선택 ~ 06 상담 내역. 견적서 확인 → 상담 신청 완료 → 상담 내역(매칭 리스트). */
 const PHASE1 = ['entry','select','loading','form','branch','list'];
 const PHASE3 = ['o2hHome','o2hSelect','o2hForm','o2hOrder','o2hApply'];
+const PHASE4 = ['cHome','cList','cQuote','cMatch','cMap'];
 const isView3 = () => document.body.classList.contains('view3');
-const getFlowGroup = () => isView3() ? 'B' : 'A';
-const flowKeys = () => isView3() ? [...PHASE3] : [...PHASE1];
-const flowLabel = k => (isView3() ? O2H_LABELS : LABELS)[k] || k;
+const isViewC = () => document.body.classList.contains('view4');
+const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
+const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
+const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cChip:'all', cLayer:'partners', cQuoteSvc:'full', cMatchReady:false, cMatchTimer:null, cPin:null, cQuotePartner:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cScrap:new Set()};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -2034,12 +2471,14 @@ function render(){ syncAuto(); renderFlowPanel(); renderRail(); renderCases(); r
 function renderFlowPanel(){
   const g = getFlowGroup();
   const title = $('#flowSectionTitle');
-  if(title) title.textContent = g==='B' ? 'FLOW B' : 'FLOW A';
-  const tabA = $('#flowTabA'), tabB = $('#flowTabB');
+  if(title) title.textContent = g==='C' ? 'FLOW C' : g==='B' ? 'FLOW B' : 'FLOW A';
+  const tabA = $('#flowTabA'), tabB = $('#flowTabB'), tabC = $('#flowTabC');
   if(tabA) tabA.setAttribute('aria-pressed', g==='A');
   if(tabB) tabB.setAttribute('aria-pressed', g==='B');
+  if(tabC) tabC.setAttribute('aria-pressed', g==='C');
   $('#flowViewsA')?.classList.toggle('hidden', g!=='A');
   $('#flowViewsB')?.classList.toggle('hidden', g!=='B');
+  $('#flowViewsC')?.classList.toggle('hidden', g!=='C');
 }
 
 function renderRail(){
@@ -2051,10 +2490,11 @@ function renderRail(){
   $('#rail').querySelectorAll('[data-step]').forEach(b=> b.onclick=()=>{
     const step = b.dataset.step;
     if(isView3()){
-      if(step==='o2hForm' && S.picked.size){ o2hStartFunnel(); return; }
+      if(step==='o2hForm' && S.picked.size){ o2hStartFunnel(); setMenuOpen(false); return; }
       if(step==='o2hOrder') S.o2hProgress = true;
     }
     go(step);
+    setMenuOpen(false);
   });
 }
 /* 화면 보기 -1/-2/-3 — Flow A(1·2) / Flow B(3) 그룹 + 프리뷰 전체화면 */
@@ -2154,7 +2594,7 @@ function resetO2h(caseSvcs){
 function setFlowGroup(g, opts={}){
   const b = document.body;
   if(g==='B'){
-    b.classList.remove('view2');
+    b.classList.remove('view2','view4');
     b.classList.add('view3');
     if(!opts.keepState){
       const svcs = [...S.picked];
@@ -2163,22 +2603,49 @@ function setFlowGroup(g, opts={}){
     }
     if(!PHASE3.includes(S.screen)) go('o2hHome');
     else render();
+  }else if(g==='C'){
+    b.classList.remove('view2','view3');
+    b.classList.add('view4');
+    if(!opts.keepState) resetFlowC();
+    if(!PHASE4.includes(S.screen)) go('cHome');
+    else render();
   }else{
-    b.classList.remove('view3');
-    if(PHASE3.includes(S.screen)){ S.screen='entry'; b.classList.remove('preview-only'); }
+    b.classList.remove('view3','view4','menu-open');
+    if(PHASE3.includes(S.screen) || PHASE4.includes(S.screen)){ S.screen='entry'; b.classList.remove('preview-only'); }
     render();
+    setMenuOpen(false);
   }
+}
+function setMenuOpen(on){
+  const b=document.body;
+  const preview = b.classList.contains('preview-only');
+  const open = on===undefined ? !b.classList.contains('menu-open') : !!on;
+  b.classList.toggle('menu-open', preview && open);
+  const reallyOpen = b.classList.contains('menu-open');
+  const off=$('#previewExit');
+  if(off){
+    off.setAttribute('aria-expanded', reallyOpen?'true':'false');
+    off.setAttribute('aria-label', reallyOpen?'메뉴 닫기':'메뉴 보기');
+    off.title = reallyOpen?'메뉴 닫기':'메뉴 보기';
+  }
+  $('#protoMenu')?.setAttribute('aria-hidden', (preview && !reallyOpen) ? 'true' : 'false');
 }
 function initPreviewToggle(){
   const b=document.body;
-  const on1=$('#previewToggle1'), on2=$('#previewToggle2'), on3=$('#previewToggle3'), off=$('#previewExit');
-  const tabA=$('#flowTabA'), tabB=$('#flowTabB');
+  const on1=$('#previewToggle1'), on2=$('#previewToggle2'), on3=$('#previewToggle3'), on4=$('#previewToggle4'), off=$('#previewExit');
+  const tabA=$('#flowTabA'), tabB=$('#flowTabB'), tabC=$('#flowTabC'), close=$('#panelClose');
   if(tabA) tabA.onclick=()=>{ setFlowGroup('A'); };
   if(tabB) tabB.onclick=()=>{ setFlowGroup('B'); };
-  if(on1) on1.onclick=()=>{ setFlowGroup('A'); b.classList.remove('view2'); b.classList.add('preview-only'); S.screen='entry'; render(); };
-  if(on2) on2.onclick=()=>{ setFlowGroup('A'); b.classList.add('view2','preview-only'); S.screen='entry'; render(); };
-  if(on3) on3.onclick=()=>{ setFlowGroup('B'); b.classList.add('preview-only'); resetO2h(); go('o2hHome'); };
-  if(off) off.onclick=()=>{ b.classList.remove('preview-only'); render(); };
+  if(tabC) tabC.onclick=()=>{ setFlowGroup('C'); };
+  if(on1) on1.onclick=()=>{ setMenuOpen(false); setFlowGroup('A'); b.classList.remove('view2'); b.classList.add('preview-only'); S.screen='entry'; render(); };
+  if(on2) on2.onclick=()=>{ setMenuOpen(false); setFlowGroup('A'); b.classList.add('view2','preview-only'); S.screen='entry'; render(); };
+  if(on3) on3.onclick=()=>{ setMenuOpen(false); setFlowGroup('B'); b.classList.add('preview-only'); resetO2h(); go('o2hHome'); };
+  if(on4) on4.onclick=()=>{ setMenuOpen(false); setFlowGroup('C'); b.classList.add('preview-only'); resetFlowC(); go('cHome'); };
+  if(off) off.onclick=()=>{
+    if(b.classList.contains('preview-only')) setMenuOpen();
+    else { b.classList.add('preview-only'); render(); }
+  };
+  if(close) close.onclick=()=> setMenuOpen(false);
 }
 
 /* ── 화면 보기-2 진입점 플로팅 CTA (Figma 90:34954) ──────────────────────
@@ -2194,7 +2661,7 @@ let fabTimer=null, fabLastY=0;
 function renderFabEntry(){
   const slot=$('#fabSlot'); if(!slot) return;
   clearTimeout(fabTimer);
-  if(isView3() || !(document.body.classList.contains('view2') && S.screen==='entry')){ slot.innerHTML=''; return; }
+  if(isView3() || isViewC() || !(document.body.classList.contains('view2') && S.screen==='entry')){ slot.innerHTML=''; return; }
   slot.innerHTML = `<button class="fab-entry" id="fabEntry" type="button" aria-label="${FAB_ROLL[FAB_ROLL.length-1]}">
       <span class="fe-roll"><span class="fe-track">
         ${FAB_ROLL.map(t=>`<span class="fe-item t-body16L24 w-bold">${t}</span>`).join('')}
@@ -2252,6 +2719,22 @@ function renderO2hBottomBar(){
 }
 function renderCases(){
   const menu = $('#caseMenu');
+  if(isViewC()){
+    const cur = C_CASES.find(c=>c.chip===S.cChip) || C_CASES.find(c=>c.chip==='all');
+    menu.innerHTML = C_CASES.map(c=>{
+      const on = cur && cur.id===c.id;
+      return `<li><button data-case="${c.id}"${on?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`;
+    }).join('');
+    menu.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
+      const c = C_CASES.find(x=>x.id===b.dataset.case);
+      S.cChip = c.chip;
+      S.cPin = null;
+      if(!PHASE4.includes(S.screen)) go('cList');
+      else render();
+      setMenuOpen(false);
+    });
+    return;
+  }
   if(isView3()){
     const pool = O2H_CASES;
     const cur = pool.find(c=>c.s.length===S.picked.size && c.s.every(k=>S.picked.has(k)));
@@ -2263,6 +2746,7 @@ function renderCases(){
       const c = pool.find(x=>x.id===b.dataset.case);
       resetO2h(c.s);
       go('o2hSelect');
+      setMenuOpen(false);
     });
     return;
   }
@@ -2276,6 +2760,7 @@ function renderCases(){
     S.picked=new Set(c.s); S.ans={}; S.log=[]; S.qi=0; S.step=0; S.ringFrac=0;
     S.route=null; S.pick=null; S.prod={}; S.stage='none'; S.openPart=false; S.gen=false; S.rtab=null;
     go('select');
+    setMenuOpen(false);
   });
 }
 function renderO2hBranches(){
@@ -5026,13 +5511,847 @@ const CASES = [
   {id:'C11', n:'이사 + 청소 + 인터넷',    s:['move','clean','net']},
   {id:'C12', n:'전체 선택',             s:['full','part','move','clean','net','rent','fix']}
 ];
-function bootFlowB(){
-  document.body.classList.add('view3','preview-only');
-  resetO2h(['full','move']);
-  S.screen = 'o2hHome';
+/* ══════════ FLOW C · 칩 필터 목록 / 견적 / 매칭 / 지도
+   유저 스토리: 상단 칩으로 O2O 업체 목록 · 견적 받기 입력 후 매칭 · 주소 기반 지도(업체/사례/매장) */
+const C_ADDR = '서울 송파구 올림픽로 135';
+const C_CHIPS = [
+  {k:'all', n:'전체'},
+  {k:'full', n:'집 전체 시공'},
+  {k:'part', n:'부분 시공'},
+  {k:'move', n:'이사'},
+  {k:'clean', n:'이사청소'},
+  {k:'net', n:'인터넷'},
+  {k:'rent', n:'렌탈'}
+];
+const C_CASES = [
+  {id:'L1', n:'집 전체 시공', chip:'full'},
+  {id:'L2', n:'부분 시공', chip:'part'},
+  {id:'L3', n:'이사', chip:'move'},
+  {id:'L4', n:'전체', chip:'all'}
+];
+const C_LAYERS = [
+  {k:'partners', n:'가까운 업체'},
+  {k:'cases', n:'아파트 사례'},
+  {k:'stores', n:'오프라인 매장'}
+];
+const C_PARTNERS = [
+  {id:'p1', svc:'full', name:'토니인테리어', dist:'0.8km', star:'5.0', reviews:24, contracts:8, badge:'책임보장', quote:'1,200~1,800만',
+    imgs:['photoKitchen','photoWall','photoFloor']},
+  {id:'p2', svc:'full', name:'보운디자인', dist:'1.4km', star:'4.9', reviews:41, contracts:12, badge:'책임보장', quote:'1,400~2,100만',
+    imgs:['photoWall','photoKitchen','photoBasin']},
+  {id:'p3', svc:'part', name:'키친랩', dist:'0.6km', star:'4.8', reviews:18, contracts:6, badge:'', quote:'180~320만',
+    imgs:['photoKitchen','photoBasin','photoFloor']},
+  {id:'p4', svc:'part', name:'월앤플로어', dist:'1.9km', star:'4.7', reviews:33, contracts:9, badge:'', quote:'90~210만',
+    imgs:['photoWall','photoFloor','photoVinyl']},
+  {id:'p5', svc:'move', name:'오늘의집 이사', dist:'2.1km', star:'4.7', reviews:132, contracts:40, badge:'검증', quote:'45~78만',
+    imgs:['photoFloor','photoWall','photoKitchen']},
+  {id:'p6', svc:'clean', name:'클린하우스', dist:'1.1km', star:'4.9', reviews:56, contracts:19, badge:'', quote:'18~32만',
+    imgs:['photoBasin','photoWall','photoKitchen']},
+  {id:'p7', svc:'net', name:'KT 제휴점 송파', dist:'0.4km', star:'4.6', reviews:88, contracts:0, badge:'', quote:'상담 후 확정',
+    imgs:['photoKitchen','photoFloor','photoWall']},
+  {id:'p8', svc:'rent', name:'코웨이 송파', dist:'1.9km', star:'4.5', reviews:27, contracts:0, badge:'', quote:'월 1.9만~',
+    imgs:['photoBasin','photoKitchen','photoFloor']}
+];
+const C_MAP_PINS = {
+  partners: [
+    {id:'p1', x:'28%', y:'38%'}, {id:'p2', x:'62%', y:'30%'}, {id:'p3', x:'40%', y:'62%'},
+    {id:'p5', x:'72%', y:'58%'}, {id:'p6', x:'22%', y:'70%'}, {id:'p7', x:'55%', y:'46%'}
+  ],
+  cases: [
+    {id:'a1', name:'잠실파크리오 32평', sub:'전체 시공 · 2026.03', x:'34%', y:'40%'},
+    {id:'a2', name:'리센츠 45평', sub:'주방·도배 · 2026.01', x:'68%', y:'48%'},
+    {id:'a3', name:'레이크팰리스 28평', sub:'부분 시공 · 2025.11', x:'48%', y:'68%'}
+  ],
+  stores: [
+    {id:'s1', name:'오늘의집 잠실점', sub:'올림픽로 300 · 10:00–21:00', x:'52%', y:'36%'},
+    {id:'s2', name:'오늘의집 송파점', sub:'송파대로 111 · 10:30–20:30', x:'30%', y:'64%'}
+  ]
+};
+function cPartners(){
+  if(S.cChip==='all') return C_PARTNERS;
+  return C_PARTNERS.filter(p=>p.svc===S.cChip);
+}
+function cPhoto(key){ return `${ODS_ASSET_BASE}/${ODS_ASSET[key]}`; }
+function cThumb(imgs){
+  return imgs.map((k,i)=>`<img class="pc-im${i===0?' pc-main':''}" src="${cPhoto(k)}" alt="">`).join('');
+}
+function cChipBar(){
+  return `<div class="c-chips">${C_CHIPS.map(c=>
+    chip({label:c.n, size:'sm', variant:S.cChip===c.k?'outlined':'normal', attrs:`data-cchip="${c.k}"`, pressed:S.cChip===c.k})
+  ).join('')}</div>`;
+}
+function bindCChips(){
+  screen.querySelectorAll('[data-cchip]').forEach(b=> b.onclick=()=>{ S.cChip=b.dataset.cchip; S.cPin=null; render(); });
+}
+function cModeToggle(mode){
+  return `<div class="c-mode-row" role="tablist" aria-label="보기 전환">
+    <div class="c-mode">
+    ${chip({label:'목록', size:'sm', variant:mode==='list'?'outlined':'normal', attrs:'data-cmode="list"', pressed:mode==='list'})}
+    ${chip({label:'지도', size:'sm', variant:mode==='map'?'outlined':'normal', attrs:'data-cmode="map"', pressed:mode==='map'})}
+    </div>
+  </div>`;
+}
+function bindCMode(){
+  screen.querySelectorAll('[data-cmode]').forEach(b=> b.onclick=()=>{
+    if(b.dataset.cmode==='map') go('cMap'); else go('cList');
+  });
+}
+function cOpenQuote(svc, partner){
+  S.cQuoteSvc = svc;
+  S.cQuotePartner = partner || null;
+  S.picked = new Set([svc]);
+  S.cMatchReady = false;
+  if(S.cMatchTimer){ clearTimeout(S.cMatchTimer); S.cMatchTimer=null; }
+  if(!S.ans.addr?.length) S.ans.addr = ['서울/경기'];
+  go('cQuote');
+}
+function cQuoteFields(svc){
+  const size = COMMON.find(q=>q.id==='size');
+  const addr = COMMON.find(q=>q.id==='addr');
+  const dday = COMMON.find(q=>q.id==='dday');
+  if(svc==='net') return [...Q.net];
+  if(svc==='rent') return [addr, ...Q.rent];
+  if(svc==='move') return [addr, size, Q.move.find(q=>q.id==='type'), Q.move.find(q=>q.id==='mdate')].filter(Boolean);
+  if(svc==='clean') return [addr, size, Q.clean.find(q=>q.id==='cday')].filter(Boolean);
+  return [addr, size, (Q[svc]||[]).find(q=>q.id==='area'), dday].filter(Boolean);
+}
+function cFieldOpts(f){ return typeof f.opts==='function' ? f.opts() : (f.opts||[]); }
+function cFieldReady(f){
+  const v = S.ans[f.id]||[];
+  return v.length>0;
+}
+function resetFlowC(){
+  S.cChip = 'all';
+  S.cTab = 'home';
+  S.cPChip = 0;      /* 집 전체시공 (846:52869 selected) */
+  S.cCChip = 1;      /* 부분시공 (868:14733 selected) */
+  S.cCFilter = 0;    /* 주방 (868:14741 selected) */
+  S.cTabChip = {full:1, part:0};   /* 전체시공=모던(893:16520) · 부분시공=전체(892:14431) */
+  S.cScrap = new Set();
+  S.cLayer = 'partners';
+  S.cQuoteSvc = 'full';
+  S.cMatchReady = false;
+  if(S.cMatchTimer){ clearTimeout(S.cMatchTimer); S.cMatchTimer=null; }
+  S.cPin = null;
+  S.cQuotePartner = null;
+  S.ans = {addr:['서울/경기'], size:['30평대']};
+  S.picked = new Set(['full']);
+}
+
+/* ══════════════ Flow C — O2O 홈 (Figma 868:18466 default / 892:15126 sticky) ══════════════
+   구성: Top Navigation(공통 chrome) → Location → sticky map(240) → Container
+        (tab / Bundle_Menu / Bundle_Offering / Bundle·partner ×2) → Bottom Navigation(공통 chrome)
+   sticky 상태는 별도 화면이 아니라 같은 tab 의 스크롤 상태다(Handle 숨김 + 헤더 하단 고정). */
+const CH_ADDR   = '경기도 성남시 분당구 판교로 50 (판교동, 판교원마을1단지아파트)';
+const CH_REGION = '분당구';
+const CH_ASSET  = 'assets/o2ohome/';
+const CH_STICKY_TOP = 86;      /* Search Top Navigation 44 + Location 42 */
+const CH_STICKY_SCROLL = 210;  /* 지도 240 − Container 겹침 30 : tab 이 헤더에 붙는 스크롤량 */
+
+/* tab 을 헤더 바로 아래(CH_STICKY_TOP)로 붙인다.
+   is-stuck 이면 Handle(24px)이 접혀 목표 스크롤량이 달라지므로(순환 의존),
+   목표 상태를 먼저 적용한 뒤 2회 수렴시킨다. */
+function chStickTab(){
+  const t = screen.querySelector('#chTab');
+  if(!t) return;
+  t.classList.add('is-stuck');
+  for(let i=0;i<2;i++)
+    screen.scrollTop += (t.getBoundingClientRect().top - screen.getBoundingClientRect().top) - CH_STICKY_TOP;
+  screen.dispatchEvent(new Event('scroll'));
+}
+
+const CH_TABS = [
+  {k:'home',   l:'홈'},
+  {k:'full',   l:'전체시공'},
+  {k:'part',   l:'부분시공'},
+  {k:'move',   l:'이사·청소'},
+  {k:'rental', l:'인터넷·렌탈'},
+];
+/* Bundle_Menu — 서비스 카테고리 1depth (annotation: ATF 1. 서비스 카테고리 1depth 메뉴).
+   asset 52×52 프레임은 Figma 에서 내부 [Asset] 인스턴스가 hidden 이라 빈 플레이스홀더가 정본이다. */
+const CH_MENU = [
+  ['전체시공','부분시공','단지시공사례','직시공','견적계산기'],
+  ['이사','이사청소','인터넷','렌탈구독','설치수리'],
+];
+/* Pin (892:15014) — kind: lounge(오늘의집 심볼) · house(단지) · brand(스탠다드) */
+const CH_PINS = [
+  {id:'lounge',   kind:'lounge', x:67,  y:144, w:60, label:'오늘의집<br>판교라운지'},
+  {id:'complex',  kind:'house',  x:168, y:84,  w:32, label:''},
+  {id:'standard', kind:'brand',  x:258, y:80,  w:48, label:'스탠다드'},
+];
+/* 파트너 카드 (846:52878) */
+const CH_QUOTE = '가격도 조금  빼주시고 남자2명, 주방 짐 챙겨주시는  여자1명 오셔서 착착 꼼꼼하고 깔끔하게 진행해주셨어요~! 꼼꼼히 잘 챙겨주셔서 추천 드립니다!!!!!!!';
+const CH_PARTNERS = [
+  {id:'ch-p1', name:'내일인테리어',   badges:[['책임보장','green-subtle'],['스탠다드','blue-subtle']], star:'5.0', reviews:'리뷰 999개',   note:'우리단지 1회 시공', img:CH_ASSET+'pcard1.png'},
+  {id:'ch-p2', name:'어반시크디자인', badges:[['책임보장','green-subtle'],['스탠다드','blue-subtle']], star:'5.0', reviews:'리뷰 124개',   note:'우리단지 2회 시공', img:CH_ASSET+'pcard2.png'},
+  {id:'ch-p3', name:'디자인덕',       badges:[['책임보장','green-subtle']],                            star:'5.0', reviews:'리뷰 9,999개', note:'우리단지 3회 시공', img:CH_ASSET+'pcard3.png'},
+];
+/* review-card (863:10948) */
+const CH_CASE_TXT = '예약하고 첫 미팅때부터 기본적인 도면이며 시공사례등 다 준비를 미리 해주셔서 믿음이 갔습니다. 많은 현장보다는 현장하나하나 신경을 쓰는업체 분위기가 맘에 들었습니다. 공사끝난 지금 제 선택이 옳았구나 싶어요';
+const CH_CASES = [
+  {id:'ch-c1', t:'42평 · 시화청솔아파트', by:'토니인테리어', img:CH_ASSET+'review_1.png'},
+  {id:'ch-c2', t:'42평 · 시화청솔아파트', by:'토니인테리어', img:CH_ASSET+'review_2.png'},
+  {id:'ch-c3', t:'42평 · 시화청솔아파트', by:'토니인테리어', img:CH_ASSET+'review_3.png'},
+];
+const CH_PCHIPS = ['집 전체시공','부분시공','이사','청소'];
+const CH_CCHIPS = ['집 전체시공','부분시공','이사','청소','인터넷·렌탈'];
+const CH_CFILTER = ['주방','도배','장판','붙박이장'];
+
+/* ODS 아이콘/에셋 헬퍼 위임 */
+const chOdsSvg = (path, size) =>
+  `<img src="${ODS_ASSET_BASE}/${path}" alt="" width="${size}" height="${size}"
+     style="width:${size}px;height:${size}px;display:block">`;
+
+/* ── 지도 (837:14495) ── */
+function chMap(){
+  const pin = p => {
+    let icon;
+    if(p.kind==='lounge')      icon = chOdsSvg('AssetOhouseSymbol/ohouse-symbol.svg', 22);
+    else if(p.kind==='brand')  icon = `<span class="chp-inner">${chOdsSvg('AssetOhouseStandardSymbolWhite/ohouse-standard-symbol-white.svg',16)}</span>`;
+    else                       icon = ic('IconPlaceHouseFilled',20);
+    return `<button class="ch-pin" data-kind="${p.kind}" data-pin="${p.id}" type="button"
+      style="left:${p.x}px;top:${p.y}px;width:${p.w}px"${p.label?'':` aria-label="단지"`}>
+      <span class="chp-ic">${icon}</span>
+      ${p.label?`<span class="chp-lb t-body14L18 w-semibold">${p.label}</span>`:''}
+    </button>`;
+  };
+  return `<div class="ch-map">
+    <img class="cm-img" src="${CH_ASSET}map.jpg" alt="주변 지도">
+    ${CH_PINS.map(pin).join('')}
+    <div class="ch-mapact">
+      <button type="button" aria-label="우리집으로 이동">${ic('IconHouse',20)}</button>
+      <button type="button" aria-label="현재 위치로 이동">${ic('IconScope',20)}</button>
+    </div>
+  </div>`;
+}
+
+/* ── ODS ScrapButton (variant="media") ── */
+const chScrap = (id) => {
+  const on = S.cScrap.has(id);
+  return `<button class="ods-scrap" type="button" data-scrap="${id}" aria-pressed="${on}"
+    aria-label="${on?'스크랩 해제':'스크랩'}">${ic(on?'IconBookmarkFilled':'IconBookmark',20)}</button>`;
+};
+
+/* ── ModuleTitle (868:14703) — ODS Section + Section Arrow Button ── */
+const chModuleTitle = (html) => `<div class="ch-mtitle">
+  <b class="mt-t t-heading17 w-semibold">${html}</b>
+  <button class="mt-arrow" type="button" aria-label="더보기">${ic('IconArrowRight',16)}</button>
+</div>`;
+
+/* ── 파트너 카드 (846:52878) ── */
+const chPartnerCard = (p) => `<article class="ch-pcard">
+  <div class="chc-info">
+    <div class="chc-ttl">
+      <div class="chc-nm">
+        <b class="t-body16L20 w-bold">${p.name}</b>
+        <span class="chc-bd">${p.badges.map(([t,v])=>sqBadge(t,v,'16')).join('')}</span>
+      </div>
+      <div class="chc-meta t-detail13L18">
+        <span class="chc-star">${ic('IconStarFilled',12)}<b class="w-semibold">${p.star}</b></span>
+        <span>${p.reviews}</span><i class="chc-sep"></i><span>${p.note}</span>
+      </div>
+    </div>
+    <p class="chc-quote t-detail13L18"><span>${CH_QUOTE}</span></p>
+  </div>
+  <div class="chc-thumb"><img src="${p.img}" alt="">${chScrap(p.id)}</div>
+</article>`;
+
+/* ── 사례·리뷰 카드 (863:10948) ── */
+const chCaseCard = (c) => `<article class="ch-rcard">
+  <div class="chr-im"><img src="${c.img}" alt=""></div>
+  <b class="chr-nm t-body14L18 w-bold">${c.t}</b>
+  <p class="chr-tx t-body14L20"><span>${CH_CASE_TXT}</span></p>
+  <span class="chr-by t-detail12L16">${c.by}</span>
+</article>`;
+
+const chMore = () => `<button class="ch-more t-detail13L18 w-medium" type="button">더보기 ${ic('IconChevronRight',12)}</button>`;
+
+
+/* ══════════════ Flow C — 탭별 개별 페이지 ══════════════
+   전체시공 837:17410 · 부분시공 868:11034 · 이사·청소 837:16817 · 인터넷·렌탈 837:17088 */
+
+/* ODS Card (compound) — Root / Media(aspectRatio) / Content(padding) */
+const odsCard = ({media='', content='', type='vertical', cls='', attrs=''}) =>
+  `<article class="ods-card ${cls}" data-type="${type}" ${attrs}>
+    ${media?`<div class="ods-card-media">${media}</div>`:''}
+    ${content?`<div class="ods-card-content">${content}</div>`:''}
+  </article>`;
+
+/* ODS GridThumbnail — layout="left-1-right-2" · shape="rectangle" */
+const gridThumb = (imgs, ratio='') =>
+  `<div class="ods-gridthumb"${ratio?` style="aspect-ratio:${ratio}"`:''}>
+    <div class="gt-main"><img src="${imgs[0]}" alt=""></div>
+    <div class="gt-side"><img src="${imgs[1]}" alt=""><img src="${imgs[2]}" alt=""></div>
+  </div>`;
+
+/* Bundle_Offering 배너 — 탭별 테마 */
+const chBanner = ({theme, kicker, title, img='', pb=24}) =>
+  `<div class="ch-offering"${pb===24?' data-pb="24"':''}>
+    <button class="ch-banner" data-theme="${theme}" type="button">
+      ${img?`<span class="cb-imgbox"><img class="cb-img" src="${img}" alt=""></span>`:''}
+      <span class="cb-dim"></span>
+      <span class="cb-tt">
+        <span class="t-detail13L18 w-medium" style="line-height:16px">${kicker}</span>
+        <span class="t-body15L24 w-semibold" style="line-height:18px">${title}</span>
+      </span>
+      <span class="cb-ind t-detail12L16">1/10</span>
+    </button>
+  </div>`;
+
+/* ModuleTitle — 위치 핀(Left slot) 옵션 */
+const chTitle = (html, {pin=false}={}) => `<div class="ch-mtitle">
+  <b class="mt-t t-heading17 w-semibold">${pin?`<img class="mt-pin" src="${ODS_ASSET_BASE}/AssetLocationPinSmallMangoOrange/location-pin-small-mango-orange.svg" alt="" width="20" height="20">`:''}<span>${html}</span></b>
+  <button class="mt-arrow" type="button" aria-label="더보기">${ic('IconArrowRight',16)}</button>
+</div>`;
+
+const CH_A = CH_ASSET;
+const blue = t => `<em>${t}</em>`;
+
+/* ── 전체시공 (837:17410) ────────────────────────────── */
+const CH_FULL_CELLS = [
+  {l:'집 전체 시공'}, {l:'부분시공'}, {l:'주방·도배·장판'}, {l:'견적계산기', accent:'yellow'},
+];
+const CH_FULL_CASES = [
+  {tx:'Dolore dolore tempor est non dolore. Velit nostrud enim eiusmod incididunt et adipisicing et dolore occaecat proident aute adipisicing culpa.',
+   view:'조회 4.6만', scrap:'1,245', imgs:[CH_A+'case_1.png',CH_A+'case_2.png',CH_A+'case_3.png']},
+  {tx:'Dolore dolore tempor est non dolore. Velit nostrud enim eiusmod incididunt et adipisicing et dolore occaecat proident aute adipisicing culpa.',
+   view:'조회 4.6만', scrap:'1,245', imgs:[CH_A+'case_4.png',CH_A+'case_5.png',CH_A+'case_6.png']},
+];
+const CH_FULL_FIRMS = [
+  {id:'ch-f1', name:'내일인테리어', badges:[['책임보장','green-subtle'],['스탠다드','blue-subtle']],
+   star:'5.0', reviews:'계약자리뷰 9,999개', note:'최근계약 15건',
+   imgs:[CH_A+'firm_a.png',CH_A+'firm_b.png',CH_A+'firm_c.png']},
+  {id:'ch-f2', name:'어반시크디자인', badges:[['책임보장','green-subtle'],['스탠다드','blue-subtle']],
+   star:'5.0', reviews:'계약자리뷰 9,999개', note:'최근계약 15건',
+   imgs:[CH_A+'pcard2.png',CH_A+'firm_b.png',CH_A+'firm_c.png']},
+];
+const CH_FULL_CHIPS = ['전체','모던','미니멀·심플','내추럴'];
+
+/* 시공사례 card — Card.Media = GridThumbnail(left-1-right-2) */
+const chCaseCardFull = (c) => odsCard({
+  cls:'ccase',
+  media: gridThumb(c.imgs, '343/180'),
+  content: `<p class="cc-tx t-body14L18">${c.tx}</p>
+    <div class="cc-info t-detail12L16">
+      <span>${c.view}</span><span>·</span>
+      <span class="cc-d">${ic('IconBookmarkFilled',12)}<span>${c.scrap}</span></span>
+    </div>`,
+});
+/* 시공업체 card — Information + thumbnail(모자이크) */
+const chFirmCard = (f) => {
+  const on = S.cScrap.has(f.id);
+  return odsCard({
+    cls:'cfirm',
+    content: `<div class="cf-info">
+        <div class="cf-t">
+          <div class="cf-nm">
+            <b class="t-body16L20 w-bold">${f.name}</b>
+            <span class="cf-bd">${f.badges.map(([t,v])=>sqBadge(t,v,'20')).join('')}</span>
+          </div>
+          <div class="cf-rv t-detail13L18">
+            <span class="chc-star">${ic('IconStarFilled',12)}<b class="w-semibold">${f.star}</b></span>
+            <span>${f.reviews}</span><i class="chc-sep"></i><span>${f.note}</span>
+          </div>
+        </div>
+        <button class="cf-scrap" type="button" data-scrap="${f.id}" aria-pressed="${on}"
+          aria-label="${on?'스크랩 해제':'스크랩'}">${ic(on?'IconBookmarkFilled':'IconBookmark',24)}</button>
+      </div>
+      <div class="cf-th">${gridThumb(f.imgs)}</div>`,
+  });
+};
+
+function chPageFull(){
+  return `
+    <div class="cta-grid">
+      <button class="cta-hero" type="button">
+        <span class="ch-ttl t-body15L24 w-semibold" style="line-height:21px">
+          <em>우리 아파트</em><b>시공 사례·전문가 찾기</b>
+        </span>
+        <img src="${ODS_ASSET_BASE}/AssetHouseWithDrillO2OLargeGenuineBlueView3/image_240.png" alt="">
+      </button>
+      <div class="cta-cells">
+        ${CH_FULL_CELLS.map(c=>`<button class="cta-cell" type="button"${c.accent?` data-accent="${c.accent}"`:''}>
+          <span class="cc-a"></span><span class="cc-l t-detail13L18 w-medium">${c.l}</span>
+        </button>`).join('')}
+      </div>
+    </div>
+    ${chBanner({theme:'wood', kicker:'오늘의집이 직접 시공합니다', title:'도배 직시공 서비스 오픈!', img:CH_A+'banner-wood.png'})}
+    <section class="ch-bundle">
+      ${chTitle(`${blue('성남시')} 주변 인기 시공사례`, {pin:true})}
+      <div class="crail">${CH_FULL_CASES.map(chCaseCardFull).join('')}</div>
+    </section>
+    <section class="ch-bundle">
+      ${chTitle(`${blue('성남시')} 주변 추천 시공업체`, {pin:true})}
+      <div class="crail">${CH_FULL_FIRMS.map(chFirmCard).join('')}</div>
+    </section>
+    <section class="ch-bundle">
+      ${chTitle(`${blue('분당구')} 주변 인기 시공사례`)}
+      <div class="ch-chips" role="group" aria-label="스타일">
+        ${CH_FULL_CHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cTabChip.full===i?'solid':'normal',
+          attrs:`data-chtabchip="full:${i}"`, pressed:S.cTabChip.full===i})).join('')}
+      </div>
+      <div class="ch-rrail">${CH_CASES.map(chCaseCard).join('')}</div>
+    </section>`;
+}
+
+/* ── 부분시공 (868:11034) ────────────────────────────── */
+const CH_PART_MENU = [
+  {l:'주방', a:'photoKitchen', badge:'N'},
+  {l:'도배', a:'photoWall'},
+  {l:'마루', a:'photoFloor'},
+  {l:'장판', a:'photoVinylIso'},
+];
+const CH_PART_CHIPS = ['전체','주방','도배','장판/마루'];
+const CH_BA_TXT = '첫 시공이라 신뢰와 A/S가 젤 중요해서 오늘의집에서 했고요! 계약서를 전자상으로 체결하는 편리성. 친절한 매니저님, 시공을 조심스럽게 잘 해주셨다는 시공팀...';
+const chBaCard = () => odsCard({
+  cls:'cba',
+  media:`<div class="cb-pair">
+      <div class="cb-half" data-side="before"><img src="${CH_A}ba_before.png" alt="">${sqBadge('전','neutral500','16')}</div>
+      <div class="cb-half" data-side="after"><img src="${CH_A}ba_after.png" alt="">${sqBadge('후','primary','16')}</div>
+    </div>`,
+  content:`<b class="cb-ti t-body14L18 w-semibold">30평 · 3.1m · ㅡ자 주방</b>
+    <p class="cb-tx t-body14L20"><span>${CH_BA_TXT}</span></p>`,
+});
+
+function chPagePart(){
+  return `
+    <div class="cta-row">
+      ${CH_PART_MENU.map(m=>`<button class="cta-mi" type="button">
+        <span class="cm-a">${asset(m.a,40)}${m.badge?`<span class="cm-badge">${m.badge}</span>`:''}</span>
+        <span class="cm-l t-detail13L18 w-medium">${m.l}</span>
+      </button>`).join('')}
+    </div>
+    ${chBanner({theme:'wood', kicker:'오늘의집이 직접 시공합니다', title:'도배 직시공 서비스 오픈!', img:CH_A+'banner-wood.png'})}
+    <section class="ch-bundle">
+      ${chTitle('실제 리뷰로 확인하는 오늘의집 직영 시공')}
+      <div class="ch-chips" role="group" aria-label="시공 분야">
+        ${CH_PART_CHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cTabChip.part===i?'solid':'normal',
+          attrs:`data-chtabchip="part:${i}"`, pressed:S.cTabChip.part===i})).join('')}
+      </div>
+      <div class="cgroup" data-gap="8">${[0,1,2,3,4].map(chBaCard).join('')}</div>
+    </section>`;
+}
+
+/* ── 이사·청소 (837:16817) ───────────────────────────── */
+const CH_MOVE_MENU = [
+  {l:'원룸이사', a:'truckV3'}, {l:'가정이사', a:'movingBox'},
+  {l:'보관이사', a:null},      {l:'이사청소', a:'cleaningToolV3'},
+];
+const CH_MOVE_PARTNERS = [{id:'ch-m1'},{id:'ch-m2'},{id:'ch-m3'},{id:'ch-m4'}];
+const chMovePhotos = [1,2,3,4,5].map(i=>CH_A+`move_${i}.png`);
+const chMoveCard = () => odsCard({
+  cls:'cmv',
+  content:`<div class="cm-info">
+      <div class="cm-t">
+        <div class="cm-id"><b class="t-body16L20 w-bold">티익스프레스</b>${sqBadge('책임보장','green-subtle','20')}</div>
+        <div class="cm-rv t-detail13L18">
+          <span class="chc-star">${ic('IconStarFilled',12)}<b class="w-semibold">4.2</b></span>
+          <span>리뷰 9,999개</span><i class="chc-sep"></i><span>최근 계약 15건</span>
+        </div>
+        <div class="cm-sv t-detail13L18">
+          <span>반포장이사</span><i class="chc-sep"></i><span>입주청소</span><i class="chc-sep"></i>
+          <span>짐보관 협의</span><span>외 +3개</span>
+        </div>
+      </div>
+      <span class="cm-cta">${boxButton({label:'견적받기', size:'small', variant:'normal'})}</span>
+    </div>
+    <div class="cm-ph">${chMovePhotos.map(u=>`<img src="${u}" alt="">`).join('')}</div>
+    <div class="cm-q">${[0,1].map(()=>`<p class="t-detail13L18"><span>${CH_QUOTE}</span></p>`).join('')}</div>`,
+});
+
+function chPageMove(){
+  return `
+    <div class="cta-row" data-fill>
+      ${CH_MOVE_MENU.map(m=>`<button class="cta-mi" type="button">
+        <span class="cm-a" style="width:52px;height:52px">${m.a?asset(m.a,52):''}</span>
+        <span class="cm-l t-detail13L18 w-medium">${m.l}</span>
+      </button>`).join('')}
+    </div>
+    ${chBanner({theme:'move', kicker:'이사 앞두고 추가금이나 파손 걱정된다면?', title:'이사 책임보장 파트너 이용하기', img:CH_A+'banner-move.png'})}
+    <section class="ch-bundle">
+      ${chTitle(`${blue('서울')} 검증된 이사 파트너 찾기`, {pin:true})}
+      <div class="cgroup">${CH_MOVE_PARTNERS.map(chMoveCard).join('')}</div>
+    </section>`;
+}
+
+/* ── 인터넷·렌탈 (837:17088) ─────────────────────────── */
+const CH_RENTAL_LS = [
+  {l:'에어컨',   p:'AssetPhotographicWallMountedAirConditionerLarge/image_240.png'},
+  {l:'제습기',   p:'AssetPhotographicCylinderAirPurifierLarge/image_240.png'},
+  {l:'안마의자', p:'AssetPhotographicModernWhiteMassageChairLarge/image_240.png'},
+  {l:'전체',     p:'AssetSquareGrid2x2SmallDarkGray/square-grid-2x2-small-dark-gray.svg', box:true},
+];
+function chPageRental(){
+  const big = (titleHtml, sub, img) => `<button class="cta-rcard" data-h="184" type="button">
+    <b class="t-body15L24 w-semibold" style="line-height:21px">${titleHtml}</b>
+    <span class="t-detail13L18 w-regular">${sub}</span>
+    ${img?`<img src="${ODS_ASSET_BASE}/${img}" alt="">`:''}
+  </button>`;
+  const small = (t, sub) => `<button class="cta-rcard" data-h="88" type="button">
+    <b class="t-body15L24 w-semibold" style="line-height:21px">${t}</b>
+    <span class="t-detail13L18 w-regular">${sub}</span>
+  </button>`;
+  return `
+    <div class="cta-rental">
+      <div class="cta-rrow">
+        ${big('<em>50만원 혜택 </em>받고<br>인터넷 설치하기','월 15,000원부터~','AssetWiFiRouterLargeGenuineBlueView3/image_240.png')}
+        ${big('정수기','월 12,900원부터~','AssetWaterPurifierLargeGenuineBlueView3/image_240.png')}
+      </div>
+      <div class="cta-rrow" data-gap="4">
+        ${small('비데','월 15,000원부터~')}
+        ${small('공기청정기','월 15,000원부터~')}
+      </div>
+      <div class="cta-ls">
+        ${CH_RENTAL_LS.map(m=>`<button class="ls-i" type="button"${m.box?' data-box':''}>
+          <span class="ls-a"><img src="${ODS_ASSET_BASE}/${m.p}" alt="" width="${m.box?32:48}" height="${m.box?32:48}"
+            style="width:${m.box?32:48}px;height:${m.box?32:48}px;object-fit:contain;display:block"></span>
+          <span class="ls-l t-detail12L16 w-regular">${m.l}</span>
+        </button>`).join('')}
+      </div>
+    </div>
+    ${chBanner({theme:'rental', kicker:'50만원 혜택 받고', title:'인터넷 정수기 렌탈 한번에 신청하기'})}`;
+}
+
+const CH_PAGES = {full:chPageFull, part:chPagePart, move:chPageMove, rental:chPageRental};
+function chPageHome(){
+  const region = `<em>${CH_REGION}</em>`;
+  return `
+      <div class="ch-menu">
+        ${CH_MENU.map(row=>`<div class="cm-row">
+          ${row.map(l=>`<button class="cm-item" type="button">
+            <span class="cm-asset"></span>
+            <span class="cm-lb t-detail13L18 w-medium">${l}</span>
+          </button>`).join('')}
+        </div>`).join('')}
+      </div>
+
+      <div class="ch-offering">
+        <button class="ch-banner" type="button">
+          <span class="cb-imgbox"><img class="cb-img" src="${CH_ASSET}offering.png" alt=""></span>
+          <span class="cb-dim"></span>
+          <span class="cb-tt">
+            <span class="t-detail13L18 w-medium" style="line-height:16px">오늘의집 스탠다드</span>
+            <span class="t-body15L24 w-semibold" style="line-height:18px">이토록 믿음직한 인테리어</span>
+          </span>
+          <span class="cb-ind t-detail12L16">1/10</span>
+        </button>
+      </div>
+
+      <section class="ch-bundle">
+        ${chModuleTitle(`${region} 주변 추천 파트너 찾기`)}
+        <div class="ch-chips" role="group" aria-label="파트너 카테고리">
+          ${CH_PCHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cPChip===i?'solid':'normal',
+            attrs:`data-chpchip="${i}"`, pressed:S.cPChip===i})).join('')}
+        </div>
+        <div class="ch-rail">
+          <div class="ch-page">${CH_PARTNERS.map(chPartnerCard).join('')}</div>
+          <div class="ch-page" aria-hidden="true">${CH_PARTNERS.map(chPartnerCard).join('')}</div>
+        </div>
+        ${chMore()}
+      </section>
+
+      <section class="ch-bundle">
+        ${chModuleTitle(`${region} 주변 인기 사례·리뷰`)}
+        <div class="ch-chips" role="group" aria-label="사례 카테고리">
+          ${CH_CCHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cCChip===i?'solid':'normal',
+            attrs:`data-chcchip="${i}"`, pressed:S.cCChip===i})).join('')}
+        </div>
+        <div class="ch-filter2" role="group" aria-label="시공 분야">
+          ${CH_CFILTER.map((f,i)=>`<button type="button" class="t-detail13L18 w-medium"
+            data-chfilter="${i}" aria-pressed="${S.cCFilter===i}">${f}</button>`).join('')}
+        </div>
+        <div class="ch-rrail">${CH_CASES.map(chCaseCard).join('')}</div>
+        ${chMore()}
+      </section>`;
+}
+
+/* 탭별 container 본문 — 홈은 Bundle_Menu/Offering/partner·case 번들,
+   그 외 탭은 개별 페이지 노드(ATF-Grid / bundle-offering / bundle container) */
+function chBody(){
+  const f = CH_PAGES[S.cTab];
+  return f ? f() : chPageHome();
+}
+
+
+VIEW.cHome = ()=>{
+  screen.innerHTML = `<div class="ch">
+    <div class="ch-top">
+      <div class="search-nav" role="navigation" aria-label="글로벌 내비게이션">
+        <button class="sn-icon" type="button" aria-label="메뉴">${ic('IconLine3Horizontal',24)}</button>
+        <div class="sn-search">
+          <span class="sn-ic">${ic('IconMagnifyingGlass',18)}</span>
+          <span class="sn-ph t-body14L20 w-regular">오늘의집 통합검색</span>
+        </div>
+        <button class="sn-icon" type="button" aria-label="알림">${ic('IconBell',24)}</button>
+        <button class="sn-icon" type="button" aria-label="북마크">${ic('IconBookmark',24)}</button>
+        <button class="sn-icon" type="button" aria-label="장바구니">${ic('IconCart',24)}</button>
+      </div>
+      <div class="ch-loc">
+        <div class="cl-label">
+          ${ic('IconLocationPinDot',18)}
+          <span class="cl-txt t-body14L20 w-regular">${CH_ADDR}</span>
+        </div>
+        ${textButton({label:'주소변경', size:14, variant:'primary'})}
+      </div>
+    </div>
+
+    ${chMap()}
+
+    <div class="ch-body">
+      <div class="ch-tab" id="chTab">
+        <div class="ct-handle" aria-hidden="true"><i></i></div>
+        <div class="ct-tablist" role="tablist" aria-label="서비스 카테고리">
+          ${CH_TABS.map(t=>`<button class="ct-item t-body15L24 w-bold" type="button" role="tab"
+            data-chtab="${t.k}" aria-selected="${S.cTab===t.k}">${t.l}</button>`).join('')}
+        </div>
+      </div>
+
+      ${chBody()}
+      <div id="chSpacer" aria-hidden="true"></div>
+    </div>
+
+    ${chCompareBar()}
+    ${bottomGnb()}
+  </div>`;
+  bindCHome();
+};
+
+/* 비교 Snackbar (892:15251) — 스크랩 1개 이상일 때 */
+function chCompareBar(){
+  const picked = CH_PARTNERS.filter(p=>S.cScrap.has(p.id));
+  if(!picked.length) return '';
+  return `<div class="ch-compare" role="status">
+    <span class="cc-av">${picked.slice(0,2).map(p=>`<i style="background-image:url('${p.img}')"></i>`).join('')}</span>
+    <span class="cc-t t-body14L18 w-medium">${picked.length}개 비교중 ${ic('IconChevronDown',16)}</span>
+    <button class="cc-btn t-detail13L18 w-semibold" type="button">비교하기</button>
+  </div>`;
+}
+
+function bindCHome(){
+  /* tab — ODS Tab value 변경 (sticky 여부와 무관한 같은 컴포넌트) */
+  screen.querySelectorAll('[data-chtab]').forEach(b=> b.onclick=()=>{
+    S.cTab = b.dataset.chtab;
+    render();
+    chStickTab();
+  });
+  screen.querySelectorAll('[data-chpchip]').forEach(b=> b.onclick=()=>{ S.cPChip=+b.dataset.chpchip; render(); });
+  screen.querySelectorAll('[data-chcchip]').forEach(b=> b.onclick=()=>{ S.cCChip=+b.dataset.chcchip; render(); });
+  screen.querySelectorAll('[data-chtabchip]').forEach(b=> b.onclick=()=>{
+    const [k,i] = b.dataset.chtabchip.split(':');
+    S.cTabChip[k] = +i; const y = screen.scrollTop; render(); screen.scrollTop = y;
+  });
+  screen.querySelectorAll('[data-chfilter]').forEach(b=> b.onclick=()=>{ S.cCFilter=+b.dataset.chfilter; render(); });
+  screen.querySelectorAll('[data-scrap]').forEach(b=> b.onclick=(e)=>{
+    e.stopPropagation();
+    const id=b.dataset.scrap;
+    S.cScrap.has(id) ? S.cScrap.delete(id) : S.cScrap.add(id);
+    const y = screen.scrollTop; render(); screen.scrollTop = y;
+  });
+  /* 핀 선택 — 선택된 업체 목록으로 진입 */
+  screen.querySelectorAll('[data-pin]').forEach(b=> b.onclick=()=>{ S.cPin=b.dataset.pin; go('cList'); });
+  /* sticky 전환 — tab 이 헤더(86px) 에 붙으면 Handle 을 접는다 (892:15275) */
+  /* 콘텐츠가 짧은 탭(인터넷·렌탈)도 tab 이 헤더에 붙을 수 있도록 스크롤 여유를 만든다.
+     탭 페이지 노드의 Top Navigation 이 h196(헤더 86 + tab 60)로 항상 sticky 인 상태를 재현. */
+  const spacer = screen.querySelector('#chSpacer');
+  if(spacer){
+    spacer.style.height = '0px';
+    /* +24 = sticky 전환 시 접히는 Handle 높이. 접힌 뒤에도 210px 을 스크롤할 수 있어야 한다. */
+    const need = (screen.clientHeight + CH_STICKY_SCROLL + 24) - screen.scrollHeight;
+    if(need > 0) spacer.style.height = need + 'px';
+  }
+  const tab = screen.querySelector('#chTab');
+  if(tab){
+    /* is-stuck 이 되면 Handle(24px)이 접혀 scrollHeight 가 줄고, 최하단에서는 브라우저가
+       scrollTop 을 24px 되감아 다시 unstick → 무한 진동한다. 히스테리시스로 끊는다. */
+    const onScroll = ()=>{
+      const top = tab.getBoundingClientRect().top - screen.getBoundingClientRect().top;
+      const stuck = tab.classList.contains('is-stuck');
+      if(!stuck && top <= CH_STICKY_TOP + .5) tab.classList.add('is-stuck');
+      else if(stuck && top > CH_STICKY_TOP + 32) tab.classList.remove('is-stuck');
+    };
+    screen.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  }
+}
+
+VIEW.cList = ()=>{
+  const rows = cPartners();
+  screen.innerHTML = `<div class="c-page">
+    ${topNav({title:'내 주변 업체'})}
+    <div class="c-addr">
+      ${ic('IconLocationPinDot',18)}
+      <div class="c-addr-t">
+        <div class="t-detail12L16 c-fg-weak">설정된 주소</div>
+        <div class="t-body14L18 w-semibold">${C_ADDR}</div>
+      </div>
+    </div>
+    ${cModeToggle('list')}
+    ${cChipBar()}
+    <div class="c-list">
+      ${rows.length? rows.map(p=>`<article class="c-row">
+        <div class="pc-thumb">${cThumb(p.imgs)}</div>
+        <div class="c-row-info">
+          <div class="c-row-nm">
+            <b class="t-body16L20 w-bold">${p.name}</b>
+            ${p.badge?sqBadge(p.badge,'brand-weak','16'):''}
+            <span class="t-detail12L16 c-fg-weak">${p.dist}</span>
+          </div>
+          <div class="t-detail12L16 c-fg-weak">${label(p.svc)}</div>
+          <div class="c-row-meta t-detail12L16">
+            <span class="pc-star">${ic('IconStarFilled',12)}<b class="w-bold">${p.star}</b></span>
+            <span>계약자리뷰 <b class="w-bold">${p.reviews}</b></span>
+            ${p.contracts?`<span class="pc-dot">·</span><span>최근계약 <b class="w-bold">${p.contracts}</b></span>`:''}
+          </div>
+          <div class="c-row-cta">${boxButton({label:'견적 받기', size:'medium', variant:'brand-solid', attrs:`data-cquote="${p.id}"`, full:true})}</div>
+        </div>
+      </article>`).join('') : `<div class="c-empty t-body14L18">이 카테고리의 업체가 없어요</div>`}
+    </div>
+    ${bottomGnb()}
+  </div>`;
+  bindCChips(); bindCMode();
+  screen.querySelectorAll('[data-cquote]').forEach(b=> b.onclick=()=>{
+    const p = C_PARTNERS.find(x=>x.id===b.dataset.cquote);
+    cOpenQuote(p.svc, p);
+  });
+};
+
+VIEW.cQuote = ()=>{
+  const svc = S.cQuoteSvc || 'full';
+  const fields = cQuoteFields(svc);
+  const ready = fields.every(cFieldReady);
+  const who = S.cQuotePartner ? S.cQuotePartner.name : label(svc);
+  screen.innerHTML = `<div class="c-quote">
+    ${topNav({title:'견적 신청', backId:'bk'})}
+    <div class="form">
+      <div class="c-quote-lead">
+        <p class="t-heading18 w-semibold">${who}</p>
+        <p class="t-body14L18 c-fg-weak">${C_ADDR} 기준 · ${label(svc)} 파트너 매칭에 필요한 정보를 알려주세요.</p>
+      </div>
+      ${fields.map(f=>{
+        const sel = S.ans[f.id]||[];
+        const opts = cFieldOpts(f);
+        return `<div class="field">
+          <div class="lb t-body14L18">${f.label||f.q}</div>
+          ${f.why?`<p class="why t-detail13L18">${f.why}</p>`:''}
+          <div class="opts">${opts.map(o=>selChip(o, f.multi?sel.includes(o):sel[0]===o, `data-fid="${f.id}" data-o="${o}"`)).join('')}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${actionDock({pattern:'single', children: boxButton({label:'파트너 매칭 받기', size:'large', variant:'brand-solid', id:'cGoMatch', full:true, disabled:!ready})})}
+  </div>`;
+  $('#bk').onclick=()=>go('cList');
+  screen.querySelectorAll('[data-fid]').forEach(b=> b.onclick=()=>{
+    const f = fields.find(x=>x.id===b.dataset.fid);
+    const o = b.dataset.o;
+    if(!f) return;
+    if(f.multi){
+      const cur = new Set(S.ans[f.id]||[]);
+      if(cur.has(o)) cur.delete(o); else cur.add(o);
+      S.ans[f.id]=[...cur];
+    } else S.ans[f.id]=[o];
+    render();
+  });
+  const goM=$('#cGoMatch'); if(goM) goM.onclick=()=>{ if(!ready) return; S.cMatchReady=false; go('cMatch'); };
+};
+
+VIEW.cMatch = ()=>{
+  if(!S.cMatchReady){
+    screen.innerHTML = `${topNav({title:'파트너 매칭', backId:'bk'})}
+      <div class="c-match-wait">
+        ${spinner(40)}
+        <b class="t-heading18 w-semibold">딱 맞는 파트너를 찾고 있어요</b>
+        <p class="t-body14L18 c-fg-weak">${C_ADDR} 근처 · ${label(S.cQuoteSvc||'full')}</p>
+      </div>`;
+    $('#bk').onclick=()=>go('cQuote');
+    if(!S.cMatchTimer){
+      S.cMatchTimer = setTimeout(()=>{
+        S.cMatchTimer=null;
+        if(S.screen==='cMatch' && !S.cMatchReady){ S.cMatchReady=true; render(); }
+      }, 900);
+    }
+    return;
+  }
+  const svc = S.cQuoteSvc||'full';
+  const matched = C_PARTNERS.filter(p=>p.svc===svc).slice(0,3);
+  screen.innerHTML = `
+    ${topNav({title:'받은 견적', backId:'bk'})}
+    <div class="mlist">
+      <p class="c-match-note t-body14L18">${matched.length}곳의 파트너가 견적을 보냈어요.</p>
+      <div class="ml-cards">${matched.map(p=>`<div class="ml-card">
+        <span class="ml-ic">${asset(PRICE_ART[p.svc]||'houseDrill',28)}</span>
+        <div class="ml-body">
+          <b class="ml-nm t-body16L20 w-semibold">${p.name}</b>
+          <span class="ml-stat t-detail13L18">${p.quote}</span>
+          <span class="ml-sub t-detail13L18">${p.dist} · 별점 ${p.star}</span>
+        </div>
+        <span class="ml-time t-detail11L14">방금</span>
+      </div>`).join('')}</div>
+    </div>
+    ${actionDock({pattern:'single', children: boxButton({label:'목록으로', size:'large', variant:'outlined', id:'cBackList', full:true})})}`;
+  $('#bk').onclick=()=>go('cQuote');
+  $('#cBackList').onclick=()=>go('cList');
+};
+
+VIEW.cMap = ()=>{
+  const layer = S.cLayer || 'partners';
+  let pins = [];
+  if(layer==='partners'){
+    const allow = new Set(cPartners().map(p=>p.id));
+    pins = C_MAP_PINS.partners.filter(x=>allow.has(x.id)).map(x=>{
+      const p = C_PARTNERS.find(pp=>pp.id===x.id);
+      return {kind:'partners', id:p.id, x:x.x, y:x.y, name:p.name, sub:`${label(p.svc)} · ${p.dist}`, ic:'IconLocationPinDot', partner:p};
+    });
+  } else if(layer==='cases'){
+    pins = C_MAP_PINS.cases.map(x=>({kind:'cases', id:x.id, x:x.x, y:x.y, name:x.name, sub:x.sub, ic:'IconHouse'}));
+  } else {
+    pins = C_MAP_PINS.stores.map(x=>({kind:'stores', id:x.id, x:x.x, y:x.y, name:x.name, sub:x.sub, ic:'IconStore'}));
+  }
+  if(!S.cPin || !pins.some(p=>p.id===S.cPin)) S.cPin = pins[0]?.id || null;
+  const sel = pins.find(p=>p.id===S.cPin);
+  screen.innerHTML = `<div class="c-map-page">
+    ${topNav({title:'내 주변'})}
+    ${cModeToggle('map')}
+    ${cChipBar()}
+    <div class="c-layers">${C_LAYERS.map(l=>
+      chip({label:l.n, size:'sm', variant:layer===l.k?'outlined':'normal', attrs:`data-clayer="${l.k}"`, pressed:layer===l.k})
+    ).join('')}</div>
+    <div class="c-map" aria-label="내 주소 주변 지도">
+      <div class="c-map-grid"></div>
+      <div class="c-road c-road-h1"></div>
+      <div class="c-road c-road-v1"></div>
+      <div class="c-road c-road-h2"></div>
+      <div class="c-me" aria-hidden="true"></div>
+      <span class="c-me-lab t-detail11L14">현재 위치</span>
+      ${pins.map(p=>`<button type="button" class="c-pin" style="left:${p.x};top:${p.y}" data-cpin="${p.id}" aria-pressed="${S.cPin===p.id}">
+        ${ic(p.ic,24)}<span class="c-pin-lab t-detail11L14">${p.name}</span>
+      </button>`).join('')}
+    </div>
+    ${sel?`<div class="c-sheet">
+      <div class="c-sheet-h">
+        <span class="c-sheet-ic">${ic(sel.ic,24)}</span>
+        <div class="c-sheet-t">
+          <b class="t-body16L20 w-semibold">${sel.name}</b>
+          <div class="t-detail13L18 c-fg-weak">${sel.sub}</div>
+        </div>
+      </div>
+      ${sel.partner? boxButton({label:'견적 받기', size:'large', variant:'brand-solid', id:'cMapQuote', full:true})
+        : `<p class="t-detail13L18 c-fg-weak">${layer==='cases'?'이 단지의 시공 사례입니다.':'방문 가능한 오프라인 매장입니다.'}</p>`}
+    </div>`:''}
+  </div>`;
+  bindCChips(); bindCMode();
+  screen.querySelectorAll('[data-clayer]').forEach(b=> b.onclick=()=>{ S.cLayer=b.dataset.clayer; S.cPin=null; render(); });
+  screen.querySelectorAll('[data-cpin]').forEach(b=> b.onclick=()=>{ S.cPin=b.dataset.cpin; render(); });
+  const mq=$('#cMapQuote'); if(mq && sel?.partner) mq.onclick=()=> cOpenQuote(sel.partner.svc, sel.partner);
+};
+
+function bootFlowC(){
+  document.body.classList.add('view4');
+  resetFlowC();
+  S.screen = 'cHome';
+  setMenuOpen(false);   /* preview-only 가 아니므로 패널은 좌측에 항상 노출 (aria-hidden=false) */
 }
 initPreviewToggle();
-bootFlowB();
+bootFlowC();
 render();
 </script>
 </body>

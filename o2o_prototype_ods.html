@@ -52,6 +52,7 @@
   --ods-border-critical:#FD3D4A;            /* colors.borderCritical    = red.400 */
   --ods-border-attention:#D19506;           /* colors.borderAttention   = yellow.350 */
   --ods-border-inverse:#FFFFFF;             /* colors.borderInverse     = white */
+  --ods-border-thumbnail:rgba(0,0,0,.05);   /* colors.borderThumbnail   = blackAlpha.50 */
   /* foreground */
   --ods-foreground:#141414;                 /* colors.foreground        = gray.900 */
   --ods-foreground-weak:#8C8C8C;            /* colors.foregroundWeak    = gray.400 */
@@ -1827,20 +1828,28 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
    Menu(820:82944) = asset 48 r16 + gap5 + label 12/16 regular · h69.
    asset 은 사진형(배경 없음)과 아이콘형(backgroundWeak + p8) 두 가지다.
    변형: MenuAll(홈) · SubMenu/O2OAll(전체시공) · O2OPart(부분시공) · Moving(이사·청소) */
-.mbd{background:var(--ods-background);padding:0 16px 16px;display:flex;flex-direction:column;gap:14px}
+.mbd{background:var(--ods-background);padding:0 0 16px;display:flex;flex-direction:column;gap:12px}
 .mbd-row{display:flex;align-items:flex-start}
-.mbd-row[data-wrap]{flex-wrap:wrap}
+/* O2OPart(917:22702) — 4열 2행 wrap · 행간 12 (gap 12px 0) */
+.mbd-row[data-wrap]{flex-wrap:wrap;row-gap:12px}
 .mb-item{flex:1 0 0;min-width:48px;height:69px;display:flex;flex-direction:column;align-items:center;
-  gap:5px;border:0;background:none;padding:0;cursor:pointer;font-family:inherit}
+  justify-content:space-between;border:0;background:none;padding:0;cursor:pointer;font-family:inherit}
 .mbd-row[data-wrap] .mb-item{flex:0 0 25%;min-width:25%}
 .mb-a{width:48px;height:48px;flex:0 0 auto;border-radius:16px;box-sizing:border-box;
   display:flex;align-items:center;justify-content:center;overflow:hidden}
 .mb-a[data-box]{background:var(--ods-background-weak);padding:8px;color:var(--ods-foreground)}
+/* more (931:14293) — 48 박스 p4 안에 backgroundWeak 원형(r100) + ChevronDown 20 */
+.mb-a[data-more]{padding:4px;background:none;border-radius:0}
+.mb-a[data-more] i{flex:1;min-width:0;height:100%;box-sizing:border-box;
+  display:grid;place-items:center;padding:8px;border-radius:100px;
+  background:var(--ods-background-weak);color:var(--ods-foreground-weak)}
 .mb-a img{width:100%;height:100%;object-fit:contain;display:block}
 .mb-l{width:100%;text-align:center;color:var(--ods-foreground)}
-/* MenuAll 상단 (917:18143) — 간편매칭 카드 + 2×2 그리드 */
-.mbd-all{display:flex;align-items:stretch;gap:8px}
-.mbd-cta{flex:1 0 0;min-width:0;height:150px;position:relative;overflow:hidden;
+/* MenuAll 상단 (917:18143) — 간편매칭 카드 + 2×2 그리드.
+   행은 왼쪽만 16 패딩이고 오른쪽은 화면 끝까지, 카드와 그리드 사이 gap 은 0 이다.
+   CTA 너비 = 하단 mb-item 2칸(화면 50%). padding-left 16 을 보정해서 calc(50% + 8px). */
+.mbd-all{display:flex;align-items:stretch;gap:0;padding-left:16px}
+.mbd-cta{flex:0 0 calc(50% + 8px);min-width:0;align-self:stretch;position:relative;overflow:hidden;
   border:0;padding:0;cursor:pointer;font-family:inherit;text-align:left;
   border-radius:12px;background:var(--ods-background-weak)}
 .mbd-cta .mc-t{position:absolute;left:12px;right:12px;top:12px;display:flex;flex-direction:column}
@@ -1848,13 +1857,13 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-cta .mc-t b{color:var(--ods-foreground);font-weight:600}
 .mbd-cta img{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);
   width:90px;height:90px;object-fit:contain;display:block}
-.mbd-grid{flex:1 0 0;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.mbd-grid .mb-item{flex:none;height:auto}
+.mbd-grid{flex:1 0 0;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px 0}
+.mbd-grid .mb-item{flex:none;height:auto;gap:5px}
 
 /* ═══ BannerProductList (931:18483) ═══════════════════════════════
    ModuleTitle → Container(가로 레일). Product Container 하나 = 배너 328×240 + 상품 3개.
    배너는 사진 위에 하단 Dim Gradient 를 깔고 타이틀·서브를 아래 정렬한다. */
-.bpl{display:flex;gap:8px;padding:0 16px 24px;overflow-x:auto;scrollbar-width:none;
+.bpl{display:flex;gap:8px;padding:0 16px;overflow-x:auto;scrollbar-width:none;
   scroll-snap-type:x mandatory;scroll-padding-left:16px}
 .bpl::-webkit-scrollbar{display:none}
 .bpl-col{flex:0 0 328px;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
@@ -1884,13 +1893,18 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .bpl-p .bp-sub{display:flex;align-items:center;gap:2px;color:var(--ods-foreground-weak)}
 
 /* 인기 사례 card — 썸네일 + 제목 2줄 + 평수·스타일 (893:16596) */
+/* Thumbnail 160×160 r4 + gap8 + Body(gap6: 제목 2줄 + meta) = h226 */
 .ch-scard{flex:0 0 160px;display:flex;flex-direction:column;gap:8px}
-.ch-scard .chs-im{width:160px;height:150px;border-radius:8px;overflow:hidden;
+.ch-scard .chs-im{width:160px;height:160px;border-radius:4px;overflow:hidden;
   background:var(--ods-background-weak)}
 .ch-scard .chs-im img{width:100%;height:100%;object-fit:cover;display:block}
+.ch-scard .chs-im[data-fit] img{object-fit:contain;padding:16px;box-sizing:border-box}
+.ch-scard .chs-b{display:flex;flex-direction:column;gap:6px}
+/* 제목 자리는 2줄 고정 — 한 줄짜리 카피(상품명)가 와도 카드 높이 226 이 흔들리지 않는다 */
 .ch-scard .chs-nm{color:var(--ods-foreground);display:-webkit-box;-webkit-line-clamp:2;
-  -webkit-box-orient:vertical;overflow:hidden}
-.ch-scard .chs-m{color:var(--ods-foreground-weak)}
+  -webkit-box-orient:vertical;overflow:hidden;height:36px}
+.ch-scard .chs-m{color:var(--ods-foreground-weak);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* Bundle_Offering (837:14525) — 343×72 배너 r12
    [토큰 예외] #172F47 은 캠페인 브랜드 색으로 ODS semantic 대응이 없다(가이드 §7). */
@@ -1908,7 +1922,9 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   background:rgba(33,38,41,.5);color:var(--ods-foreground-inverse)}
 
 /* Bundle/partner (846:52866 · 846:52885) */
-.ch-bundle{background:var(--ods-background);padding-top:12px}
+/* Bundle 은 위 여백 없이 아래 24 로 다음 번들과 떨어진다 — 모든 BTF 번들 공통.
+   내부 레일이 자체 하단 여백을 갖지 않게 해 합이 정확히 24 가 되도록 한다. */
+.ch-bundle{background:var(--ods-background);padding-bottom:24px}
 /* ModuleTitle — ODS Section(medium) + Section Arrow Button 28 */
 .ch-mtitle{display:flex;align-items:center;gap:8px;padding:0 16px 12px}
 .ch-mtitle .mt-t{flex:1;min-width:0;color:var(--ods-foreground)}
@@ -1917,13 +1933,18 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   border:0;border-radius:9999px;background:var(--ods-background-weak);color:var(--ods-foreground);cursor:pointer}
 /* ChipGroup Rail */
 .ch-chips{display:flex;gap:4px;padding:0 16px 16px;overflow-x:auto;scrollbar-width:none}
+.ch-chips[data-pb="8"]{padding-bottom:8px}
 .ch-chips::-webkit-scrollbar{display:none}
 .ch-chips > *{flex:0 0 auto}
 /* 2DepthFilter — ODS BoxButton xs, 선택 ghost(foreground) / 미선택 weak-ghost(foregroundWeak) */
-.ch-filter2{display:flex;gap:0;padding:0 16px 12px}
+.ch-filter2{padding:0 16px 12px}
+.ch-filter2 .f2-in{display:flex;align-items:center;height:40px;box-sizing:border-box;
+  border-top:1px solid var(--ods-border-thumbnail);border-bottom:1px solid var(--ods-border-thumbnail)}
 .ch-filter2 button{height:28px;padding:0 8px;border:0;background:none;cursor:pointer;font-family:inherit;
   border-radius:6px;color:var(--ods-foreground-weak)}
-.ch-filter2 button[aria-pressed="true"]{color:var(--ods-foreground);font-weight:600}
+/* 선택 상태는 BoxButton ghost(foreground) / 미선택 weak-ghost(foregroundWeak) —
+   텍스트 스타일은 둘 다 Body14L18 Medium 이라 굵기는 바꾸지 않는다 (941:24382) */
+.ch-filter2 button[aria-pressed="true"]{color:var(--ods-foreground)}
 /* carousel — 파트너: 320 폭 페이지(3장 세로) 가로 스크롤 */
 .ch-rail{display:flex;gap:16px;padding:0 16px 0;overflow-x:auto;scroll-snap-type:x mandatory;
   scroll-padding-left:16px;scrollbar-width:none}
@@ -1960,16 +1981,12 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   text-align:left;cursor:pointer;font-family:inherit}
 .ch-rcard .chr-im{width:159px;height:159px;border-radius:8px;overflow:hidden;background:var(--ods-background-weak)}
 .ch-rcard .chr-im img{width:100%;height:100%;object-fit:cover;display:block}
+.ch-rcard .chr-im[data-fit] img{object-fit:contain;padding:16px;box-sizing:border-box}
 .ch-rcard .chr-nm{color:var(--ods-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ch-rcard .chr-tx{color:var(--ods-foreground);height:60px;overflow:hidden}
 .ch-rcard .chr-tx span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
   overflow:hidden}
 .ch-rcard .chr-by{color:var(--ods-foreground-weak)}
-/* more-button (863:10969) — 343×44 */
-.ch-more{display:flex;align-items:center;justify-content:center;gap:2px;height:44px;margin:16px 16px 0;
-  border:1px solid var(--ods-border);border-radius:8px;background:var(--ods-background);
-  color:var(--ods-foreground);cursor:pointer;font-family:inherit;width:calc(100% - 32px)}
-
 /* 비교 Snackbar (892:15251) — 스크랩 1개 이상일 때 GNB 위에 노출 */
 .ch-compare{position:sticky;bottom:88px;z-index:7;margin:0 0 8px;display:flex;align-items:center;gap:8px;
   height:48px;padding:0 12px 0 16px;background:var(--ods-background-inverse);color:var(--ods-foreground-inverse)}
@@ -2063,17 +2080,19 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 /* ── 부분시공 before/after card (868:11081) ── */
 .cba{padding-bottom:20px;gap:8px}
 .cba .cb-pair{display:flex;gap:2px;border-radius:4px;overflow:hidden;width:100%}
-.cba .cb-half{position:relative;flex:1;min-width:0;height:96px;overflow:hidden}
+.cba .cb-half{position:relative;flex:1;min-width:0;height:120px;overflow:hidden}
 .cba .cb-half img{width:100%;height:100%;object-fit:cover;display:block}
 .cba .cb-half .ods-sqbadge{position:absolute;left:6px;top:6px}
 .cba .cb-half[data-side="after"] .ods-sqbadge{left:auto;right:6px}
 .cba .ods-card-content{gap:6px}
 .cba .cb-ti{color:var(--ods-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cba .cb-tx{color:var(--ods-foreground);height:60px;overflow:hidden}
+.cba .cb-tx{color:var(--ods-foreground);height:63px;overflow:hidden}
 .cba .cb-tx span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
 /* ── 이사·청소 파트너 card (837:17070) ── */
-.cmv{padding:16px 0 0;gap:16px}
+.cmv{padding:16px 0;gap:16px}
+/* info(64) · carousel_photo(90) · reviewCarousel(60) 사이 16 — Card Content 가 세 블록을 쌓는다 */
+.cmv .ods-card-content{gap:16px}
 .cmv .cm-info{display:flex;align-items:flex-start;gap:12px}
 .cmv .cm-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
 .cmv .cm-id{display:flex;align-items:center;gap:4px}
@@ -2095,7 +2114,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 
 /* 세로 카드 그룹 / 가로 카드 레일 */
 .cgroup{display:flex;flex-direction:column;padding:0 16px}
-.cgroup[data-gap="8"]{gap:8px}
 .crail{display:flex;gap:8px;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;
   scroll-padding-left:16px;scrollbar-width:none}
 .crail::-webkit-scrollbar{display:none}
@@ -5861,6 +5879,202 @@ const CH_TABS = [
   {k:'move',   l:'이사·청소'},
   {k:'rental', l:'인터넷·렌탈'},
 ];
+/* ══════════ 목업 데이터 리프래시 ══════════════════════════════════
+   칩을 바꾸면 카드 내용도 같이 바뀌어야 목록이 살아 있는 것처럼 읽힌다.
+   Math.random() 은 무관한 리렌더마다 값이 튀므로, (번들, 선택된 칩) 조합을 seed 로 한
+   결정적 PRNG(mulberry32)를 쓴다 — 같은 칩으로 돌아오면 같은 데이터가 다시 나온다. */
+const hash32 = str => {
+  let h = 2166136261 >>> 0;
+  for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+};
+function rng(seed){
+  let a = hash32(String(seed));
+  return ()=>{
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ a>>>15, 1 | a);
+    t = (t + Math.imul(t ^ t>>>7, 61 | t)) ^ t;
+    return ((t ^ t>>>14) >>> 0) / 4294967296;
+  };
+}
+const rPick  = (r, a) => a[Math.floor(r()*a.length)];
+const rPickN = (r, a, n) => { const c=[...a], o=[]; while(o.length<n && c.length) o.push(c.splice(Math.floor(r()*c.length),1)[0]); return o; };
+const rInt   = (r, a, b) => a + Math.floor(r()*(b-a+1));
+const rNum   = n => n.toLocaleString('ko-KR');
+
+/* 목업 풀 — 실제 서비스 어휘로 채운다 */
+const MK = {
+  firm:['내일인테리어','어반시크디자인','디자인덕','토니인테리어','조이디자인','리라인테리어',
+        '라인디자인','예설디자인','스튜디오모노','벽과바닥','오브제하우스','한올인테리어'],
+  apt:['판교원마을2단지','봇들마을4단지','산운마을13단지','시화청솔아파트','푸르지오그랑블',
+       '알파리움','휴먼시아하늘채','래미안블레스티지'],
+  style:['내추럴스타일','모던스타일','미니멀스타일','북유럽스타일','클래식스타일','우드톤'],
+  size:[21,24,25,28,32,34,38,42,45,49],
+  badge:[['책임보장','green-subtle'],['스탠다드','blue-subtle'],['원가검수','neutral300'],['이벤트','neutral300']],
+  quote:[
+    '가격도 조금 빼주시고 남자2명, 주방 짐 챙겨주시는 여자1명 오셔서 착착 꼼꼼하고 깔끔하게 진행해주셨어요~! 꼼꼼히 잘 챙겨주셔서 추천 드립니다!!!!!!!',
+    '견적부터 마감까지 일정이 하루도 안 밀렸어요. 중간중간 사진으로 진행 상황 공유해 주셔서 멀리 있어도 안심이 됐습니다.',
+    '자재 고를 때 예산 안에서 대안을 여러 개 제안해 주셔서 좋았어요. 무리하게 비싼 걸 권하지 않으시는 게 제일 마음에 들었습니다.',
+    '하자 보수 요청드렸는데 이틀 만에 오셔서 처리해 주셨어요. 시공 끝나고가 더 중요한데 그 부분이 확실했습니다.',
+  ],
+  caseTxt:[
+    '예설이 추구하는 철학이 담긴 디자인의 정석을 소개합니다',
+    '군더더기를 덜어내고 동선만 남긴 34평 리모델링',
+    '조명 하나로 분위기가 달라진 거실 이야기',
+    '수납을 벽 안으로 밀어 넣어 넓어진 집',
+    '오래된 아파트를 열흘 만에 바꾼 기록',
+  ],
+  reviewTxt:[
+    '예약하고 첫 미팅때부터 기본적인 도면이며 시공사례등 다 준비를 미리 해주셔서 믿음이 갔습니다. 많은 현장보다는 현장하나하나 신경을 쓰는업체 분위기가 맘에 들었습니다.',
+    '처음이라 걱정이 많았는데 단계마다 뭘 하는지 설명해 주셔서 편했어요. 마감 디테일이 특히 깔끔합니다.',
+    '아이 있는 집이라 자재 문의를 많이 드렸는데 하나하나 근거를 들어 답해 주셨어요. 공사 중 청소도 매일 해주셨습니다.',
+    '평수 대비 견적이 합리적이었고, 추가금 없이 처음 견적 그대로 끝났습니다. 다음에도 맡기고 싶어요.',
+  ],
+  baTitle:['30평 · 3.1m · ㅡ자 주방','24평 · 2.4m · ㄱ자 주방','34평 · 3.6m · 대면형 주방','42평 · 4.0m · 아일랜드 주방'],
+  baTxt:[
+    '첫 시공이라 신뢰와 A/S가 젤 중요해서 오늘의집에서 했고요! 계약서를 전자상으로 체결하는 편리성. 친절한 매니저님, 시공을 조심스럽게 잘 해주셨다는 시공팀...',
+    '상판 색만 바꾸려다 전체를 했는데 결과적으로 잘한 선택이었어요. 하부장 수납이 두 배가 됐습니다.',
+    '오래된 싱크대라 배관까지 손봐야 했는데 추가 비용 없이 처리해 주셨습니다.',
+  ],
+  mover:['티익스프레스','한진이사','스마트무빙','굿맨이사','청우익스프레스','다솔이사'],
+  moveSvc:['반포장이사','입주청소','짐보관 협의','에어컨 이전','사다리차','피아노운반','폐기물 처리'],
+
+  /* ── 이사 칩 — 이사 과정 콘텐츠. 서브타이틀은 평수 · 이사유형 ── */
+  moveType:['반포장이사','포장이사','일반이사','원룸이사','보관이사'],
+  moveCaseTxt:[
+    '이삿날 아침 6시부터 짐 정리까지, 하루의 기록',
+    '엘리베이터 없는 4층, 사다리차로 끝낸 두 시간',
+    '보관이사로 한 달 비운 집, 그대로 돌아왔어요',
+    '원룸에서 신혼집으로, 짐이 두 배 늘어난 이사',
+    '피아노와 냉장고까지 파손 없이 끝낸 포장이사',
+    '짐 싸기부터 배치까지, 손 하나 안 댄 하루',
+  ],
+  moveReviewTxt:[
+    '전날 방문 견적 그대로 추가금 없이 끝났어요. 짐 싸는 것부터 새집 배치까지 세 분이 착착 맞춰서 진행해 주셨습니다.',
+    '깨지는 물건이 많아 걱정했는데 하나하나 따로 포장해 주셨어요. 새집에서 박스를 열어보니 파손이 하나도 없었습니다.',
+    '엘리베이터 예약부터 사다리차 섭외까지 다 챙겨주셔서 저는 짐만 확인하면 됐어요. 이사 끝나고 정리까지 도와주셨습니다.',
+    '보관이사로 한 달 맡겼는데 먼지 하나 없이 그대로였어요. 중간에 필요한 짐도 바로 찾아 보내주셨습니다.',
+  ],
+  /* ── 인터넷·렌탈 칩 — 상품 정보(통신사 · 요금제 · 월요금) ── */
+  telco:['KT','SK브로드밴드','LG U+'],
+  /* n=요금제명 · fee=월요금 · a=상품 에셋 키 (이미지와 요금제를 한 쌍으로 묶는다) */
+  netPlan:[
+    {n:'인터넷 100M',        fee:16500, a:'wifi'},
+    {n:'인터넷 500M',        fee:22000, a:'wifi'},
+    {n:'인터넷 1G',          fee:27500, a:'wifi'},
+    {n:'인터넷 500M + TV',   fee:31900, a:'wifi'},
+    {n:'인터넷 + 정수기',     fee:34900, a:'purifier'},
+    {n:'인터넷 + 공기청정기', fee:33900, a:'airpurifier'},
+    {n:'인터넷 + 에어컨',     fee:36900, a:'aircon'},
+  ],
+  netReviewTxt:[
+    '이사 날짜에 맞춰 설치까지 한 번에 잡아주셔서 편했어요. 기존 회선 해지도 대신 처리해 주셨습니다.',
+    '약정이 두 달 남았는데 위약금까지 계산해서 갈아타는 게 이득이라고 알려주셨어요. 요금이 월 8천원 줄었습니다.',
+    'TV를 같이 묶으니 따로 쓸 때보다 저렴했어요. 상담부터 설치까지 이틀 걸렸습니다.',
+    '공유기 위치까지 잡아주시고 속도 측정해 보여주셨어요. 방 끝에서도 잘 터집니다.',
+  ],
+};
+const MK_IMG = {
+  pcard:[CH_ASSET+'pcard1.png',CH_ASSET+'pcard2.png',CH_ASSET+'pcard3.png'],
+  review:[CH_ASSET+'review_1.png',CH_ASSET+'review_2.png',CH_ASSET+'review_3.png'],
+  case:[1,2,3,4,5,6].map(i=>CH_ASSET+`case_${i}.png`),
+  firm:[CH_ASSET+'firm_a.png',CH_ASSET+'firm_b.png',CH_ASSET+'firm_c.png',
+        CH_ASSET+'pcard1.png',CH_ASSET+'pcard2.png',CH_ASSET+'pcard3.png'],
+  move:[1,2,3,4,5].map(i=>CH_ASSET+`move_${i}.png`),
+  /* 인터넷·렌탈은 사진이 아니라 ODS 상품 에셋이라 contain 으로 얹는다. MK.netPlan.a 로 참조 */
+  net:{
+    wifi:        `${ODS_ASSET_BASE}/AssetWiFiRouterLargeGenuineBlueView3/image_240.png`,
+    purifier:    `${ODS_ASSET_BASE}/AssetWaterPurifierLargeGenuineBlueView3/image_240.png`,
+    aircon:      `${ODS_ASSET_BASE}/AssetPhotographicWallMountedAirConditionerLarge/image_240.png`,
+    airpurifier: `${ODS_ASSET_BASE}/AssetPhotographicCylinderAirPurifierLarge/image_240.png`,
+  },
+};
+
+/* 번들별 생성기 — seed 는 그 번들에서 선택된 칩 조합이다 */
+function mkPartners(seed, n=3){
+  const r = rng(seed);
+  return rPickN(r, MK.firm, n).map((name,i)=>({
+    id:`ch-p${i+1}`, name,
+    badges: rPickN(r, MK.badge, rInt(r,1,2)),
+    star: (rInt(r,44,50)/10).toFixed(1),
+    reviews: `리뷰 ${rNum(rInt(r,80,9999))}개`,
+    note: `우리단지 ${rInt(r,1,6)}회 시공`,
+    img: MK_IMG.pcard[i % MK_IMG.pcard.length],
+    quote: rPick(r, MK.quote),
+  }));
+}
+/* cat: 'move' 는 이사 과정 콘텐츠(평수 · 이사유형), 'net' 은 상품 정보(통신사 · 요금제 · 월요금),
+   그 밖에는 시공 콘텐츠(평수 · 아파트 / 평수 · 스타일)를 만든다. */
+function mkReviewCases(seed, n=3, cat){
+  const r = rng(seed);
+  /* 한 레일 안에서 본문·작성자가 겹치지 않게 서로 다른 값을 뽑는다 */
+  const txt = rPickN(r, cat === 'move' ? MK.moveReviewTxt
+                      : cat === 'net'  ? MK.netReviewTxt : MK.reviewTxt, n);
+  const by  = rPickN(r, cat === 'move' ? MK.mover : MK.firm, n);
+  const plans = rPickN(r, MK.netPlan, n);
+  return Array.from({length:n}, (_,i)=>{
+    const base = {id:`ch-c${i+1}`, tx:txt[i % txt.length]};
+    if(cat === 'move') return {...base,
+      t:`${rPick(r,MK.size)}평 · ${rPick(r,MK.moveType)}`,
+      by: by[i % by.length],
+      img: MK_IMG.move[i % MK_IMG.move.length]};
+    if(cat === 'net'){
+      const p = plans[i % plans.length];
+      return {...base, fit:true,
+        t: p.n,
+        by:`${rPick(r,MK.telco)} · 월 ${rNum(p.fee)}원`,
+        img: MK_IMG.net[p.a]};
+    }
+    return {...base,
+      t:`${rPick(r,MK.size)}평 · ${rPick(r,MK.apt)}`,
+      by: by[i % by.length],
+      img: MK_IMG.review[i % MK_IMG.review.length]};
+  });
+}
+function mkStyleCases(seed, n=4, cat){
+  const r = rng(seed);
+  const pool = cat === 'move' ? MK.moveCaseTxt : MK.caseTxt;
+  const imgs = rPickN(r, cat === 'move' ? MK_IMG.move : MK_IMG.case, n);
+  const txt  = rPickN(r, pool, n);   /* 한 레일 안에서 카피가 겹치지 않게 */
+  const plans = rPickN(r, MK.netPlan, n);
+  return imgs.map((img,i)=>{
+    const t = txt[i % txt.length];
+    if(cat === 'move') return {img, t, m:`${rPick(r,MK.size)}평 · ${rPick(r,MK.moveType)}`};
+    if(cat === 'net'){
+      const p = plans[i % plans.length];
+      return {img:MK_IMG.net[p.a], fit:true,
+        t:`${rPick(r,MK.telco)} ${p.n}`, m:`월 ${rNum(p.fee)}원`};
+    }
+    return {img, t, m:`${rPick(r,MK.size)}평 · ${rPick(r,MK.style)}`};
+  });
+}
+function mkFirms(seed, n=2){
+  const r = rng(seed);
+  return rPickN(r, MK.firm, n).map((name,i)=>({
+    id:`ch-f${i+1}`, name,
+    badges: rPickN(r, MK.badge, 2),
+    star: (rInt(r,45,50)/10).toFixed(1),
+    reviews: `계약자리뷰 ${rNum(rInt(r,120,9999))}개`,
+    note: `최근계약 ${rInt(r,3,40)}건`,
+    imgs: rPickN(r, MK_IMG.firm, 3),
+  }));
+}
+function mkBaCards(seed, n=5){
+  const r = rng(seed);
+  return Array.from({length:n}, ()=>({t:rPick(r,MK.baTitle), tx:rPick(r,MK.baTxt)}));
+}
+function mkMovers(seed, n=4){
+  const r = rng(seed);
+  return rPickN(r, MK.mover, n).map((name,i)=>{
+    const svc = rPickN(r, MK.moveSvc, 3);
+    return {id:`ch-m${i+1}`, name, svc, more: rInt(r,1,5),
+      star:(rInt(r,40,49)/10).toFixed(1),
+      reviews:`리뷰 ${rNum(rInt(r,300,9999))}개`,
+      note:`최근 계약 ${rInt(r,5,40)}건`,
+      quote: rPick(r, MK.quote)};
+  });
+}
+
 /* 파트너 카드 (846:52878) */
 const CH_QUOTE = '가격도 조금  빼주시고 남자2명, 주방 짐 챙겨주시는  여자1명 오셔서 착착 꼼꼼하고 깔끔하게 진행해주셨어요~! 꼼꼼히 잘 챙겨주셔서 추천 드립니다!!!!!!!';
 const CH_PARTNERS = [
@@ -5877,7 +6091,12 @@ const CH_CASES = [
 ];
 const CH_PCHIPS = ['집 전체시공','부분시공','이사','청소'];
 const CH_CCHIPS = ['집 전체시공','부분시공','이사','청소','인터넷·렌탈'];
+/* CH_CCHIPS 와 1:1 — 선택한 칩이 그 번들 콘텐츠의 카테고리가 된다 */
+const CH_CCAT = ['full','part','move','clean','net'];
 const CH_CFILTER = ['주방','도배','장판','붙박이장'];
+/* 리뷰 번들은 두 변형이 있다 — 941:24179 AllO2O(칩만) / 941:24373 PartO2O(칩 + 2Depth).
+   부분시공만 하위 시공 분야가 있어, 그 칩을 골랐을 때만 2Depth 필터가 붙는다. */
+const CH_PART_CHIP_I = CH_CCHIPS.indexOf('부분시공');
 
 /* ODS 아이콘/에셋 헬퍼 위임 */
 const chOdsSvg = (path, size) =>
@@ -5930,8 +6149,9 @@ const chPartnerCard = (p) => `<article class="ch-pcard">
 const mbAsset = (m) => m.a ? `<img src="${assetSrc(m.a)}" alt="">`
                      : m.ic ? ic(m.ic, 24) : '';
 const mbItem = (m) => `<button class="mb-item" type="button">
-  <span class="mb-a"${m.box?' data-box':''}>${mbAsset(m)}</span>
-  <span class="mb-l t-detail12L16 w-regular">${m.l}</span>
+  <span class="mb-a"${m.more?' data-more':m.box?' data-box':''}>${
+    m.more ? `<i>${ic('IconChevronDown',20)}</i>` : mbAsset(m)}</span>
+  <span class="mb-l t-detail13L18 w-medium">${m.l}</span>
 </button>`;
 const mbRow = (items, wrap) => `<div class="mbd-row"${wrap?' data-wrap':''}>${items.map(mbItem).join('')}</div>`;
 
@@ -5944,14 +6164,14 @@ const MB_HOME_SVC = [
   {l:'전체시공',   a:'menuFull'}, {l:'부분시공',    a:'menuPart'},
   {l:'이사·청소',  a:'menuMove'}, {l:'인터넷·렌탈', a:'menuNet'},
 ];
-/* 전체시공 탭 — Figma 원본에서 앞 3개는 asset 이 비어 있어 placeholder 박스로 둔다 */
+/* 전체시공 탭 — Figma 원본에서 업체찾기·시공사례는 asset 이 비어 있어 placeholder 박스로 둔다 */
 const MB_ALL = [
   {l:'업체찾기', box:true}, {l:'시공사례', box:true},
-  {l:'간편 매칭', a:'menuForm'}, {l:'전체', a:'gridAll', box:true},
+  {l:'간편 매칭', a:'menuForm'}, {l:'더보기', more:true},
 ];
 const MB_PART = [...MB_PART4,
   {l:'욕실',   a:'photoBasin'}, {l:'중문도어', a:'photoDoor'},
-  {l:'조명',   a:'photoLamp'},  {l:'더보기', ic:'IconChevronDown', box:true},
+  {l:'조명',   a:'photoLamp'},  {l:'더보기', more:true},
 ];
 const MB_MOVE = [
   {l:'원룸·소형이사', a:'menuMove'},  {l:'가정·보관이사', a:'menuBox'},
@@ -5975,9 +6195,9 @@ function mbHome(){
 
 /* ── 사례·리뷰 카드 (863:10948) ── */
 const chCaseCard = (c) => `<article class="ch-rcard">
-  <div class="chr-im"><img src="${c.img}" alt=""></div>
+  <div class="chr-im"${c.fit?' data-fit':''}><img src="${c.img}" alt=""></div>
   <b class="chr-nm t-body14L18 w-bold">${c.t}</b>
-  <p class="chr-tx t-body14L20"><span>${CH_CASE_TXT}</span></p>
+  <p class="chr-tx t-body14L20"><span>${c.tx || CH_CASE_TXT}</span></p>
   <span class="chr-by t-detail12L16">${c.by}</span>
 </article>`;
 
@@ -5990,14 +6210,18 @@ const CH_STYLE_CASES = [
   {img:CH_ASSET+'case_4.png', m:'21평 · 내추럴스타일'},
 ];
 const chStyleCard = (c) => `<article class="ch-scard">
-  <div class="chs-im"><img src="${c.img}" alt=""></div>
-  <b class="chs-nm t-body14L18 w-semibold">${CH_STYLE_TXT}</b>
-  <span class="chs-m t-detail12L16 w-regular">${c.m}</span>
+  <div class="chs-im"${c.fit?' data-fit':''}><img src="${c.img}" alt=""></div>
+  <div class="chs-b">
+    <b class="chs-nm t-body14L18 w-semibold">${c.t || CH_STYLE_TXT}</b>
+    <span class="chs-m t-detail12L16 w-regular">${c.m}</span>
+  </div>
 </article>`;
 
 const chFilter2 = (items, key, sel) => `<div class="ch-filter2" role="group" aria-label="시공 분야">
-  ${items.map((f,i)=>`<button type="button" class="t-detail13L18 w-medium"
-    data-chfilter="${i}" aria-pressed="${sel===i}">${f}</button>`).join('')}
+  <div class="f2-in">
+    ${items.map((f,i)=>`<button type="button" class="t-body14L18 w-medium"
+      data-chfilter="${i}" aria-pressed="${sel===i}">${f}</button>`).join('')}
+  </div>
 </div>`;
 
 /* ── BannerProductList (931:18483) — 오늘의집 직접 제작·시공 상품 ── */
@@ -6037,9 +6261,6 @@ function chBannerProductList(){
     </div>
   </section>`;
 }
-
-const chMore = () => `<button class="ch-more t-detail13L18 w-medium" type="button">더보기 ${ic('IconChevronRight',12)}</button>`;
-
 
 /* ══════════════ Flow C — 탭별 개별 페이지 ══════════════
    전체시공 837:17410 · 부분시공 868:11034 · 이사·청소 837:16817 · 인터넷·렌탈 837:17088 */
@@ -6166,33 +6387,33 @@ function chPageFull(){
     ${chOffering('full')}
     <section class="ch-bundle">
       ${chTitle(`${blue('성남시')} 주변 추천 시공업체`, {pin:true})}
-      <div class="crail">${CH_FULL_FIRMS.map(chFirmCard).join('')}</div>
+      <div class="crail">${mkFirms(`full.firm:${S.cTabChip.full}`).map(chFirmCard).join('')}</div>
     </section>
     <section class="ch-bundle">
       ${chTitle(`최신 ${blue('분당구')} 주변 리뷰`)}
-      <div class="ch-chips" role="group" aria-label="스타일">
+      <div class="ch-chips" data-pb="8" role="group" aria-label="스타일">
         ${CH_FULL_CHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cTabChip.full===i?'solid':'normal',
           attrs:`data-chtabchip="full:${i}"`, pressed:S.cTabChip.full===i})).join('')}
       </div>
-      <div class="ch-rrail">${CH_CASES.map(chCaseCard).join('')}</div>
+      <div class="ch-rrail">${mkReviewCases(`full.review:${S.cTabChip.full}`).map(chCaseCard).join('')}</div>
     </section>
     <section class="ch-bundle">
       ${chTitle(`${blue('성남구')} 주변 인기 시공사례`)}
-      <div class="ch-rrail">${CH_STYLE_CASES.map(chStyleCard).join('')}</div>
+      <div class="ch-rrail">${mkStyleCases(`full.case:${S.cTabChip.full}`).map(chStyleCard).join('')}</div>
     </section>`;
 }
 
 /* ── 부분시공 (868:11034) ────────────────────────────── */
 const CH_PART_CHIPS = ['전체','주방','도배','장판/마루'];
 const CH_BA_TXT = '첫 시공이라 신뢰와 A/S가 젤 중요해서 오늘의집에서 했고요! 계약서를 전자상으로 체결하는 편리성. 친절한 매니저님, 시공을 조심스럽게 잘 해주셨다는 시공팀...';
-const chBaCard = () => odsCard({
+const chBaCard = (c={}) => odsCard({
   cls:'cba',
   media:`<div class="cb-pair">
       <div class="cb-half" data-side="before"><img src="${CH_A}ba_before.png" alt="">${sqBadge('전','neutral500','16')}</div>
       <div class="cb-half" data-side="after"><img src="${CH_A}ba_after.png" alt="">${sqBadge('후','primary','16')}</div>
     </div>`,
-  content:`<b class="cb-ti t-body14L18 w-semibold">30평 · 3.1m · ㅡ자 주방</b>
-    <p class="cb-tx t-body14L20"><span>${CH_BA_TXT}</span></p>`,
+  content:`<b class="cb-ti t-body14L18 w-semibold">${c.t || '40평대 · 4m · ㄱ자 주방'}</b>
+    <p class="cb-tx t-body14L18"><span>${c.tx || CH_BA_TXT}</span></p>`,
 });
 
 function chPagePart(){
@@ -6205,7 +6426,7 @@ function chPagePart(){
         ${CH_PART_CHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cTabChip.part===i?'solid':'normal',
           attrs:`data-chtabchip="part:${i}"`, pressed:S.cTabChip.part===i})).join('')}
       </div>
-      <div class="cgroup" data-gap="8">${[0,1,2,3,4].map(chBaCard).join('')}</div>
+      <div class="crail">${mkBaCards(`part.ba:${S.cTabChip.part}`).map(chBaCard).join('')}</div>
     </section>
     <section class="ch-bundle">
       ${chTitle('부분 시공 리뷰')}
@@ -6213,31 +6434,31 @@ function chPagePart(){
         ${CH_PART_CHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cPartRv===i?'solid':'normal',
           attrs:`data-chpartrv="${i}"`, pressed:S.cPartRv===i})).join('')}
       </div>
-      <div class="ch-rrail">${CH_CASES.map(chCaseCard).join('')}</div>
+      <div class="ch-rrail">${mkReviewCases(`part.review:${S.cPartRv}`).map(chCaseCard).join('')}</div>
     </section>`;
 }
 
 /* ── 이사·청소 (837:16817) ───────────────────────────── */
 const CH_MOVE_PARTNERS = [{id:'ch-m1'},{id:'ch-m2'},{id:'ch-m3'},{id:'ch-m4'}];
 const chMovePhotos = [1,2,3,4,5].map(i=>CH_A+`move_${i}.png`);
-const chMoveCard = () => odsCard({
+const chMoveCard = (m={}) => odsCard({
   cls:'cmv',
   content:`<div class="cm-info">
       <div class="cm-t">
-        <div class="cm-id"><b class="t-body16L20 w-bold">티익스프레스</b>${sqBadge('책임보장','green-subtle','20')}</div>
+        <div class="cm-id"><b class="t-body16L20 w-bold">${m.name || '티익스프레스'}</b>${sqBadge('책임보장','green-subtle','20')}</div>
         <div class="cm-rv t-detail13L18">
-          <span class="chc-star">${ic('IconStarFilled',12)}<b class="w-semibold">4.2</b></span>
-          <span>리뷰 9,999개</span><i class="chc-sep"></i><span>최근 계약 15건</span>
+          <span class="chc-star">${ic('IconStarFilled',12)}<b class="w-semibold">${m.star || '4.2'}</b></span>
+          <span>${m.reviews || '리뷰 9,999개'}</span><i class="chc-sep"></i><span>${m.note || '최근 계약 15건'}</span>
         </div>
         <div class="cm-sv t-detail13L18">
-          <span>반포장이사</span><i class="chc-sep"></i><span>입주청소</span><i class="chc-sep"></i>
-          <span>짐보관 협의</span><span>외 +3개</span>
+          ${(m.svc || ['반포장이사','입주청소','짐보관 협의']).map((x,i)=>
+            `${i?'<i class="chc-sep"></i>':''}<span>${x}</span>`).join('')}<span>외 +${m.more || 3}개</span>
         </div>
       </div>
       <span class="cm-cta">${boxButton({label:'견적받기', size:'small', variant:'normal'})}</span>
     </div>
     <div class="cm-ph">${chMovePhotos.map(u=>`<img src="${u}" alt="">`).join('')}</div>
-    <div class="cm-q">${[0,1].map(()=>`<p class="t-detail13L18"><span>${CH_QUOTE}</span></p>`).join('')}</div>`,
+    <div class="cm-q">${[0,1].map(()=>`<p class="t-detail13L18"><span>${m.quote || CH_QUOTE}</span></p>`).join('')}</div>`,
 });
 
 function chPageMove(){
@@ -6246,7 +6467,7 @@ function chPageMove(){
     ${chOffering('move')}
     <section class="ch-bundle">
       ${chTitle(`${blue('서울')} 검증된 이사 파트너 찾기`, {pin:true})}
-      <div class="cgroup">${CH_MOVE_PARTNERS.map(chMoveCard).join('')}</div>
+      <div class="cgroup">${mkMovers('move.partner').map(chMoveCard).join('')}</div>
     </section>`;
 }
 
@@ -6291,6 +6512,8 @@ function chPageRental(){
 const CH_PAGES = {full:chPageFull, part:chPagePart, move:chPageMove, rental:chPageRental};
 function chPageHome(){
   const region = `<em>${CH_REGION}</em>`;
+  /* 칩이 바뀌면 시드가 바뀌어 카드 메타데이터가 갱신된다 */
+  const homePartners = mkPartners(`home.partner:${S.cPChip}`);
   return `
       ${mbHome()}
 
@@ -6305,30 +6528,28 @@ function chPageHome(){
             attrs:`data-chpchip="${i}"`, pressed:S.cPChip===i})).join('')}
         </div>
         <div class="ch-rail">
-          <div class="ch-page">${CH_PARTNERS.map(chPartnerCard).join('')}</div>
-          <div class="ch-page" aria-hidden="true">${CH_PARTNERS.map(chPartnerCard).join('')}</div>
+          <div class="ch-page">${homePartners.map(chPartnerCard).join('')}</div>
+          <div class="ch-page" aria-hidden="true">${homePartners.map(chPartnerCard).join('')}</div>
         </div>
-        ${chMore()}
       </section>
 
       <section class="ch-bundle">
         ${chModuleTitle(`${region} 주변 인기 사례`)}
-        <div class="ch-chips" role="group" aria-label="사례 카테고리">
+        <div class="ch-chips" data-pb="8" role="group" aria-label="사례 카테고리">
           ${CH_CCHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cCChip===i?'solid':'normal',
             attrs:`data-chcchip="${i}"`, pressed:S.cCChip===i})).join('')}
         </div>
-        <div class="ch-rrail">${CH_STYLE_CASES.map(chStyleCard).join('')}</div>
+        <div class="ch-rrail">${mkStyleCases(`home.case:${S.cCChip}`, 4, CH_CCAT[S.cCChip]).map(chStyleCard).join('')}</div>
       </section>
 
       <section class="ch-bundle">
         ${chModuleTitle(`최신 ${region} 주변 리뷰`)}
-        <div class="ch-chips" role="group" aria-label="리뷰 카테고리">
+        <div class="ch-chips" data-pb="8" role="group" aria-label="리뷰 카테고리">
           ${CH_CCHIPS.map((c,i)=>chip({label:c, size:'md', variant:S.cRChip===i?'solid':'normal',
             attrs:`data-chrchip="${i}"`, pressed:S.cRChip===i})).join('')}
         </div>
-        ${chFilter2(CH_CFILTER, 'cCFilter', S.cCFilter)}
-        <div class="ch-rrail">${CH_CASES.map(chCaseCard).join('')}</div>
-        ${chMore()}
+        ${S.cRChip===CH_PART_CHIP_I ? chFilter2(CH_CFILTER, 'cCFilter', S.cCFilter) : ''}
+        <div class="ch-rrail">${mkReviewCases(`home.review:${S.cRChip}:${S.cCFilter}`, 3, CH_CCAT[S.cRChip]).map(chCaseCard).join('')}</div>
       </section>`;
 }
 
@@ -6966,7 +7187,7 @@ function mdPin(p, marker){
 const DRAG_GO  = 72;    /* 화면 전환 임계치(px) */
 /* BottomSheet 높이는 고정 px 이 아니라 화면 비율(fractional)로 잡는다 —
    기기 높이가 달라져도 두 화면이 같은 비율을 유지한다. */
-const SHEET_FR_HOME = 0.60;   /* O2O 홈 Container — 화면 전체 높이 기준 */
+const SHEET_FR_HOME = 0.66;   /* O2O 홈 Container — 화면 전체 높이 기준 (0.60 → 6% 더 위로) */
 const SHEET_FR_DISC = 0.40;   /* Map Discovery BottomSheet */
 const SHEET_FR_PEEK = 0.16;   /* 시트를 접었을 때 (핸들 + 제목만) */
 const screenH = () => screen.clientHeight || 750;

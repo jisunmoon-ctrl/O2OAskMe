@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flow B · 주소지 입력 퍼널 와이어프레임</title>
+<style>
+:root{
+  --ink:#1A1A1A; --ink-mid:#6B6B73; --ink-dim:#9A9AA2;
+  --line:#D8D8DE; --line-soft:#EAEAEE; --bg:#F4F4F6; --paper:#FFF;
+  --dash:#B9B9C0; --fill:#EFEFF2; --accent:#1A1A1A;
+  --mint:#1E7F6E; --warn:#B4415F; --info:#2F6E9E;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;padding:40px 32px 80px}
+.wrap{max-width:1560px;margin:0 auto}
+
+/* ── 문서 헤더 ── */
+.doc-head{margin-bottom:36px;max-width:780px}
+.doc-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--mint);margin-bottom:10px}
+.doc-head h1{font-size:26px;letter-spacing:-.02em;font-weight:700;margin-bottom:12px}
+.doc-head p{font-size:14px;line-height:1.7;color:var(--ink-mid)}
+.doc-head p + p{margin-top:8px}
+.doc-head b{color:var(--ink);font-weight:600}
+
+/* ── 범례 ── */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;padding:5px 9px;border-radius:5px;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-mid)}
+.tag.new{border-color:#E39BAE;background:#FBE6EC;color:var(--warn)}
+.tag.auto{border-color:#8FC7D6;background:#E3F4F7;color:var(--info)}
+.tag.cond{border-color:#A9C295;background:#EAF1E5;color:#4A6B35}
+.tag.fig{border-color:#B4A7D6;background:#EFEAF7;color:#5B4A8A}
+
+/* ── 섹션 ── */
+section{margin-top:44px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;flex-wrap:wrap;
+  padding-bottom:12px;border-bottom:1px solid var(--line)}
+.sec-head h2{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.sec-head span{font-size:12.5px;color:var(--ink-dim)}
+
+/* ── 표 ── */
+table{width:100%;border-collapse:collapse;background:var(--paper);
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:12.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{background:#FAFAFB;font-weight:600;font-size:11.5px;letter-spacing:.02em;color:var(--ink-mid)}
+tr:last-child td{border-bottom:0}
+td b{font-weight:600}
+td .n{font-family:var(--mono);font-size:11.5px}
+td em{font-style:normal;color:var(--warn);font-weight:600}
+td code{font-family:var(--mono);font-size:11px;background:var(--fill);padding:1px 4px;border-radius:3px}
+
+/* ── 프레임 그리드 ── */
+.frames{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.fr{width:298px;flex:0 0 auto}
+.fr-cap{display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap;min-height:23px}
+.fr-id{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--paper);
+  background:var(--ink);padding:3px 6px;border-radius:4px}
+.fr-id.opt{background:var(--ink-dim)}
+.fr-name{font-size:12.5px;font-weight:600}
+.fr-meta{font-family:var(--mono);font-size:10px;color:var(--ink-dim)}
+.fr-node{font-family:var(--mono);font-size:9.5px;color:#5B4A8A;background:#EFEAF7;
+  border:1px solid #DCD2EE;padding:2px 5px;border-radius:4px}
+.fr-note{margin-top:10px;font-size:11.5px;line-height:1.65;color:var(--ink-mid)}
+.fr-note li{list-style:none;padding-left:11px;position:relative}
+.fr-note li::before{content:"";position:absolute;left:0;top:7px;width:4px;height:4px;
+  border-radius:50%;background:var(--dash)}
+.fr-note li + li{margin-top:3px}
+.fr-note em{font-style:normal;color:var(--warn);font-weight:600}
+.fr-note strong{color:var(--info);font-weight:600}
+
+/* ── 폰 목업 ── */
+.ph{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+  height:588px;display:flex;flex-direction:column;overflow:hidden;position:relative}
+/* 항목이 많은 화면은 전체를 한눈에 보라고 프레임을 늘렸다. 실기기에서는 스크롤된다 */
+.ph.mid{height:660px}
+.ph.tall{height:734px}
+
+/* 페이지 전용 헤더 — OS statusbar 는 그리지 않는다 */
+.ph-nav{height:44px;flex:0 0 auto;display:flex;align-items:center;
+  padding:0 14px;position:relative}
+.ph-nav .ttl{position:absolute;left:0;right:0;text-align:center;font-size:12.5px;font-weight:700}
+.ph-nav .ico{position:relative;z-index:1}
+.pbar{height:3px;flex:0 0 auto;background:var(--line-soft);position:relative}
+.pbar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink);display:block}
+
+/* ODS 아이콘 (@bucketplace/icons · regular) */
+.ico{width:15px;height:15px;fill:currentColor;flex:0 0 auto;display:block}
+.ico.s{width:12px;height:12px}
+.ico.m{width:17px;height:17px}
+
+.ph-body{flex:1;overflow:hidden;padding:16px 16px 0;display:flex;flex-direction:column}
+.ph-body.center{justify-content:center;align-items:center;text-align:center;padding-bottom:18px}
+.ph-body.flush{padding-left:0;padding-right:0}
+.ph-body.flush > *{padding-left:16px;padding-right:16px}
+
+.eyebrow{font-size:11.5px;color:var(--ink-mid);margin-bottom:4px}
+.h1{font-size:17px;line-height:1.42;font-weight:700;letter-spacing:-.02em}
+.sub{font-size:12px;line-height:1.5;color:var(--ink-dim);margin-top:7px}
+.lbl{font-size:10.5px;font-family:var(--mono);letter-spacing:.06em;color:var(--ink-dim);
+  margin:18px 0 7px}
+.sec-t{font-size:12.5px;font-weight:700;margin:18px 0 2px}
+
+/* 검색 필드 — Figma 는 채워진 회색 박스 */
+.srch{height:40px;border-radius:8px;background:var(--fill);display:flex;align-items:center;
+  gap:8px;padding:0 12px;font-size:12.5px;color:var(--ink-dim)}
+.srch.on{background:var(--paper);border:1px solid var(--ink);color:var(--ink)}
+.srch .fillx{margin-left:auto;color:var(--ink-dim)}
+
+/* 와이어 인풋 */
+.inp{height:42px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;
+  gap:8px;padding:0 12px;font-size:12.5px;color:var(--ink-dim);background:var(--paper)}
+.inp.on{border-color:var(--ink);color:var(--ink)}
+.inp.caret::after{content:"";width:1px;height:16px;background:var(--ink);margin-left:-4px}
+.inp .fillx{margin-left:auto;color:var(--ink-dim)}
+
+/* 검색 가이드 */
+.tips{margin-top:14px;font-size:11.5px;line-height:1.9;color:var(--ink-mid)}
+.tips .head{color:var(--ink-dim);margin-bottom:6px}
+.tips li{list-style:none;padding-left:10px;position:relative}
+.tips li::before{content:"";position:absolute;left:0;top:9px;width:3px;height:3px;border-radius:50%;background:var(--ink-mid)}
+.tips b{font-weight:600;color:var(--ink)}
+.tips span{color:var(--ink-dim)}
+
+/* 리스트 행 */
+.rows{margin-top:6px;display:flex;flex-direction:column}
+.row{padding:12px 2px;border-bottom:1px solid var(--line-soft);display:flex;gap:10px;align-items:flex-start}
+.row:last-child{border-bottom:0}
+.row-main{flex:1;min-width:0}
+.row-t{font-size:12.5px;line-height:1.45;font-weight:500}
+.row-d{font-size:11px;color:var(--ink-dim);margin-top:3px;line-height:1.45}
+.row-chev{color:var(--dash);margin-top:4px}
+.pill{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;
+  padding:2px 5px;border-radius:3px;background:var(--fill);color:var(--ink-mid);margin-right:5px;
+  vertical-align:1px}
+.pill.b{background:#E3F4F7;color:var(--info)}
+/* 라벨 우선 행 — 라벨이 제목, 주소가 보조 */
+.row-lbl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px}
+.badge{font-size:9.5px;font-weight:500;color:var(--ink-mid);background:var(--fill);
+  padding:2px 5px;border-radius:3px}
+/* 검색 결과 행 */
+.res-t{font-size:12.5px;line-height:1.45}
+.res-t .zip{color:var(--ink-mid);margin-right:4px}
+.res-t .hl{color:var(--info);font-weight:600}
+.res-d{font-size:11px;color:var(--ink-dim);margin-top:4px;display:flex;align-items:center;gap:5px}
+
+.empty{margin-top:26px;padding:28px 0;text-align:center;border:1px dashed var(--line);
+  border-radius:10px;background:#FCFCFD}
+.empty-t{font-size:12.5px;color:var(--ink-mid)}
+.empty-d{font-size:11px;color:var(--ink-dim);margin-top:5px}
+
+.opts{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.opt{border:1px solid var(--line);border-radius:10px;padding:13px 12px}
+.opt.on{border-color:var(--ink);border-width:1.5px}
+.opt-t{font-size:12.5px;font-weight:600}
+.opt-d{font-size:11px;color:var(--ink-dim);margin-top:4px;line-height:1.45}
+
+/* 드롭다운 · 필드 */
+.field{margin-top:14px}
+.field-l{font-size:11px;color:var(--ink-mid);margin-bottom:5px}
+.field-l i{font-style:normal;color:var(--warn);margin-left:1px}
+.dd{height:40px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 12px;font-size:12.5px;color:var(--ink-dim);background:var(--paper)}
+.dd.on{color:var(--ink);border-color:var(--ink)}
+.dd .cv{color:var(--ink-dim)}
+.chk{margin-top:14px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink)}
+.chk .box{width:14px;height:14px;border:1.2px solid var(--dash);border-radius:3px;flex:0 0 auto}
+.seg{display:flex;gap:6px}
+.seg > div{flex:1;height:38px;border:1px solid var(--line);border-radius:8px;display:flex;
+  align-items:center;justify-content:center;font-size:12px;color:var(--ink-dim)}
+
+/* 확인 화면 타임라인 */
+.tl{margin-top:14px;display:flex;flex-direction:column}
+.tl-sec{display:flex;gap:0;align-items:stretch}
+.tl-rail{width:32px;flex:0 0 auto;display:flex;flex-direction:column;align-items:center}
+.tl-pin{width:28px;height:28px;border-radius:9px;background:var(--fill);display:flex;
+  align-items:center;justify-content:center;color:var(--ink-mid);flex:0 0 auto}
+.tl-line{flex:1;width:1px;background:var(--line);margin:2px 0}
+.tl-body{flex:1;min-width:0;padding:0 0 20px 10px}
+.tl-h{font-size:13px;font-weight:700}
+.tl-a{font-size:11.5px;color:var(--ink-dim);line-height:1.5;margin-top:2px}
+.kv{display:flex;gap:10px;font-size:11.5px;line-height:1.9;padding-left:2px}
+.kv dt{width:30px;flex:0 0 auto;color:var(--ink-dim)}
+.kv dd{color:var(--ink)}
+.kv dd.none{color:var(--ink-dim)}
+.kvs{margin-top:8px}
+.ghost{margin-top:8px;display:inline-flex;align-items:center;gap:4px;font-size:11.5px;
+  font-weight:600;color:var(--info)}
+
+/* 하단 고정 */
+.fixed{margin-top:auto;padding:12px 0 16px;background:var(--paper)}
+.cta{height:44px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:600;background:var(--accent);color:var(--paper)}
+.cta.off{background:var(--fill);color:var(--ink-dim)}
+.foot2{margin-top:auto;border-top:1px solid var(--line-soft);display:flex;gap:6px;padding:8px 10px 12px}
+.foot2 .cta{flex:1}
+.foot2 .cta.sec{background:var(--paper);border:1px solid var(--line);color:var(--ink)}
+.foot2 .cta.sec{flex:0 0 88px}
+.kb{margin-top:auto;height:150px;background:repeating-linear-gradient(90deg,#EDEDF0 0 46px,#F6F6F8 46px 50px);
+  border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;color:var(--ink-dim);letter-spacing:.1em}
+
+/* 바텀시트 */
+.sheet-mask{position:absolute;inset:0;background:rgba(26,26,26,.46)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--paper);
+  border-radius:16px 16px 0 0;border:1px solid var(--line);border-bottom:0;
+  padding:10px 16px 0;top:52px;display:flex;flex-direction:column;overflow:hidden}
+.grab{width:34px;height:3.5px;border-radius:2px;background:var(--line);margin:0 auto 10px}
+.sheet-head{display:flex;align-items:center;margin-bottom:12px;position:relative;height:20px}
+.sheet-head .t{position:absolute;left:0;right:0;text-align:center;font-size:13px;font-weight:700}
+.sheet-head .x{margin-left:auto;position:relative;z-index:1}
+
+/* 스피너 */
+.spin{width:26px;height:26px;border:2.5px solid var(--line);border-top-color:var(--ink-mid);
+  border-radius:50%;margin:0 auto 16px}
+.load-t{font-size:15px;line-height:1.45;font-weight:700}
+.load-d{font-size:12px;color:var(--ink-dim);margin-top:8px}
+
+/* 흐름 화살표 */
+.arrow{align-self:center;width:24px;flex:0 0 auto;display:flex;align-items:center;
+  justify-content:center;color:var(--dash);font-size:18px;padding-top:120px}
+
+/* 주석 박스 */
+.callout{margin-top:18px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--mint);
+  border-radius:8px;padding:14px 16px;font-size:12.5px;line-height:1.7;color:var(--ink-mid);max-width:860px}
+.callout b{color:var(--ink);font-weight:600}
+.callout.warn{border-left-color:var(--warn)}
+</style>
+</head>
+<body>
+
+<!-- ODS 아이콘 스프라이트 — @bucketplace/icons v3.24.1 · regular weight · viewBox 0 0 480 480 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-x" viewBox="0 0 480 480"><path d="M373.686 83.686c6.249-6.248 16.379-6.248 22.627 0s6.249 16.379 0 22.627L262.627 240l133.686 133.686.289.295c5.958 6.269 5.862 16.181-.289 22.332s-16.063 6.247-22.332.288l-.295-.288L240 262.627 106.313 396.313l-.294.288c-6.269 5.959-16.183 5.863-22.333-.288s-6.246-16.064-.288-22.332l.288-.295 133.686-133.687L83.686 106.313c-6.248-6.248-6.248-16.378 0-22.627s16.379-6.248 22.627 0l133.686 133.686z"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 480 480"><path fill-rule="evenodd" d="M240.254 41c110.045 0 199.254 89.209 199.254 199.254s-89.209 199.254-199.254 199.254S41 350.299 41 240.254 130.209 41 240.254 41m-48.941 127.687c-6.248-6.249-16.378-6.249-22.626 0s-6.249 16.378 0 22.626L217.374 240l-48.687 48.687c-6.249 6.248-6.249 16.378 0 22.626s16.378 6.249 22.626 0l48.689-48.687 48.685 48.684.294.289c6.269 5.958 16.183 5.861 22.333-.289 6.151-6.151 6.247-16.063.289-22.331l-.289-.296L262.629 240l48.685-48.683c6.249-6.248 6.249-16.378 0-22.627s-16.379-6.248-22.627 0l-48.685 48.683z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 480 480"><path fill-rule="evenodd" d="M99.661 100.661c54.283-54.282 142.293-54.282 196.576 0 50.4 50.4 54.003 129.873 10.813 184.433l87.722 87.722c6.249 6.249 6.249 16.38 0 22.628s-16.378 6.248-22.626 0l-87.685-87.685c-54.57 43.497-134.287 39.991-184.8-10.522-54.282-54.283-54.282-142.293 0-196.576m173.948 22.628c-41.786-41.786-109.535-41.786-151.321 0-41.785 41.786-41.785 109.534 0 151.32 41.786 41.786 109.535 41.786 151.321 0s41.786-109.534 0-151.32"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 480 480"><path fill-rule="evenodd" d="M242.235 34.014h.101C340.576 35.26 421 110.183 421 210c0 10.06-.094 30.678-12.363 60.577-12.138 29.579-35.836 67.424-81.649 113.236l-.089.089-68.804 66.683c-10.084 9.773-26.106 9.773-36.19 0l-68.804-66.683-.089-.089c-45.813-45.812-69.51-83.657-81.649-113.236C59.093 240.678 59 220.06 59 210c0-100.601 81.688-176 181-176h.103zM240 155c-30.376 0-55 24.624-55 55s24.624 55 55 55 55-24.624 55-55-24.624-55-55-55"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 480 480"><path d="M364.503 215.902 164.579 415.827a26 26 0 0 1-18.259 7.614l-63.94.312c-14.23.069-25.827-11.303-26.121-25.448l-.005-.675.302-63.951a26 26 0 0 1 7.615-18.262l199.923-199.924zM305.546 74.042c25.774-25.775 67.563-25.775 93.338 0l7.071 7.071c25.774 25.775 25.774 67.564 0 93.338l-25.896 25.895-100.41-100.409z"/></symbol>
+  <symbol id="i-chev-down" viewBox="0 0 480 480"><path d="M393.176 142.221c5.953-6.53 16.073-6.998 22.603-1.045s6.998 16.073 1.045 22.603l-165 181-.288.308a16 16 0 0 1-23.36-.308l-165-181c-5.953-6.53-5.485-16.65 1.045-22.603s16.65-5.485 22.603 1.045L240 310.25z"/></symbol>
+  <symbol id="i-chev-right" viewBox="0 0 480 480"><path d="M144.676 64.22c5.953-6.53 16.073-6.997 22.603-1.044l181 165a16 16 0 0 1 .308 23.36l-.308.288-181 165c-6.53 5.953-16.65 5.485-22.603-1.045s-5.485-16.65 1.045-22.603L313.75 240 145.721 86.824c-6.53-5.953-6.998-16.073-1.045-22.603"/></symbol>
+</svg>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="doc-kicker">FLOW B · WIREFRAME</div>
+    <h1>주소지 입력 퍼널</h1>
+    <p>서비스 선택과 입력폼 사이에 들어가는 주소 퍼널이다. 공통 항목은 <b>주소 하나</b>만 받고, 평수·층수·엘리베이터·방 구조는 <b>단지 매칭과 건축물대장 조회</b>로 채운다. 조회에 실패한 항목만 되묻는다.</p>
+    <p>배송지는 <b>확정값이 아니라 리스트 안의 후보</b>다. 시공지일 수도 이사 출발지일 수도 있어 자동으로 넣지 않는다.</p>
+    <p>화면은 <b>이사 신청 Figma 8개 노드</b>를 반영했다. Figma에 없는 스텝(조회 로딩·두 번째 주소·청소 장소)은 정책 초안으로 남겨두고 표시를 달리했다.</p>
+    <div class="legend">
+      <span class="tag">기존 화면</span>
+      <span class="tag new">신설 화면</span>
+      <span class="tag auto">조회로 채우는 값</span>
+      <span class="tag cond">조건부 노출</span>
+      <span class="tag fig">Figma 확정</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <h2>서비스 조합별 주소 스텝</h2>
+      <span>앵커 순서 — 시공지 &gt; 이사 출발지 &gt; 이사 도착지</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:24%">선택 서비스</th><th style="width:26%">직접 받는 주소</th><th>승계로 채우는 주소</th><th style="width:12%">주소 스텝</th></tr></thead>
+      <tbody>
+        <tr><td><b>종합시공 / 부분시공</b></td><td>시공지</td><td>—</td><td class="n">1</td></tr>
+        <tr><td><b>이사</b></td><td>이사 출발지 · 이사 도착지</td><td>—</td><td class="n">2</td></tr>
+        <tr><td><b>이사청소</b></td><td>청소 장소</td><td>—</td><td class="n">1</td></tr>
+        <tr><td><b>시공 + 이사</b></td><td>시공지 · 이사 출발지</td><td>이사 도착지 ← 시공지</td><td class="n">2</td></tr>
+        <tr><td><b>시공 + 이사청소</b></td><td>시공지</td><td>청소 장소 ← 시공지</td><td class="n">1</td></tr>
+        <tr><td><b>이사 + 이사청소</b></td><td>이사 출발지 · 이사 도착지</td><td>청소 장소 ← 선택 (S5-2)</td><td class="n">2 + 선택</td></tr>
+        <tr><td><b>시공 + 이사 + 이사청소</b></td><td>시공지 · 이사 출발지</td><td>이사 도착지 ← 시공지 · 청소 장소 ← 선택 (S5-2)</td><td class="n">2 + 선택</td></tr>
+        <tr><td><b>인터넷 / 렌탈만</b></td><td>—</td><td>—</td><td class="n">0</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <b>주소를 새로 묻는 것은 최대 두 번이다.</b> 시공·이사·이사청소를 모두 골라도 시공지와 이사 출발지만 받는다. 이사 도착지는 시공지를 승계하고, 청소 장소는 이미 받은 두 주소 중 하나를 고르게 한다.
+    </div>
+    <div class="callout">
+      <b>화면 chrome은 이사 신청폼과 같다.</b> 좌측 <b>닫기(X)</b> · 중앙 타이틀 <b>이사 신청</b> · 그 아래 <b>Linear Progressbar</b>. 이전 초안의 <span class="n">n/N</span> 텍스트 표기는 쓰지 않는다. OS statusbar는 프리뷰 대상이 아니라 그리지 않았다.
+    </div>
+  </section>
+
+  <!-- ══════════ 1. 앵커 주소 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>S1. 앵커 주소 스텝</h2>
+      <span>저장된 주소 보유 여부로 갈린다 — 보유 87.5% / 0건 12.5%</span>
+    </div>
+    <div class="frames">
+
+      <!-- S1-a 리스트 -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S1-a</span><span class="fr-name">주소 리스트</span>
+          <span class="fr-node">9470:79517</span>
+          <span class="fr-meta">87.5%</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:22%"></i></div>
+          <div class="ph-body">
+            <div class="h1">이사 출발지를<br>선택주세요</div>
+            <div class="srch" style="margin-top:14px"><svg class="ico s"><use href="#i-search"/></svg>주소 찾기</div>
+            <div class="sec-t">최근 주소</div>
+            <div class="rows">
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">시공지</div>
+                <div class="row-d">서울 강남구 테헤란로 42 삼성증권빌딩</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">집 <span class="badge">기본배송지</span></div>
+                <div class="row-d">서울특별시 송파구 올림픽로 145, 1510호</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">우리집</div>
+                <div class="row-d">서울특별시 송파구 올림픽로 120, 300호</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">회사</div>
+                <div class="row-d">서울특별시 송파구 올림픽로 1105, 1101호</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">본가</div>
+                <div class="row-d">서울특별시 목동서로 70 1510호</div></div></div>
+            </div>
+          </div>
+        </div>
+        <ul class="fr-note">
+          <li><strong>라벨이 제목, 주소가 보조</strong>다. 사용자가 붙인 이름(우리집·본가)을 그대로 노출한다</li>
+          <li>기본배송지는 <strong>뱃지로만</strong> 표시한다 — 자동 선택하지 않는다</li>
+          <li>과거 시공지·이사 주소도 같은 리스트에 섞이고 라벨은 <b>시공지</b>로 붙는다</li>
+          <li>행 우측 chevron 없음. CTA 없음 — 선택이 곧 다음 스텝</li>
+          <li><em>남은 질문 — 리스트 상한(초안 5개)과 정렬 기준이 Figma에 명시되지 않았다</em></li>
+        </ul>
+      </div>
+
+      <!-- S1-b 빈 상태 -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id opt">S1-b</span><span class="fr-name">빈 상태</span>
+          <span class="fr-meta">0건 12.5% · 조회 실패</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:22%"></i></div>
+          <div class="ph-body">
+            <div class="h1">이사 출발지를<br>선택주세요</div>
+            <div class="srch on caret" style="margin-top:14px"><svg class="ico s"><use href="#i-search"/></svg>주소 찾기</div>
+            <div class="empty">
+              <div class="empty-t">아직 등록한 주소지가 없어요</div>
+              <div class="empty-d">주소를 검색해 추가해주세요</div>
+            </div>
+          </div>
+          <div class="kb">키보드 · 즉시 노출</div>
+        </div>
+        <ul class="fr-note">
+          <li>Figma에 해당 노드가 없다 — <em>S1-a 구조를 따른 초안</em></li>
+          <li>리스트 자리에 빈 상태 문구만 두고 <strong>검색 필드에 오토포커스</strong></li>
+          <li>주소 조회 API가 실패해도 같은 화면으로 떨어뜨린다</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ 2. 주소 검색 시트 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>S2. 주소 검색 바텀시트</h2>
+      <span>검색 필드를 탭하면 전체 높이 시트로 올라온다</span>
+      <span class="tag fig">Figma 확정</span>
+    </div>
+    <div class="frames">
+
+      <!-- S2-a 초기 -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S2-a</span><span class="fr-name">검색 시트 · 초기</span>
+          <span class="fr-node">9470:79228</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="sheet-mask"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sheet-head"><span class="t">주소 검색</span><span class="x"><svg class="ico m"><use href="#i-x"/></svg></span></div>
+            <div class="srch on caret"><svg class="ico s"><use href="#i-search"/></svg>주소 검색</div>
+            <ul class="tips">
+              <div class="head">도로명 + 건물번호로 검색하면 결과가 더 정확합니다</div>
+              <li><b>서초대로 74길 4</b> <span>(도로명+건물번호)</span></li>
+              <li><b>역삼동 824-10</b> <span>(동/읍/면/리+번지)</span></li>
+              <li><b>반포힐스테이트</b> <span>(건물명,아파트명)</span></li>
+            </ul>
+            <div class="kb" style="margin:auto -16px 0">키보드 · 즉시 노출</div>
+          </div>
+        </div>
+        <ul class="fr-note">
+          <li>시트가 <strong>거의 풀스크린</strong>으로 올라오고 상단에 자체 타이틀·닫기를 갖는다</li>
+          <li>빈 결과 자리를 <strong>검색어 형식 가이드 3종</strong>으로 채운다 — 재검색을 줄이는 장치</li>
+          <li>닫기(X)는 시트만 닫고 앵커 스텝으로 돌아간다</li>
+        </ul>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- S2-b 결과 -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S2-b</span><span class="fr-name">검색 결과</span>
+          <span class="fr-node">9470:79658</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="sheet-mask"></div>
+          <div class="sheet">
+            <div class="grab"></div>
+            <div class="sheet-head"><span class="t">주소 검색</span><span class="x"><svg class="ico m"><use href="#i-x"/></svg></span></div>
+            <div class="srch on"><svg class="ico s"><use href="#i-search"/></svg>서울 서초구<span class="fillx"><svg class="ico s"><use href="#i-x-circle"/></svg></span></div>
+            <div class="rows" style="margin-top:10px">
+              <div class="row"><div class="row-main">
+                <div class="res-t"><span class="zip">135-080</span><span class="hl">서울 서초구</span> 사임당로 10길 39</div>
+                <div class="res-d"><span class="pill">지번</span>서울 서초구 서초동 1620-20</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="res-t"><span class="zip">135-080</span><span class="hl">서울 서초구</span> 사임당로 10길 39</div>
+                <div class="res-d"><span class="pill">지번</span>서울 서초구 서초동 1620-20</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="res-t"><span class="zip">135-080</span><span class="hl">서울 서초구</span> 사임당로 10길 39</div>
+                <div class="res-d"><span class="pill">지번</span>서울 서초구 서초동 1620-20</div></div></div>
+            </div>
+            <div class="kb" style="margin:auto -16px 0">키보드 · 유지</div>
+          </div>
+        </div>
+        <ul class="fr-note">
+          <li>행 구성 = <strong>우편번호 · 도로명</strong> 한 줄 + <strong>지번</strong> 뱃지 줄</li>
+          <li>입력한 검색어와 일치하는 부분을 <strong>강조색으로 하이라이트</strong>한다</li>
+          <li>인풋 우측 <b>X 원형</b>으로 검색어를 한 번에 지운다</li>
+          <li>결과 건수 헤더는 없다. 키보드를 내리지 않고 결과를 스크롤한다</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ 3. 상세주소 + 결손 입력 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>S3. 상세주소 · 결손 입력 <span class="tag new" style="margin-left:4px">신설</span></h2>
+      <span>Figma는 상세주소와 결손 항목을 <b>한 화면</b>에서 단계적으로 연다</span>
+      <span class="tag fig">Figma 확정</span>
+    </div>
+    <div class="frames">
+
+      <!-- S3-a -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S3-a</span><span class="fr-name">상세주소 입력 · 초기</span>
+          <span class="fr-node">9478:116171</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:34%"></i></div>
+          <div class="ph-body">
+            <div class="eyebrow">서울 서초구 사임당로 10길 39</div>
+            <div class="h1">상세 주소를 입력해주세요</div>
+            <div class="inp on caret" style="margin-top:14px">상세주소 입력</div>
+            <div class="fixed" style="border-top:1px solid var(--line-soft);padding-bottom:0">
+              <div class="cta off">확인</div>
+            </div>
+          </div>
+          <div class="kb">키보드 · 즉시 노출</div>
+        </div>
+        <ul class="fr-note">
+          <li>고른 도로명은 <strong>타이틀 위 eyebrow</strong>로 고정된다 (별도 카드 없음)</li>
+          <li>처음에는 <strong>상세주소 인풋 하나만</strong> 보인다 — 평수·층수는 아직 없다</li>
+          <li>키보드 즉시 노출, 확인은 비활성</li>
+        </ul>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- S3-b -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S3-b</span><span class="fr-name">결손 항목 등장</span>
+          <span class="fr-node">9478:117053</span>
+          <span class="fr-meta">단지 미매칭</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:34%"></i></div>
+          <div class="ph-body">
+            <div class="eyebrow">서울 서초구 사임당로 10길 39</div>
+            <div class="h1">상세 주소를 입력해주세요</div>
+            <div class="inp on" style="margin-top:14px">1510호<span class="fillx"><svg class="ico s"><use href="#i-x-circle"/></svg></span></div>
+            <div class="field"><div class="field-l">평수<i>*</i></div>
+              <div class="dd">평수 선택 <span class="cv"><svg class="ico s"><use href="#i-chev-down"/></svg></span></div></div>
+            <div class="field"><div class="field-l">층수</div>
+              <div class="dd">층수 선택 <span class="cv"><svg class="ico s"><use href="#i-chev-down"/></svg></span></div></div>
+            <div class="chk"><span class="box"></span>복층이에요</div>
+            <div class="fixed" style="border-top:1px solid var(--line-soft);padding-bottom:0">
+              <div class="cta off">확인</div>
+            </div>
+          </div>
+          <div class="kb">키보드 · 유지</div>
+        </div>
+        <ul class="fr-note">
+          <li>상세주소가 채워지면 <strong>같은 화면에 평수·층수가 이어 붙는다</strong> — 별도 결손 화면이 없다</li>
+          <li>평수만 <b>*</b> 필수. 층수는 선택으로 두고 <strong>복층 체크박스</strong>가 층수에 딸린다</li>
+          <li>인풋에 값이 있으면 <b>X 원형</b>으로 지운다</li>
+          <li><em>엘리베이터 인풋이 없다</em> — 이사 견적에 필요한 값이라 별도 확인 필요</li>
+        </ul>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- S3-c -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S3-c</span><span class="fr-name">필수 충족 · CTA 활성</span>
+          <span class="fr-node">9487:53567</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:34%"></i></div>
+          <div class="ph-body">
+            <div class="eyebrow">서울 서초구 사임당로 10길 39</div>
+            <div class="h1">상세 주소를 입력해주세요</div>
+            <div class="inp on" style="margin-top:14px">1510호<span class="fillx"><svg class="ico s"><use href="#i-x-circle"/></svg></span></div>
+            <div class="field"><div class="field-l">평수<i>*</i></div>
+              <div class="dd on">30평대 <span class="cv"><svg class="ico s"><use href="#i-chev-down"/></svg></span></div></div>
+            <div class="field"><div class="field-l">층수</div>
+              <div class="dd">층수 선택 <span class="cv"><svg class="ico s"><use href="#i-chev-down"/></svg></span></div></div>
+            <div class="chk"><span class="box"></span>복층이에요</div>
+            <div class="fixed" style="border-top:1px solid var(--line-soft);padding-bottom:0">
+              <div class="cta">확인</div>
+            </div>
+          </div>
+          <div class="kb">키보드 · 유지</div>
+        </div>
+        <ul class="fr-note">
+          <li><strong>평수만 채우면 확인이 열린다</strong> — 층수가 비어도 통과한다</li>
+          <li>평수는 정확 평이 아니라 <b>30평대</b> 같은 <strong>구간값</strong>으로 받는다</li>
+          <li>여기서 직접 채운 값은 <code>origin=USER</code>로 기록한다</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ 4. 조회 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>S4. 단지 매칭 · 건축물대장 조회</h2>
+      <span>Figma 노드 없음 — 정책 초안</span>
+    </div>
+    <div class="frames">
+
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id opt">S4</span><span class="fr-name">조회 로딩</span>
+          <span class="fr-meta">1회 · 타임아웃 3초</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:34%"></i></div>
+          <div class="ph-body center">
+            <div class="spin"></div>
+            <div class="load-t">예상 견적 계산에 필요한<br>정보를 구성 중이에요</div>
+            <div class="load-d">주소지 정보를 불러오고 있어요...</div>
+          </div>
+        </div>
+        <ul class="fr-note">
+          <li>도로명 + 동 + 호가 확정된 직후 <strong>1회만</strong> 실행</li>
+          <li>평수 ← 단지 structures · 층수 ← 건축물대장</li>
+          <li>엘리베이터 ← O2O 단지 정보 · 방·베란다/화장실 ← 단지 structures</li>
+          <li>3초 넘으면 붙잡지 않고 S3-b 결손 필드로 넘긴다</li>
+          <li><em>Figma에는 이 로딩 화면이 없다 — 실제로 별도 화면인지 인라인 처리인지 확인 필요</em></li>
+        </ul>
+      </div>
+
+      <div class="fr" style="width:auto;flex:1;min-width:340px">
+        <div class="callout" style="margin-top:26px">
+          <b>조회 결과가 S3-b의 노출 항목을 결정한다.</b> 조회로 채워진 항목은 필드를 그리지 않고, 실패한 항목만 남긴다. Figma의 S3-b는 평수·층수가 모두 실패한 상태(단지 미매칭 54.2%)를 그린 것이다.<br>
+          전부 성공하면 상세주소 입력만 하고 바로 확인 화면(S6)으로 넘어간다.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ 5. 두 번째 주소 · 청소 장소 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>S5-1 · S5-2. 두 번째 주소와 청소 장소</h2>
+      <span>조합에 따라서만 나온다 · Figma 노드 없음 — 정책 초안</span>
+    </div>
+    <div class="frames">
+
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id opt">S5-1</span><span class="fr-name">이사 도착지</span>
+          <span class="fr-meta">이사 선택 시</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:56%"></i></div>
+          <div class="ph-body">
+            <div class="h1">이사 도착지를<br>선택주세요</div>
+            <div class="srch" style="margin-top:14px"><svg class="ico s"><use href="#i-search"/></svg>주소 찾기</div>
+            <div class="sec-t">최근 주소</div>
+            <div class="rows">
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">집 <span class="badge">기본배송지</span></div>
+                <div class="row-d">서울특별시 송파구 올림픽로 145, 1510호</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">회사</div>
+                <div class="row-d">서울특별시 송파구 올림픽로 1105, 1101호</div></div></div>
+              <div class="row"><div class="row-main">
+                <div class="row-lbl">본가</div>
+                <div class="row-d">서울특별시 목동서로 70 1510호</div></div></div>
+            </div>
+          </div>
+        </div>
+        <ul class="fr-note">
+          <li>S1-a와 같은 리스트 정책. <strong>1스텝에서 고른 주소는 제외</strong></li>
+          <li>선택 후 S2~S3 서브플로우를 그대로 반복한다</li>
+          <li>시공을 함께 골랐으면 도착지는 <strong>시공지를 승계</strong>해 이 화면을 건너뛴다</li>
+        </ul>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id opt">S5-2</span><span class="fr-name">청소 장소 선택</span>
+          <span class="fr-meta">이사 + 이사청소 동시 선택 시</span>
+        </div>
+        <div class="ph">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:70%"></i></div>
+          <div class="ph-body">
+            <div class="h1">이사청소는<br>어느 집을 하나요?</div>
+            <div class="sub">이미 입력한 주소 중에서 고르면 돼요</div>
+            <div class="opts">
+              <div class="opt on">
+                <div class="opt-t">이사 들어갈 집</div>
+                <div class="opt-d">서울 서초구 사임당로 10길 39<br>1510호 · 시공지와 동일</div>
+              </div>
+              <div class="opt">
+                <div class="opt-t">지금 사는 집</div>
+                <div class="opt-d">서울특별시 송파구 올림픽로 135<br>101호</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ul class="fr-note">
+          <li>입주 청소와 퇴거 청소가 다 있어 <strong>승계 방향을 정할 수 없다</strong></li>
+          <li>주소를 새로 받지 않고 <strong>받은 주소 중 하나를 고르는</strong> 스텝</li>
+          <li>후보가 하나뿐인 조합에서는 띄우지 않는다</li>
+          <li>고르는 즉시 다음 — CTA 없음</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ 6. 확인 화면 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>S6. 주소 확인 화면</h2>
+      <span>입력폼이 아니라 <b>전용 확인 화면</b>이다 — 조회·승계로 채워진 값을 한 번에 보여준다</span>
+      <span class="tag fig">Figma 확정</span>
+    </div>
+    <div class="frames">
+
+      <!-- S6-a -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S6-a</span><span class="fr-name">조회 성공</span>
+          <span class="fr-node">9445:86334</span>
+        </div>
+        <div class="ph mid">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:43%"></i></div>
+          <div class="ph-body">
+            <div class="h1">출발지와 도착지 정보를<br>확인해주세요</div>
+            <div class="tl">
+              <div class="tl-sec">
+                <div class="tl-rail"><span class="tl-pin"><svg class="ico"><use href="#i-pin"/></svg></span><span class="tl-line"></span></div>
+                <div class="tl-body">
+                  <div class="tl-h">출발지</div>
+                  <div class="tl-a">서울특별시 송파구 올림픽로 135, 101호</div>
+                  <dl class="kvs">
+                    <div class="kv"><dt>평수</dt><dd>40평 (132.231m²)</dd></div>
+                    <div class="kv"><dt>층수</dt><dd>13층</dd></div>
+                    <div class="kv"><dt>EV</dt><dd>엘리베이터 있음</dd></div>
+                  </dl>
+                  <div class="ghost"><svg class="ico s"><use href="#i-pencil"/></svg>편집하기</div>
+                </div>
+              </div>
+              <div class="tl-sec">
+                <div class="tl-rail"><span class="tl-pin"><svg class="ico"><use href="#i-pin"/></svg></span></div>
+                <div class="tl-body" style="padding-bottom:0">
+                  <div class="tl-h">도착지</div>
+                  <div class="tl-a">서울특별시 송파구 올림픽로 135, 1310호 서울특별시 송파구 올림픽로 135, 1310호 서울특별시 송…</div>
+                  <dl class="kvs">
+                    <div class="kv"><dt>평수</dt><dd>40평 (132.231m²)</dd></div>
+                    <div class="kv"><dt>층수</dt><dd>13층</dd></div>
+                    <div class="kv"><dt>EV</dt><dd>엘리베이터 있음</dd></div>
+                  </dl>
+                  <div class="ghost"><svg class="ico s"><use href="#i-pencil"/></svg>편집하기</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="foot2"><div class="cta sec">이전</div><div class="cta">확인하고 다음</div></div>
+        </div>
+        <ul class="fr-note">
+          <li>출발지 → 도착지를 <strong>핀 타임라인</strong>으로 잇는다. 순서가 곧 앵커 순서다</li>
+          <li>표시 항목은 <strong>평수 · 층수 · EV</strong> 세 줄로 고정. 방 구조는 여기 없다</li>
+          <li>조회 성공 시 평수는 <b>40평 (132.231m²)</b> 처럼 <strong>실측 + 환산</strong>으로 적는다</li>
+          <li>주소가 길면 <strong>말줄임 없이 여러 줄</strong>로 흐른다 — 최대 줄 수 확인 필요</li>
+          <li>수정은 행 탭이 아니라 섹션 하단 <strong>편집하기</strong> 버튼으로만 한다</li>
+          <li>하단은 <b>이전 / 확인하고 다음</b> 2버튼. 값이 다 차 있으면 활성이다</li>
+        </ul>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- S6-b -->
+      <div class="fr">
+        <div class="fr-cap">
+          <span class="fr-id">S6-b</span><span class="fr-name">조회 결손</span>
+          <span class="fr-node">9450:88777</span>
+          <span class="fr-meta">단지 미매칭</span>
+        </div>
+        <div class="ph mid">
+          <div class="ph-nav"><svg class="ico"><use href="#i-x"/></svg><span class="ttl">이사 신청</span></div>
+          <div class="pbar"><i style="width:43%"></i></div>
+          <div class="ph-body">
+            <div class="h1">출발지와 도착지 정보를<br>확인해주세요</div>
+            <div class="tl">
+              <div class="tl-sec">
+                <div class="tl-rail"><span class="tl-pin"><svg class="ico"><use href="#i-pin"/></svg></span><span class="tl-line"></span></div>
+                <div class="tl-body">
+                  <div class="tl-h">출발지</div>
+                  <div class="tl-a">서울시 강서구 공항대로 591, 101호</div>
+                  <dl class="kvs">
+                    <div class="kv"><dt>평수</dt><dd>30평대</dd></div>
+                    <div class="kv"><dt>층수</dt><dd class="none">정보 없음</dd></div>
+                    <div class="kv"><dt>EV</dt><dd class="none">정보 없음</dd></div>
+                  </dl>
+                  <div class="ghost"><svg class="ico s"><use href="#i-pencil"/></svg>편집하기</div>
+                </div>
+              </div>
+              <div class="tl-sec">
+                <div class="tl-rail"><span class="tl-pin"><svg class="ico"><use href="#i-pin"/></svg></span></div>
+                <div class="tl-body" style="padding-bottom:0">
+                  <div class="tl-h">도착지</div>
+                  <div class="tl-a">서울특별시 송파구 올림픽로 135</div>
+                  <dl class="kvs">
+                    <div class="kv"><dt>평수</dt><dd>30평대</dd></div>
+                    <div class="kv"><dt>층수</dt><dd class="none">정보 없음</dd></div>
+                    <div class="kv"><dt>EV</dt><dd class="none">정보 없음</dd></div>
+                  </dl>
+                  <div class="ghost"><svg class="ico s"><use href="#i-pencil"/></svg>편집하기</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="foot2"><div class="cta sec">이전</div><div class="cta">확인하고 다음</div></div>
+        </div>
+        <ul class="fr-note">
+          <li>채우지 못한 값은 행을 지우지 않고 <strong>정보 없음</strong>으로 남긴다 — 조회 실패를 숨기지 않는다</li>
+          <li>사용자가 직접 고른 평수는 구간값 <b>30평대</b>로 그대로 보인다</li>
+          <li>도착지 상세주소가 없어도(<b>올림픽로 135</b>) 진행을 막지 않는다</li>
+          <li><em>정보 없음인 채로 확인하고 다음이 활성이다</em> — 이사 견적에 층수·EV가 필요하다면 이 정책을 다시 봐야 한다</li>
+          <li><em>정보 없음 행에 바로 채울 수 있는 진입점이 없다</em> — 편집하기로 되돌아가야 한다</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ 7. 폴백 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>S7. 주소를 바꿨을 때</h2>
+      <span>Figma 노드 없음 — 정책 초안</span>
+    </div>
+    <div class="callout warn">
+      <b>주소를 바꾸면 상세주소·평수·층수·엘리베이터·방 구조를 모두 지우고 조회를 다시 돈다.</b> 다른 집의 값이 남는 것이 가장 위험하다.<br>
+      값만 수정하면 해당 값만 <code>origin=USER</code>로 바꾸고 나머지는 유지한다. 앵커 주소를 바꾸면 이를 승계한 주소도 함께 따라 바뀐다.<br>
+      S6의 <b>편집하기</b>가 어디로 보내는지(S2 검색 시트인지 S3-b인지)가 이 정책의 진입점이다 — Figma에 정의되어 있지 않다.
+    </div>
+  </section>
+
+  <!-- ══════════ 8. Figma 반영 델타 ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2>이전 초안 대비 바뀐 것</h2>
+      <span>Figma 8개 노드 반영</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:18%">항목</th><th style="width:34%">이전 와이어 초안</th><th>Figma 확정</th></tr></thead>
+      <tbody>
+        <tr><td><b>화면 chrome</b></td><td>뒤로가기 chevron + <span class="n">n/N</span> 텍스트</td><td>닫기(X) + 타이틀 <b>이사 신청</b> + Linear Progressbar</td></tr>
+        <tr><td><b>주소 리스트 행</b></td><td>주소가 제목, 라벨은 pill</td><td><b>라벨이 제목</b>(시공지·집·우리집·회사·본가), 주소는 보조. 기본배송지는 뱃지. chevron 없음</td></tr>
+        <tr><td><b>검색 진입</b></td><td>점선 인풋 1개</td><td>채워진 회색 <b>주소 찾기</b> 필드 → 풀높이 시트, 초기 화면에 <b>검색어 형식 가이드 3종</b></td></tr>
+        <tr><td><b>검색 결과 행</b></td><td>우편번호 pill + 도로명 + 지번 보조</td><td>우편번호 + 도로명(<b>매칭어 하이라이트</b>) + <b>지번</b> 뱃지 줄</td></tr>
+        <tr><td><b>상세주소 · 결손</b></td><td>S3(상세주소) / S5(결손) <b>두 화면</b></td><td><b>한 화면</b>. 상세주소가 채워지면 평수·층수가 인라인으로 이어 붙는다</td></tr>
+        <tr><td><b>복층 체크박스</b></td><td>넣지 않는다</td><td><b>넣는다</b> — 층수 아래 <b>복층이에요</b> 체크박스</td></tr>
+        <tr><td><b>엘리베이터 인풋</b></td><td>참조 디자인의 갭이라 추가 제안</td><td><em>Figma에 없다</em> — 미해결. 이사 견적에 필요하면 추가해야 한다</td></tr>
+        <tr><td><b>평수 입력 형식</b></td><td>선택해주세요 (형식 미정)</td><td><b>구간값 드롭다운</b>(30평대). 조회 성공 시에는 <b>40평 (132.231m²)</b> 실측 표기</td></tr>
+        <tr><td><b>필수 범위</b></td><td>평수 필수 · 층수/EV는 이사 시 필수</td><td><b>평수만 필수</b>. 층수 비어도 확인 활성, 확인 화면에서 <b>정보 없음</b>으로 통과</td></tr>
+        <tr><td><b>컨펌</b></td><td>기존 입력폼이 컨펌을 겸한다</td><td><b>전용 확인 화면</b>(출발지/도착지 핀 타임라인 · 평수/층수/EV · 편집하기 · 이전/확인하고 다음)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>확인이 필요한 것</h2></div>
+    <table>
+      <thead><tr><th style="width:26%">항목</th><th>지금 상태</th></tr></thead>
+      <tbody>
+        <tr><td><b>엘리베이터 입력</b></td><td>Figma 입력 화면(S3)에 없는데 확인 화면(S6)에는 <b>EV</b> 행이 있다. 조회로만 채우고 실패하면 <b>정보 없음</b>으로 두는 것이 의도인지 확인 필요</td></tr>
+        <tr><td><b>층수 결손 통과</b></td><td>층수가 <b>정보 없음</b>이어도 <b>확인하고 다음</b>이 활성이다. 이사 견적 산출에 층수가 필수라면 게이트를 걸어야 한다</td></tr>
+        <tr><td><b>편집하기 목적지</b></td><td>S6의 편집하기가 주소 검색(S2)으로 가는지, 상세·결손 입력(S3-b)으로 가는지 미정. 주소를 바꾸면 파생값 초기화가 걸린다</td></tr>
+        <tr><td><b>조회 로딩 화면</b></td><td>Figma에 별도 로딩 노드가 없다. S3 확인 직후 인라인 처리인지 전체 화면인지 확인 필요</td></tr>
+        <tr><td><b>Progressbar 비율</b></td><td>조합마다 스텝 수가 다른데 progressbar는 연속값이다. 조합별 단계 수 → 퍼센트 매핑 테이블이 필요하다</td></tr>
+        <tr><td><b>리스트 상한·정렬</b></td><td>Figma는 5개를 그렸지만 상한·정렬 기준(최근 등록순 / 사용 빈도순) 명시 없음</td></tr>
+        <tr><td><b>인터넷·렌탈 설치 주소</b></td><td>앵커 주소를 승계하고, 단독 선택 시에는 묻지 않는다 (상담에서 확인)</td></tr>
+        <tr><td><b>청소 장소 선택 자리</b></td><td>독립 화면(S5-2) 초안 유지. 확인 화면(S6)에 세 번째 핀으로 붙이면 화면을 하나 줄일 수 있다</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+</body>
+</html>

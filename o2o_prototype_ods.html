@@ -1851,6 +1851,38 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-grid{flex:1 0 0;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .mbd-grid .mb-item{flex:none;height:auto}
 
+/* ═══ BannerProductList (931:18483) ═══════════════════════════════
+   ModuleTitle → Container(가로 레일). Product Container 하나 = 배너 328×240 + 상품 3개.
+   배너는 사진 위에 하단 Dim Gradient 를 깔고 타이틀·서브를 아래 정렬한다. */
+.bpl{display:flex;gap:8px;padding:0 16px 24px;overflow-x:auto;scrollbar-width:none;
+  scroll-snap-type:x mandatory;scroll-padding-left:16px}
+.bpl::-webkit-scrollbar{display:none}
+.bpl-col{flex:0 0 328px;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
+/* ProductCarouselSection_Thumbnail — 328×240 r12 */
+.bpl-banner{position:relative;height:240px;border-radius:12px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:16px;
+  border:0;cursor:pointer;font-family:inherit;text-align:left;background:var(--ods-background-weak)}
+.bpl-banner > img{position:absolute;left:0;top:var(--bb-top,0.03%);
+  width:100%;height:159.44%;object-fit:cover;display:block}
+/* Dim Gradient — 하단 160px, 20% 지점부터 rgba(0,0,0,.18) */
+.bpl-banner .bb-dim{position:absolute;left:0;bottom:0;width:100%;height:160px;
+  background:linear-gradient(to top, rgba(0,0,0,.18) 20%, rgba(0,0,0,0))}
+.bpl-banner .bb-t{position:relative;display:flex;flex-direction:column;gap:4px;width:200px;
+  color:var(--ods-foreground-inverse)}
+.bpl-banner .bb-t b{font-weight:600;display:block}
+/* ProductAccessory — 썸네일 80 + gap10 + 텍스트 */
+.bpl-p{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:0;
+  cursor:pointer;font-family:inherit;text-align:left}
+.bpl-p .bp-th{flex:0 0 80px;width:80px;height:80px;border-radius:8px;overflow:hidden;position:relative;
+  background:var(--ods-background-weak)}
+.bpl-p .bp-th img{width:100%;height:100%;object-fit:cover;display:block}
+.bpl-p .bp-th::after{content:'';position:absolute;inset:0;border-radius:8px;
+  border:.5px solid rgba(0,0,0,.05);pointer-events:none}
+.bpl-p .bp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bpl-p .bp-nm{color:var(--ods-foreground);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bpl-p .bp-pr{color:var(--ods-foreground)}
+.bpl-p .bp-sub{display:flex;align-items:center;gap:2px;color:var(--ods-foreground-weak)}
+
 /* 인기 사례 card — 썸네일 + 제목 2줄 + 평수·스타일 (893:16596) */
 .ch-scard{flex:0 0 160px;display:flex;flex-direction:column;gap:8px}
 .ch-scard .chs-im{width:160px;height:150px;border-radius:8px;overflow:hidden;
@@ -5797,7 +5829,18 @@ const CH_ADDR   = '경기 성남시 분당구 판교로 30 (운중동, 판교원
 const CH_REGION = '분당구';
 const CH_ASSET  = 'assets/o2ohome/';
 const CH_STICKY_TOP = 86;      /* Search Top Navigation 44 + bundle_location 42 */
-const CH_STICKY_SCROLL = 210;  /* 지도 240 − Container 겹침 30 : tab 이 헤더에 붙는 스크롤량 */
+/* tab 이 헤더에 붙기까지 필요한 스크롤량 = 지도 높이 − Container 겹침 30.
+   지도 높이(--chm-h)는 chmBase() 로 뷰포트 비율에서 역산되므로 240 고정이 아니다.
+   상수로 두면 실제보다 모자란 여유가 잡혀, 콘텐츠가 짧은 탭(인터넷·렌탈)에서 tab 이
+   헤더까지 다 붙지 못하고 그만큼 지도가 tab 위로 비쳐 상단에 빈 띠가 생긴다. 실측한다. */
+function chStickyScroll(){
+  const t = screen.querySelector('#chTab');
+  if(!t) return chmBase() - 30;
+  /* tab 의 스크롤 콘텐츠 내 offsetTop (스크롤 위치·is-stuck 과 무관) − 헤더 높이.
+     +1 은 소수점 레이아웃에서 scrollTop 이 상한에 걸려 0.5px 모자라는 것을 막는 여유다. */
+  return Math.max(0, Math.ceil(
+    (t.getBoundingClientRect().top - screen.getBoundingClientRect().top) + screen.scrollTop - CH_STICKY_TOP) + 1);
+}
 
 /* tab 을 헤더 바로 아래(CH_STICKY_TOP)로 붙인다.
    is-stuck 이면 Handle(24px)이 접혀 목표 스크롤량이 달라지므로(순환 의존),
@@ -5956,6 +5999,44 @@ const chFilter2 = (items, key, sel) => `<div class="ch-filter2" role="group" ari
   ${items.map((f,i)=>`<button type="button" class="t-detail13L18 w-medium"
     data-chfilter="${i}" aria-pressed="${sel===i}">${f}</button>`).join('')}
 </div>`;
+
+/* ── BannerProductList (931:18483) — 오늘의집 직접 제작·시공 상품 ── */
+const BPL_ASSET = 'assets/bundle/';
+const BPL_PRODUCT = {name:'오늘의집키친 Essential 일자형 키친 1.4m~', price:'1,964,000', sub:['무료배송','설치 무료']};
+const BPL_COLS = [
+  {t:'오늘의집키친', sub:'중간마진없는 합리적 가격', img:'banner-kitchen.png', top:'0.03%',
+   products:[{...BPL_PRODUCT, th:'prod-1.png'}, {...BPL_PRODUCT, th:'prod-2.png'}, {...BPL_PRODUCT, th:'prod-3.png'}]},
+  {t:'오늘의집도배', sub:'리뷰가 검증한 시공 품질', img:'banner-wallpaper.png', top:'-10.57%',
+   products:[{...BPL_PRODUCT, th:'prod-1.png'}, {...BPL_PRODUCT, th:'prod-2.png'}, {...BPL_PRODUCT, th:'prod-3.png'}]},
+];
+const bplProduct = (p) => `<button class="bpl-p" type="button">
+  <span class="bp-th"><img src="${BPL_ASSET}${p.th}" alt=""></span>
+  <span class="bp-tx">
+    <span class="bp-nm t-detail13L18 w-regular">${p.name}</span>
+    <b class="bp-pr t-body14L18 w-semibold">${p.price}</b>
+    <span class="bp-sub t-detail12L16 w-regular">
+      ${p.sub.map((x,i)=>`${i?'<span>·</span>':''}<span>${x}</span>`).join('')}
+    </span>
+  </span>
+</button>`;
+function chBannerProductList(){
+  return `<section class="ch-bundle">
+    ${chTitle('제작부터 시공까지 오늘의집이 직접')}
+    <div class="bpl">
+      ${BPL_COLS.map(c=>`<div class="bpl-col">
+        <button class="bpl-banner" type="button" style="--bb-top:${c.top}">
+          <img src="${BPL_ASSET}${c.img}" alt="">
+          <span class="bb-dim" aria-hidden="true"></span>
+          <span class="bb-t">
+            <b class="t-heading20 w-semibold">${c.t}</b>
+            <span class="t-detail12L16 w-regular">${c.sub}</span>
+          </span>
+        </button>
+        ${c.products.map(bplProduct).join('')}
+      </div>`).join('')}
+    </div>
+  </section>`;
+}
 
 const chMore = () => `<button class="ch-more t-detail13L18 w-medium" type="button">더보기 ${ic('IconChevronRight',12)}</button>`;
 
@@ -6215,6 +6296,8 @@ function chPageHome(){
 
       ${chOffering('home', {pb:16})}
 
+      ${chBannerProductList()}
+
       <section class="ch-bundle">
         ${chModuleTitle(`${region} 주변 추천 파트너 찾기`)}
         <div class="ch-chips" role="group" aria-label="파트너 카테고리">
@@ -6349,8 +6432,8 @@ function bindCHome(){
   const spacer = screen.querySelector('#chSpacer');
   if(spacer){
     spacer.style.height = '0px';
-    /* +24 = sticky 전환 시 접히는 Handle 높이. 접힌 뒤에도 210px 을 스크롤할 수 있어야 한다. */
-    const need = (screen.clientHeight + CH_STICKY_SCROLL + 24) - screen.scrollHeight;
+    /* +24 = sticky 전환 시 접히는 Handle 높이. 접힌 뒤에도 chStickyScroll() 만큼 스크롤할 수 있어야 한다. */
+    const need = (screen.clientHeight + chStickyScroll() + 24) - screen.scrollHeight;
     if(need > 0) spacer.style.height = need + 'px';
   }
   const tab = screen.querySelector('#chTab');

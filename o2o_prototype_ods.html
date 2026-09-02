@@ -1669,16 +1669,15 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
    [토큰 예외] #172F47 은 캠페인 브랜드 색으로 ODS semantic 대응이 없다(가이드 §7). */
 .ch-offering{padding:0 16px 16px;background:var(--ods-background);
   filter:drop-shadow(2px 2px 10px rgba(194,200,204,.2))}
-.ch-banner{position:relative;height:72px;border-radius:12px;overflow:hidden;background:#172F47;
+.ch-banner{position:relative;height:72px;border-radius:12px;overflow:hidden;
+  background:var(--ods-background-weak);
   box-shadow:0 2px 5px rgba(63,71,77,.05);width:100%;border:0;padding:0;cursor:pointer;
   font-family:inherit;display:block;text-align:left}
-.ch-banner .cb-imgbox{position:absolute;right:-7px;top:0;width:118px;height:73px;overflow:hidden}
-/* Figma I837:14527;732:57612 의 이미지 크롭 — w153.22% h152.16% / left -63.08% top -46.56% */
-.ch-banner .cb-img{position:absolute;left:-63.08%;top:-46.56%;width:153.22%;height:152.16%;max-width:none}
-.ch-banner .cb-dim{position:absolute;left:232px;top:-2px;width:65px;height:74px;
-  background:linear-gradient(to left,rgba(23,47,71,0),#172F47)}
-.ch-banner .cb-tt{position:absolute;left:15px;top:15px;display:flex;flex-direction:column;gap:5px;
-  color:var(--ods-foreground-inverse)}
+/* 5개 슬라이드 롤링 트랙 (indicatorNumber 와 동기) */
+.ch-banner .cb-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.2,0,.2,1)}
+.ch-banner .cb-slide{position:relative;flex:0 0 100%;height:100%}
+.ch-banner .cb-tt{position:absolute;left:15px;top:15px;right:60px;display:flex;flex-direction:column;gap:5px;
+  color:var(--ods-foreground)}
 .ch-banner .cb-ind{position:absolute;right:12px;bottom:10px;padding:4px 8px;border-radius:30px;
   background:rgba(33,38,41,.5);color:var(--ods-foreground-inverse)}
 
@@ -1771,15 +1770,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 
 /* ── Bundle_Offering 배너 테마 (탭별 배경/전경) ──
    [토큰 예외] 캠페인 배경색은 ODS semantic 대응이 없어 Figma 실측값을 둔다. */
-.ch-banner[data-theme="wood"]{background:#E3D6C5}
-.ch-banner[data-theme="wood"] .cb-dim{background:linear-gradient(to left,rgba(227,214,197,0),#E3D6C5)}
-.ch-banner[data-theme="move"]{background:#F0F3F6}
-.ch-banner[data-theme="move"] .cb-dim{background:linear-gradient(to left,rgba(240,243,246,0),rgba(240,243,246,.43))}
-.ch-banner[data-theme="rental"]{background:#E1EEFB}
-.ch-banner[data-theme="rental"] .cb-dim{background:linear-gradient(to left,rgba(240,243,246,0),rgba(240,243,246,.43))}
-.ch-banner[data-theme="wood"] .cb-tt,
-.ch-banner[data-theme="move"] .cb-tt,
-.ch-banner[data-theme="rental"] .cb-tt{color:var(--ods-foreground)}
 .ch-offering[data-pb="24"]{padding-bottom:24px}
 
 /* ── ODS Card (compound: Root / Media / Content) ──
@@ -2378,7 +2368,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cChip:'all', cLayer:'partners', cQuoteSvc:'full', cMatchReady:false, cMatchTimer:null, cPin:null, cQuotePartner:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cScrap:new Set()};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cChip:'all', cLayer:'partners', cQuoteSvc:'full', cMatchReady:false, cMatchTimer:null, cPin:null, cQuotePartner:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cScrap:new Set(), cOfferTimer:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -5632,6 +5622,7 @@ function resetFlowC(){
   S.cQuoteSvc = 'full';
   S.cMatchReady = false;
   if(S.cMatchTimer){ clearTimeout(S.cMatchTimer); S.cMatchTimer=null; }
+  if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer=null; }
   S.cPin = null;
   S.cQuotePartner = null;
   S.ans = {addr:['서울/경기'], size:['30평대']};
@@ -5784,19 +5775,47 @@ const gridThumb = (imgs, ratio='') =>
     <div class="gt-side"><img src="${imgs[1]}" alt=""><img src="${imgs[2]}" alt=""></div>
   </div>`;
 
-/* Bundle_Offering 배너 — 탭별 테마 */
-const chBanner = ({theme, kicker, title, img='', pb=24}) =>
-  `<div class="ch-offering"${pb===24?' data-pb="24"':''}>
-    <button class="ch-banner" data-theme="${theme}" type="button">
-      ${img?`<span class="cb-imgbox"><img class="cb-img" src="${img}" alt=""></span>`:''}
-      <span class="cb-dim"></span>
-      <span class="cb-tt">
-        <span class="t-detail13L18 w-medium" style="line-height:16px">${kicker}</span>
-        <span class="t-body15L24 w-semibold" style="line-height:18px">${title}</span>
+/* Bundle_Offering — 회색 플레이스홀더 배경 위에 카피만 롤링하는 5슬롯 배너.
+   Figma 의 삽입 이미지는 콘텐츠 슬롯이라 프로토타입에서는 비운다(메뉴 asset 과 동일 방침). */
+const CH_OFFERS = [
+  {k:'home',   kicker:'오늘의집 스탠다드',                     title:'이토록 믿음직한 인테리어'},
+  {k:'full',   kicker:'오늘의집이 직접 시공합니다',            title:'도배 직시공 서비스 오픈!'},
+  {k:'part',   kicker:'오늘의집이 직접 시공합니다',            title:'도배 직시공 서비스 오픈!'},
+  {k:'move',   kicker:'이사 앞두고 추가금이나 파손 걱정된다면?', title:'이사 책임보장 파트너 이용하기'},
+  {k:'rental', kicker:'50만원 혜택 받고',                      title:'인터넷 정수기 렌탈 한번에 신청하기'},
+];
+const chOffering = (tab, {pb=24}={}) => {
+  const i = Math.max(0, CH_OFFERS.findIndex(o=>o.k===tab));
+  const list = [...CH_OFFERS.slice(i), ...CH_OFFERS.slice(0,i)];   /* 현재 탭 카피가 1번 슬라이드 */
+  return `<div class="ch-offering"${pb===24?' data-pb="24"':''}>
+    <button class="ch-banner" type="button">
+      <span class="cb-track" id="chOfferTrack" data-n="${list.length}">
+        ${list.map(o=>`<span class="cb-slide">
+          <span class="cb-tt">
+            <span class="t-detail13L18 w-medium" style="line-height:16px">${o.kicker}</span>
+            <span class="t-body15L24 w-semibold" style="line-height:18px">${o.title}</span>
+          </span>
+        </span>`).join('')}
       </span>
-      <span class="cb-ind t-detail12L16">1/10</span>
+      <span class="cb-ind t-detail12L16" id="chOfferInd">1/${list.length}</span>
     </button>
   </div>`;
+};
+
+/* 배너 자동 롤링 — 3초 간격, indicatorNumber 동기 */
+function chStartOfferRoll(){
+  if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer = null; }
+  const track = screen.querySelector('#chOfferTrack');
+  if(!track) return;
+  const n = +track.dataset.n, ind = screen.querySelector('#chOfferInd');
+  let i = 0;
+  S.cOfferTimer = setInterval(()=>{
+    if(!track.isConnected){ clearInterval(S.cOfferTimer); S.cOfferTimer = null; return; }
+    i = (i + 1) % n;
+    track.style.transform = `translateX(${-i * 100}%)`;
+    if(ind) ind.textContent = `${i + 1}/${n}`;
+  }, 3000);
+}
 
 /* ModuleTitle — 위치 핀(Left slot) 옵션 */
 const chTitle = (html, {pin=false}={}) => `<div class="ch-mtitle">
@@ -5875,7 +5894,7 @@ function chPageFull(){
         </button>`).join('')}
       </div>
     </div>
-    ${chBanner({theme:'wood', kicker:'오늘의집이 직접 시공합니다', title:'도배 직시공 서비스 오픈!', img:CH_A+'banner-wood.png'})}
+    ${chOffering('full')}
     <section class="ch-bundle">
       ${chTitle(`${blue('성남시')} 주변 인기 시공사례`, {pin:true})}
       <div class="crail">${CH_FULL_CASES.map(chCaseCardFull).join('')}</div>
@@ -5921,7 +5940,7 @@ function chPagePart(){
         <span class="cm-l t-detail13L18 w-medium">${m.l}</span>
       </button>`).join('')}
     </div>
-    ${chBanner({theme:'wood', kicker:'오늘의집이 직접 시공합니다', title:'도배 직시공 서비스 오픈!', img:CH_A+'banner-wood.png'})}
+    ${chOffering('part')}
     <section class="ch-bundle">
       ${chTitle('실제 리뷰로 확인하는 오늘의집 직영 시공')}
       <div class="ch-chips" role="group" aria-label="시공 분야">
@@ -5967,7 +5986,7 @@ function chPageMove(){
         <span class="cm-l t-detail13L18 w-medium">${m.l}</span>
       </button>`).join('')}
     </div>
-    ${chBanner({theme:'move', kicker:'이사 앞두고 추가금이나 파손 걱정된다면?', title:'이사 책임보장 파트너 이용하기', img:CH_A+'banner-move.png'})}
+    ${chOffering('move')}
     <section class="ch-bundle">
       ${chTitle(`${blue('서울')} 검증된 이사 파트너 찾기`, {pin:true})}
       <div class="cgroup">${CH_MOVE_PARTNERS.map(chMoveCard).join('')}</div>
@@ -6009,7 +6028,7 @@ function chPageRental(){
         </button>`).join('')}
       </div>
     </div>
-    ${chBanner({theme:'rental', kicker:'50만원 혜택 받고', title:'인터넷 정수기 렌탈 한번에 신청하기'})}`;
+    ${chOffering('rental')}`;
 }
 
 const CH_PAGES = {full:chPageFull, part:chPagePart, move:chPageMove, rental:chPageRental};
@@ -6025,17 +6044,7 @@ function chPageHome(){
         </div>`).join('')}
       </div>
 
-      <div class="ch-offering">
-        <button class="ch-banner" type="button">
-          <span class="cb-imgbox"><img class="cb-img" src="${CH_ASSET}offering.png" alt=""></span>
-          <span class="cb-dim"></span>
-          <span class="cb-tt">
-            <span class="t-detail13L18 w-medium" style="line-height:16px">오늘의집 스탠다드</span>
-            <span class="t-body15L24 w-semibold" style="line-height:18px">이토록 믿음직한 인테리어</span>
-          </span>
-          <span class="cb-ind t-detail12L16">1/10</span>
-        </button>
-      </div>
+      ${chOffering('home', {pb:16})}
 
       <section class="ch-bundle">
         ${chModuleTitle(`${region} 주변 추천 파트너 찾기`)}
@@ -6128,6 +6137,7 @@ function chCompareBar(){
 }
 
 function bindCHome(){
+  chStartOfferRoll();
   /* tab — ODS Tab value 변경 (sticky 여부와 무관한 같은 컴포넌트) */
   screen.querySelectorAll('[data-chtab]').forEach(b=> b.onclick=()=>{
     S.cTab = b.dataset.chtab;

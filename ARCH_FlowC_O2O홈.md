@@ -77,7 +77,6 @@
 
 | 값 | 사유 |
 |---|---|
-| `#172F47` (Offering 배너 배경) | 캠페인 브랜드 색, ODS semantic 대응 없음 |
 | `#15b86921` / `#0079fa14` (SquareBadge subtle 배경) | ODS 코드 토큰에 subtle 배경 alias 가 없어 컴포넌트 변수값 그대로 재현 |
 | `rgba(0,0,0,.04)` (메뉴 asset 박스) | Figma 실측 오버레이 값, semantic 대응 없음 |
 | `rgba(33,38,41,.5)` (indicatorNumber) | `dim_basic #212629` 50% — ODS dim alias 없음 |
@@ -136,8 +135,22 @@ Figma 가 노출한 legacy palette 신호(`base_1[light] #2F3438` · `neutral500
 
 | 값 | 사유 |
 |---|---|
-| `#E3D6C5` · `#F0F3F6` · `#E1EEFB` (탭별 배너 배경) | 캠페인 색, ODS semantic 대응 없음 |
 | `rgba(255,255,0,.25)` (견적계산기 셀) | Figma 실측 강조 배경, 대응 토큰 없음 |
+
+> 탭별 배너 캠페인 배경색(`#172F47` · `#E3D6C5` · `#F0F3F6` · `#E1EEFB`)과 삽입 이미지는
+> **Bundle_Offering 을 회색 플레이스홀더 + 5슬롯 롤링으로 바꾸면서 제거**됐다(아래 참조).
+> 배경은 `--ods-background-weak` 로 통일돼 토큰 예외가 4건 줄었다.
+
+### Bundle_Offering — 회색 플레이스홀더 + 5슬롯 롤링
+
+Figma 의 배너는 캠페인 배경색 + 삽입 이미지를 갖지만, 프로토타입에서는
+**메뉴 asset 과 같은 방침으로 콘텐츠 슬롯을 비운다.**
+
+- 배경 `--ods-background-weak`, 삽입 이미지 없음, 카피 색 `--ods-foreground`
+- `CH_OFFERS` 5개(디자인의 5개 화면 배너 카피)를 `.cb-track` 으로 가로 롤링,
+  현재 탭의 카피가 1번 슬라이드. `indicatorNumber` 는 `1/5` 로 동기화
+- `chStartOfferRoll()` 이 3초 간격 `setInterval`. `track.isConnected` 로 재렌더 시 자동 해제하고
+  `resetFlowC()` 에서도 `clearInterval`
 
 ### 알려진 제약
 

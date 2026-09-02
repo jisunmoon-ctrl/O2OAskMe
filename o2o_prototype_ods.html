@@ -1657,7 +1657,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   background:var(--ods-foreground);z-index:1}
 
 /* Bundle_Menu (837:14502) — 5열 × 2행, asset 52 r16, label detail13L18 medium */
-.ch-menu{display:flex;flex-direction:column;gap:12px;padding-bottom:16px;background:var(--ods-background)}
+.ch-menu{display:flex;flex-direction:column;gap:12px;padding-bottom:24px;background:var(--ods-background)}
 .ch-menu .cm-row{display:flex;padding:0 16px}
 .ch-menu .cm-item{flex:1;min-width:63px;display:flex;flex-direction:column;align-items:center;gap:6px;
   background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
@@ -1788,7 +1788,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .ods-gridthumb .gt-main{position:relative;min-width:0}
 
 /* ── ATF-Grid (전체시공 837:17675) — hero 169 + 2×2 셀 ── */
-.cta-grid{display:flex;gap:6px;align-items:center;padding:0 16px}
+.cta-grid{display:flex;gap:6px;align-items:center;padding:0 16px 24px}
 .cta-hero{position:relative;flex:0 0 169px;height:168px;border-radius:12px;overflow:hidden;
   background:var(--ods-background-weak);border:0;padding:0;cursor:pointer;font-family:inherit;text-align:left}
 .cta-hero .ch-ttl{position:absolute;left:12px;right:12px;top:12px;display:flex;flex-direction:column}
@@ -1804,7 +1804,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .cta-cell .cc-l{width:100%;text-align:center;color:var(--ods-foreground)}
 
 /* ── ATF 가로 메뉴 (부분시공 868:11416 / 이사·청소 837:16836) ── */
-.cta-row{display:flex;justify-content:space-between;padding:0 16px}
+.cta-row{display:flex;justify-content:space-between;padding:0 16px 24px}
 .cta-row[data-fill]{justify-content:flex-start}
 .cta-row[data-fill] .cta-mi{flex:1;min-width:0;width:auto}
 .cta-mi{width:56px;display:flex;flex-direction:column;align-items:center;gap:4px;
@@ -1816,7 +1816,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .cta-mi .cm-l{width:100%;text-align:center;color:var(--ods-foreground)}
 
 /* ── ATF (인터넷·렌탈 837:17301) ── */
-.cta-rental{display:flex;flex-direction:column;gap:6px;padding:0 16px 16px}
+.cta-rental{display:flex;flex-direction:column;gap:6px;padding:0 16px 24px}
 .cta-rrow{display:flex;gap:6px}
 .cta-rrow[data-gap="4"]{gap:4px}
 .cta-rcard{position:relative;flex:1;min-width:0;border-radius:12px;overflow:hidden;padding:12px;
@@ -1828,8 +1828,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .cta-rcard b em{font-style:normal;color:var(--ods-accent-blue)}
 .cta-rcard span{color:var(--ods-foreground)}
 .cta-rcard img{position:absolute;right:10px;bottom:10px;width:92px;height:92px;object-fit:contain}
-.cta-ls{border-radius:12px;background:var(--ods-background-weak);padding:16px 12px;display:flex;gap:10px;
-  filter:drop-shadow(2px 2px 10px rgba(194,200,204,.2))}
+.cta-ls{border-radius:12px;background:var(--ods-background-weak);padding:16px 12px;display:flex;gap:10px}
 .cta-ls .ls-i{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;
   background:none;border:0;padding:0;cursor:pointer;font-family:inherit}
 .cta-ls .ls-a{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;overflow:hidden;flex:0 0 auto}
@@ -6144,19 +6143,19 @@ function bindCHome(){
     render();
     chStickTab();
   });
-  screen.querySelectorAll('[data-chpchip]').forEach(b=> b.onclick=()=>{ S.cPChip=+b.dataset.chpchip; render(); });
-  screen.querySelectorAll('[data-chcchip]').forEach(b=> b.onclick=()=>{ S.cCChip=+b.dataset.chcchip; render(); });
-  screen.querySelectorAll('[data-chtabchip]').forEach(b=> b.onclick=()=>{
-    const [k,i] = b.dataset.chtabchip.split(':');
-    S.cTabChip[k] = +i; const y = screen.scrollTop; render(); screen.scrollTop = y;
-  });
-  screen.querySelectorAll('[data-chfilter]').forEach(b=> b.onclick=()=>{ S.cCFilter=+b.dataset.chfilter; render(); });
-  screen.querySelectorAll('[data-scrap]').forEach(b=> b.onclick=(e)=>{
+  /* 칩·필터·스크랩은 같은 화면 안의 상태 변경이므로 스크롤 위치를 유지한다. */
+  const keepScroll = fn => (...a)=>{ const y = screen.scrollTop; fn(...a); render(); screen.scrollTop = y; };
+  screen.querySelectorAll('[data-chpchip]').forEach(b=> b.onclick=keepScroll(()=>{ S.cPChip=+b.dataset.chpchip; }));
+  screen.querySelectorAll('[data-chcchip]').forEach(b=> b.onclick=keepScroll(()=>{ S.cCChip=+b.dataset.chcchip; }));
+  screen.querySelectorAll('[data-chtabchip]').forEach(b=> b.onclick=keepScroll(()=>{
+    const [k,i] = b.dataset.chtabchip.split(':'); S.cTabChip[k] = +i;
+  }));
+  screen.querySelectorAll('[data-chfilter]').forEach(b=> b.onclick=keepScroll(()=>{ S.cCFilter=+b.dataset.chfilter; }));
+  screen.querySelectorAll('[data-scrap]').forEach(b=> b.onclick=keepScroll((e)=>{
     e.stopPropagation();
     const id=b.dataset.scrap;
     S.cScrap.has(id) ? S.cScrap.delete(id) : S.cScrap.add(id);
-    const y = screen.scrollTop; render(); screen.scrollTop = y;
-  });
+  }));
   /* 핀 선택 — 선택된 업체 목록으로 진입 */
   screen.querySelectorAll('[data-pin]').forEach(b=> b.onclick=()=>{ S.cPin=b.dataset.pin; go('cList'); });
   /* sticky 전환 — tab 이 헤더(86px) 에 붙으면 Handle 을 접는다 (892:15275) */

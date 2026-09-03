@@ -1860,37 +1860,45 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-grid{flex:1 0 0;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px 0}
 .mbd-grid .mb-item{flex:none;height:auto;gap:5px}
 
-/* ═══ BannerProductList (931:18483) ═══════════════════════════════
-   ModuleTitle → Container(가로 레일). Product Container 하나 = 배너 328×240 + 상품 3개.
+/* ═══ BannerProductList (941:23785) ═══════════════════════════════
+   ModuleTitle → Container(가로 레일). Product Container 하나 = 배너 280×168 + gap8 + 상품 3개(각 h68).
    배너는 사진 위에 하단 Dim Gradient 를 깔고 타이틀·서브를 아래 정렬한다. */
 .bpl{display:flex;gap:8px;padding:0 16px;overflow-x:auto;scrollbar-width:none;
   scroll-snap-type:x mandatory;scroll-padding-left:16px}
 .bpl::-webkit-scrollbar{display:none}
-.bpl-col{flex:0 0 328px;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
-/* ProductCarouselSection_Thumbnail — 328×240 r12 */
-.bpl-banner{position:relative;height:240px;border-radius:12px;overflow:hidden;
+.bpl-col{flex:0 0 280px;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
+/* List (944:18898) — Product 끼리는 간격 없이 붙는다 (각 Product 가 pb8 을 갖는다) */
+.bpl-list{display:flex;flex-direction:column}
+/* ProductCarouselSection_Thumbnail (941:23791) — 280×168 r12 */
+.bpl-banner{position:relative;height:168px;border-radius:12px;overflow:hidden;
   display:flex;flex-direction:column;justify-content:flex-end;padding:16px;
   border:0;cursor:pointer;font-family:inherit;text-align:left;background:var(--ods-background-weak)}
-.bpl-banner > img{position:absolute;left:0;top:var(--bb-top,0.03%);
-  width:100%;height:159.44%;object-fit:cover;display:block}
-/* Dim Gradient — 하단 160px, 20% 지점부터 rgba(0,0,0,.18) */
+/* 배너 에셋(960×1120)은 prod 캡처라 하단 약 30% 에 캠페인 카피가 박혀 있다.
+   그 영역이 보이지 않도록 위쪽(20%) 기준으로 크롭한다. */
+.bpl-banner > img{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover;object-position:50% 20%}
+/* Dim Gradient (941:23792) — 하단 160px, 20% 지점부터 rgba(0,0,0,.18) */
 .bpl-banner .bb-dim{position:absolute;left:0;bottom:0;width:100%;height:160px;
   background:linear-gradient(to top, rgba(0,0,0,.18) 20%, rgba(0,0,0,0))}
-.bpl-banner .bb-t{position:relative;display:flex;flex-direction:column;gap:4px;width:200px;
-  color:var(--ods-foreground-inverse)}
-.bpl-banner .bb-t b{font-weight:600;display:block}
-/* ProductAccessory — 썸네일 80 + gap10 + 텍스트 */
-.bpl-p{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:0;
+/* Banner Text (941:23794) — Figma 의 flex-1 은 가로 행(941:23793) 기준이라
+   세로로는 늘리지 않는다. 배너 하단 정렬을 유지해야 한다. */
+.bpl-banner .bb-t{position:relative;flex:0 0 auto;width:100%;min-width:0;
+  display:flex;flex-direction:column;gap:4px;color:var(--ods-foreground-inverse)}
+.bpl-banner .bb-t b{font-weight:600;display:block;max-height:56px;overflow:hidden}
+.bpl-banner .bb-t span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Product (944:18718) — 썸네일 60 + gap12 + 텍스트 · pb8 → h68 */
+.bpl-p{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:0 0 8px;
   cursor:pointer;font-family:inherit;text-align:left}
-.bpl-p .bp-th{flex:0 0 80px;width:80px;height:80px;border-radius:8px;overflow:hidden;position:relative;
-  background:var(--ods-background-weak)}
+.bpl-p .bp-th{flex:0 0 60px;width:60px;height:60px;border-radius:8px;overflow:hidden;position:relative;
+  background:var(--ods-border-thumbnail)}
 .bpl-p .bp-th img{width:100%;height:100%;object-fit:cover;display:block}
 .bpl-p .bp-th::after{content:'';position:absolute;inset:0;border-radius:8px;
-  border:.5px solid rgba(0,0,0,.05);pointer-events:none}
-.bpl-p .bp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  border:.5px solid var(--ods-border-thumbnail);pointer-events:none}
+.bpl-p .bp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding-right:8px}
 .bpl-p .bp-nm{color:var(--ods-foreground);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bpl-p .bp-pr{color:var(--ods-foreground)}
-.bpl-p .bp-sub{display:flex;align-items:center;gap:2px;color:var(--ods-foreground-weak)}
+/* 설명 2줄 — 3줄이 되면 Product 가 68 을 넘는다 */
+.bpl-p .bp-sub{color:var(--ods-foreground-weak);display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden}
 
 /* 인기 사례 card — 썸네일 + 제목 2줄 + 평수·스타일 (893:16596) */
 /* Thumbnail 160×160 r4 + gap8 + Body(gap6: 제목 2줄 + meta) = h226 */
@@ -1905,21 +1913,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   -webkit-box-orient:vertical;overflow:hidden;height:36px}
 .ch-scard .chs-m{color:var(--ods-foreground-weak);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* Bundle_Offering (837:14525) — 343×72 배너 r12
-   [토큰 예외] #172F47 은 캠페인 브랜드 색으로 ODS semantic 대응이 없다(가이드 §7). */
-.ch-offering{padding:0 16px 16px;background:var(--ods-background)}
-.ch-banner{position:relative;height:72px;border-radius:12px;overflow:hidden;
-  background:var(--ods-background-weak);
-  width:100%;border:0;padding:0;cursor:pointer;
-  font-family:inherit;display:block;text-align:left}
-/* 5개 슬라이드 롤링 트랙 (indicatorNumber 와 동기) */
-.ch-banner .cb-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.2,0,.2,1)}
-.ch-banner .cb-slide{position:relative;flex:0 0 100%;height:100%}
-.ch-banner .cb-tt{position:absolute;left:15px;top:15px;right:60px;display:flex;flex-direction:column;gap:5px;
-  color:var(--ods-foreground)}
-.ch-banner .cb-ind{position:absolute;right:12px;bottom:10px;padding:4px 8px;border-radius:30px;
-  background:rgba(33,38,41,.5);color:var(--ods-foreground-inverse)}
 
 /* Bundle/partner (846:52866 · 846:52885) */
 /* Bundle 은 위 여백 없이 아래 24 로 다음 번들과 떨어진다 — 모든 BTF 번들 공통.
@@ -2010,10 +2003,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
    공통 구조: ATF(-Grid) → Bundle_Offering → BTFcontainer(Bundle = ModuleTitle + card group)
    탭 페이지 노드의 Top Navigation 은 h196(= 86 + tab 60)이라 tab 이 항상 sticky 상태다.
    ═══════════════════════════════════════════════════════════ */
-
-/* ── Bundle_Offering 배너 테마 (탭별 배경/전경) ──
-   [토큰 예외] 캠페인 배경색은 ODS semantic 대응이 없어 Figma 실측값을 둔다. */
-.ch-offering[data-pb="24"]{padding-bottom:24px}
 
 /* ── ODS Card (compound: Root / Media / Content) ──
    design-system 11.5.1 Card 스펙 재현 — type vertical|horizontal, gap, Media(aspectRatio), Content(padding) */
@@ -2603,7 +2592,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), mdPin:null, mdCard:null, mapAddr:null, msH:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -5830,8 +5819,6 @@ function resetFlowC(){
   S.cRChip = 1;      /* 최신 리뷰 = 부분시공 (931:14355) */
   S.cPartRv = 0;     /* 부분 시공 리뷰 = 전체 */
   S.cScrap = new Set();
-  if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer=null; }
-  S.cOfferBg = chPickOfferBg(5);   /* 배너 슬라이드 배경 랜덤 배치 */
   S.mdPin = null;
   S.mdCard = null;
   S.msH = msFull();
@@ -6224,23 +6211,28 @@ const chFilter2 = (items, key, sel) => `<div class="ch-filter2" role="group" ari
   </div>
 </div>`;
 
-/* ── BannerProductList (931:18483) — 오늘의집 직접 제작·시공 상품 ── */
+/* ── BannerProductList (941:23785) — 오늘의집 직접 제작·시공 상품 ── */
 const BPL_ASSET = 'assets/bundle/';
-const BPL_PRODUCT = {name:'오늘의집키친 Essential 일자형 키친 1.4m~', price:'1,964,000', sub:['무료배송','설치 무료']};
+/* th 가 없는 상품은 Figma 에서도 이미지가 비어 있어 borderThumbnail 색 플레이스홀더로 둔다 */
 const BPL_COLS = [
-  {t:'오늘의집키친', sub:'중간마진없는 합리적 가격', img:'banner-kitchen.png', top:'0.03%',
-   products:[{...BPL_PRODUCT, th:'prod-1.png'}, {...BPL_PRODUCT, th:'prod-2.png'}, {...BPL_PRODUCT, th:'prod-3.png'}]},
-  {t:'오늘의집도배', sub:'리뷰가 검증한 시공 품질', img:'banner-wallpaper.png', top:'-10.57%',
-   products:[{...BPL_PRODUCT, th:'prod-1.png'}, {...BPL_PRODUCT, th:'prod-2.png'}, {...BPL_PRODUCT, th:'prod-3.png'}]},
+  {t:'오늘의집 직시공', sub:'제작부터 시공까지 오늘의집이 직접하는 시공 서비스', img:'banner-kitchen.png',
+   products:[
+     {n:'오늘의집 키친',      d:'일자형, ㄱ자형, ㄷ자형 대면형 원하는 타입으로 골라서, 무료배송부터 설치까지!', th:'prod-1.png'},
+     {n:'오늘의집 도배',      d:'리뷰가 검증한 시공 품질, 200개 이상의 후기로 검증된 오늘의집 도배',          th:'prod-2.png'},
+     {n:'오늘의집 마루/장판',  d:'20년 경력의 베테랑 시공팀이 직접하는 오늘의집 마루/장판',                  th:'prod-3.png'},
+   ]},
+  {t:'스탠다드', sub:'이토록 믿음직한 인테리어, 오늘의집 스탠다드', img:'banner-wallpaper.png',
+   products:[
+     {n:'표준견적서',           d:'자재비, 인건비, 업체마진까지. 모든 비용을 100% 알 수 있는 표준견적서 사용', th:'prod-1.png'},
+     {n:'계약 수수료 0원',       d:'오늘의집에서 수수료 없이 계약하고 A/S까지 책임보장'},
+     {n:'상담 및 시공 품질 관리', d:'최상의 만족을 위해 상담 및 시공 품질을 철저하게 관리'},
+   ]},
 ];
 const bplProduct = (p) => `<button class="bpl-p" type="button">
-  <span class="bp-th"><img src="${BPL_ASSET}${p.th}" alt=""></span>
+  <span class="bp-th">${p.th ? `<img src="${BPL_ASSET}${p.th}" alt="">` : ''}</span>
   <span class="bp-tx">
-    <span class="bp-nm t-detail13L18 w-regular">${p.name}</span>
-    <b class="bp-pr t-body14L18 w-semibold">${p.price}</b>
-    <span class="bp-sub t-detail12L16 w-regular">
-      ${p.sub.map((x,i)=>`${i?'<span>·</span>':''}<span>${x}</span>`).join('')}
-    </span>
+    <b class="bp-nm t-body15L24 w-semibold">${p.n}</b>
+    <span class="bp-sub t-detail12L16 w-regular">${p.d}</span>
   </span>
 </button>`;
 function chBannerProductList(){
@@ -6248,7 +6240,7 @@ function chBannerProductList(){
     ${chTitle('제작부터 시공까지 오늘의집이 직접')}
     <div class="bpl">
       ${BPL_COLS.map(c=>`<div class="bpl-col">
-        <button class="bpl-banner" type="button" style="--bb-top:${c.top}">
+        <button class="bpl-banner" type="button">
           <img src="${BPL_ASSET}${c.img}" alt="">
           <span class="bb-dim" aria-hidden="true"></span>
           <span class="bb-t">
@@ -6256,7 +6248,7 @@ function chBannerProductList(){
             <span class="t-detail12L16 w-regular">${c.sub}</span>
           </span>
         </button>
-        ${c.products.map(bplProduct).join('')}
+        <div class="bpl-list">${c.products.map(bplProduct).join('')}</div>
       </div>`).join('')}
     </div>
   </section>`;
@@ -6278,66 +6270,6 @@ const gridThumb = (imgs, ratio='') =>
     <div class="gt-main"><img src="${imgs[0]}" alt=""></div>
     <div class="gt-side"><img src="${imgs[1]}" alt=""><img src="${imgs[2]}" alt=""></div>
   </div>`;
-
-/* Bundle_Offering — 회색 플레이스홀더 배경 위에 카피만 롤링하는 5슬롯 배너.
-   Figma 의 삽입 이미지는 콘텐츠 슬롯이라 프로토타입에서는 비운다(메뉴 asset 과 동일 방침). */
-/* [토큰 예외] 배너 플레이스홀더 배경 4종 — 지정 색상으로 ODS semantic 대응이 없다. */
-const CH_OFFER_BG = ['#E8EAEE', '#CDEBC0', '#D7DBE1', '#C3E2F8'];
-const chPickOfferBg = n =>
-  Array.from({length:n}, ()=> CH_OFFER_BG[Math.floor(Math.random() * CH_OFFER_BG.length)]);
-
-const CH_OFFERS = [
-  {k:'home',   kicker:'오늘의집 스탠다드',                     title:'이토록 믿음직한 인테리어'},
-  {k:'full',   kicker:'오늘의집이 직접 시공합니다',            title:'도배 직시공 서비스 오픈!'},
-  {k:'part',   kicker:'오늘의집이 직접 시공합니다',            title:'도배 직시공 서비스 오픈!'},
-  {k:'move',   kicker:'이사 앞두고 추가금이나 파손 걱정된다면?', title:'이사 책임보장 파트너 이용하기'},
-  {k:'rental', kicker:'50만원 혜택 받고',                      title:'인터넷 정수기 렌탈 한번에 신청하기'},
-];
-const chOffering = (tab, {pb=24}={}) => {
-  const i = Math.max(0, CH_OFFERS.findIndex(o=>o.k===tab));
-  const rot = [...CH_OFFERS.slice(i), ...CH_OFFERS.slice(0,i)];   /* 현재 탭 카피가 1번 슬라이드 */
-  /* 전체시공·부분시공은 디자인상 배너 카피가 같다.
-     같은 문구가 연달아 보이지 않도록, 남은 개수가 많은 카피부터 배치한다. */
-  const list = [rot[0]], pool = rot.slice(1);
-  while(pool.length){
-    const prev = list[list.length - 1].title;
-    let k = -1, best = -1;
-    pool.forEach((o,n)=>{
-      if(o.title === prev) return;
-      const c = pool.filter(x=>x.title === o.title).length;
-      if(c > best){ best = c; k = n; }
-    });
-    list.push(...pool.splice(k < 0 ? 0 : k, 1));
-  }
-  return `<div class="ch-offering"${pb===24?' data-pb="24"':''}>
-    <button class="ch-banner" type="button">
-      <span class="cb-track" id="chOfferTrack" data-n="${list.length}">
-        ${list.map((o,n)=>`<span class="cb-slide" style="background:${S.cOfferBg[n] || CH_OFFER_BG[0]}">
-          <span class="cb-tt">
-            <span class="t-detail13L18 w-medium" style="line-height:16px">${o.kicker}</span>
-            <span class="t-body15L24 w-semibold" style="line-height:18px">${o.title}</span>
-          </span>
-        </span>`).join('')}
-      </span>
-      <span class="cb-ind t-detail12L16" id="chOfferInd">1/${list.length}</span>
-    </button>
-  </div>`;
-};
-
-/* 배너 자동 롤링 — 3초 간격, indicatorNumber 동기 */
-function chStartOfferRoll(){
-  if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer = null; }
-  const track = screen.querySelector('#chOfferTrack');
-  if(!track) return;
-  const n = +track.dataset.n, ind = screen.querySelector('#chOfferInd');
-  let i = 0;
-  S.cOfferTimer = setInterval(()=>{
-    if(!track.isConnected){ clearInterval(S.cOfferTimer); S.cOfferTimer = null; return; }
-    i = (i + 1) % n;
-    track.style.transform = `translateX(${-i * 100}%)`;
-    if(ind) ind.textContent = `${i + 1}/${n}`;
-  }, 3000);
-}
 
 /* ModuleTitle — 위치 핀(Left slot) 옵션 */
 const chTitle = (html, {pin=false}={}) => `<div class="ch-mtitle">
@@ -6384,7 +6316,6 @@ const chFirmCard = (f) => {
 function chPageFull(){
   return `
     <div class="mbd">${mbRow(MB_ALL)}</div>
-    ${chOffering('full')}
     <section class="ch-bundle">
       ${chTitle(`${blue('성남시')} 주변 추천 시공업체`, {pin:true})}
       <div class="crail">${mkFirms(`full.firm:${S.cTabChip.full}`).map(chFirmCard).join('')}</div>
@@ -6419,7 +6350,6 @@ const chBaCard = (c={}) => odsCard({
 function chPagePart(){
   return `
     <div class="mbd">${mbRow(MB_PART, true)}</div>
-    ${chOffering('part')}
     <section class="ch-bundle">
       ${chTitle('실제 리뷰로 확인하는 오늘의집 직영 시공')}
       <div class="ch-chips" role="group" aria-label="시공 분야">
@@ -6464,7 +6394,6 @@ const chMoveCard = (m={}) => odsCard({
 function chPageMove(){
   return `
     <div class="mbd">${mbRow(MB_MOVE)}</div>
-    ${chOffering('move')}
     <section class="ch-bundle">
       ${chTitle(`${blue('서울')} 검증된 이사 파트너 찾기`, {pin:true})}
       <div class="cgroup">${mkMovers('move.partner').map(chMoveCard).join('')}</div>
@@ -6505,8 +6434,7 @@ function chPageRental(){
           <span class="ls-l t-detail12L16 w-regular">${m.l}</span>
         </button>`).join('')}
       </div>
-    </div>
-    ${chOffering('rental')}`;
+    </div>`;
 }
 
 const CH_PAGES = {full:chPageFull, part:chPagePart, move:chPageMove, rental:chPageRental};
@@ -6516,8 +6444,6 @@ function chPageHome(){
   const homePartners = mkPartners(`home.partner:${S.cPChip}`);
   return `
       ${mbHome()}
-
-      ${chOffering('home', {pb:16})}
 
       ${chBannerProductList()}
 
@@ -6623,7 +6549,6 @@ function chCompareBar(){
 }
 
 function bindCHome(){
-  chStartOfferRoll();
   mapMount();
   bindHomeHandleDrag();
   /* tab — ODS Tab value 변경 (sticky 여부와 무관한 같은 컴포넌트) */

@@ -2004,7 +2004,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
    Flow C — 탭별 개별 페이지
    전체시공 837:17410 · 부분시공 868:11034 · 이사·청소 837:16817 · 인터넷·렌탈 837:17088
    공통 구조: ATF 메뉴번들 → Bundle_Offering(롤링 배너) → BTFcontainer(Bundle = ModuleTitle + card group)
-   전체 홈(홈 탭)에는 롤링 배너를 두지 않는다.
+   홈 탭도 메뉴번들 아래 같은 롤링 배너를 둔다 (pb 16).
    탭 페이지 노드의 Top Navigation 은 h196(= 86 + tab 60)이라 tab 이 항상 sticky 상태다.
    ═══════════════════════════════════════════════════════════ */
 
@@ -5850,7 +5850,7 @@ function resetFlowC(){
 
 /* ══════════════ Flow C — O2O 홈 (Figma 868:18466 default / 892:15126 sticky) ══════════════
    구성: Top Navigation(공통 chrome) → bundle_location → sticky map(240) → Container
-        (tab / Bundle_Menu / BannerProductList / Bundle·partner ×2) → Bottom Navigation(공통 chrome)
+        (tab / Bundle_Menu / Bundle_Offering / BannerProductList / Bundle·partner ×2) → Bottom Navigation(공통 chrome)
    sticky 상태는 별도 화면이 아니라 같은 tab 의 스크롤 상태다(Handle 숨김 + 헤더 하단 고정). */
 const CH_ADDR   = '경기 성남시 분당구 판교로 30 (운중동, 판교원마을2단지아파트)';
 const CH_REGION = '분당구';
@@ -6543,6 +6543,8 @@ function chPageHome(){
   return `
       ${mbHome()}
 
+      ${chOffering('home', {pb:16})}
+
       ${chBannerProductList()}
 
       <section class="ch-bundle">
@@ -6577,7 +6579,7 @@ function chPageHome(){
       </section>`;
 }
 
-/* 탭별 container 본문 — 홈은 MenuAll + BannerProductList + partner·case.
+/* 탭별 container 본문 — 홈은 MenuAll + Offering + BannerProductList + partner·case.
    개별 탭은 메뉴번들 아래 Bundle_Offering 롤링 배너 후 BTF. */
 function chBody(){
   const f = CH_PAGES[S.cTab];

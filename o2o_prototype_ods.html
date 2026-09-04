@@ -1659,22 +1659,27 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .ms-cts .mc-t{color:var(--ods-foreground)}
 .ms-cts .mc-by{color:var(--ods-foreground-weak)}
 
-/* Floating BottomSheet (917:14710) — Handle 24 + Scroll */
-.md-sheet{position:absolute;left:0;right:0;bottom:0;height:var(--ms-h,356px);z-index:5;
+/* Floating BottomSheet (917:14710) — Handle 24 + sticky tab(제목·필터) + Scroll.
+   스냅: peek(핸들+제목) · mid(40%) · expand(헤더 86px 아래). expand 에서 Handle 이 접힌다. */
+.md-sheet{position:absolute;left:0;right:0;bottom:0;z-index:5;
   transition:height .24s cubic-bezier(.2,0,.2,1);
-  display:flex;flex-direction:column;background:var(--ods-background);
+  display:flex;flex-direction:column;background:var(--ods-background);overflow:hidden;
   border-radius:var(--ods-radius-16) var(--ods-radius-16) 0 0;
   box-shadow:0 -2px 10px 0 rgba(63,71,77,.15)}
 .md-sheet[data-drag="1"]{transition:none}
 .md-sheet .ms-handle{flex:0 0 24px;height:24px;display:flex;align-items:center;justify-content:center;
-  cursor:grab;touch-action:none}
-.md-sheet[data-drag="1"] .ms-handle{cursor:grabbing}
+  cursor:grab;touch-action:none;overflow:hidden}
+.md-sheet[data-drag="1"] .ms-handle,.md-sheet[data-drag="1"] .ms-top{cursor:grabbing}
 .md-sheet .ms-handle i{display:block;width:32px;height:4px;border-radius:6px;background:var(--ods-border)}
-.md-sheet .ms-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.md-sheet.is-stuck{border-radius:0;box-shadow:none}
+.md-sheet.is-stuck .ms-handle{flex-basis:0;height:0}
+.md-sheet .ms-stick{flex:0 0 auto;background:var(--ods-background);z-index:3}
+.md-sheet.is-stuck .ms-stick{border-bottom:1px solid var(--ods-border)}
+.md-sheet .ms-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
 .md-sheet .ms-scroll::-webkit-scrollbar{display:none}
-/* Sticky Top — h40 px16 py10 */
+/* Sticky tab — 제목 행. 핸들과 같이 잡아 시트를 끌어올린다. */
 .ms-top{height:40px;box-sizing:border-box;padding:10px 16px;display:flex;align-items:center;
-  position:sticky;top:0;z-index:2;background:var(--ods-background)}
+  background:var(--ods-background);cursor:grab;touch-action:none}
 .ms-top .mt-txt{display:flex;gap:6px;align-items:center;color:var(--ods-foreground);min-width:0}
 .ms-top .mt-txt img{flex:0 0 auto}
 .ms-top .mt-txt b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1802,6 +1807,8 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   bottom:calc(var(--ms-h, 40%) + 16px);
   transition:bottom .24s cubic-bezier(.2,0,.2,1)}
 .md-page[data-drag="1"] > .ch-mapact{transition:none}
+.md-page:has(.md-sheet.is-stuck) > .ch-mapact,
+.md-page:has(.md-sheet.is-stuck) .map-research{opacity:0;pointer-events:none}
 
 /* Container (837:14494) — 지도 위로 30px 겹쳐 올라오는 흰 시트 */
 .ch-body{position:relative;z-index:2;margin-top:-30px;background:var(--ods-background);
@@ -1848,20 +1855,17 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   background:var(--ods-background-weak);color:var(--ods-foreground-weak)}
 .mb-a img{width:100%;height:100%;object-fit:contain;display:block}
 .mb-l{width:100%;text-align:center;color:var(--ods-foreground)}
-/* MenuAll 상단 (917:18143) — 간편매칭 카드 + 2×2 그리드.
-   행은 왼쪽만 16 패딩이고 오른쪽은 화면 끝까지, 카드와 그리드 사이 gap 은 0 이다.
-   CTA 너비 = 하단 mb-item 2칸(화면 50%). padding-left 16 을 보정해서 calc(50% + 8px). */
-.mbd-all{display:flex;align-items:stretch;gap:0;padding-left:16px}
-.mbd-cta{flex:0 0 calc(50% + 8px);min-width:0;align-self:stretch;position:relative;overflow:hidden;
-  border:0;padding:0;cursor:pointer;font-family:inherit;text-align:left;
-  border-radius:12px;background:var(--ods-background-weak)}
-.mbd-cta .mc-t{position:absolute;left:12px;right:12px;top:12px;display:flex;flex-direction:column}
-.mbd-cta .mc-t em{font-style:normal;color:var(--ods-accent-blue)}
-.mbd-cta .mc-t b{color:var(--ods-foreground);font-weight:600}
-.mbd-cta img{position:absolute;right:0;bottom:2px;
-  width:90px;height:90px;object-fit:contain;display:block}
-.mbd-grid{flex:1 0 0;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px 0}
-.mbd-grid .mb-item{flex:none;height:auto;gap:5px}
+/* MenuAll 상단 (983:23230) — 간편 견적받기 / 업체찾기 카드 2열 · h144 gap6 px16 */
+.mbd-all{display:flex;align-items:stretch;gap:6px;padding:0 16px;height:144px}
+.mbd-cta{flex:1 1 0;width:0;min-width:0;height:144px;position:relative;overflow:hidden;
+  border:0;padding:12px 0;cursor:pointer;font-family:inherit;text-align:left;
+  border-radius:12px;background:var(--ods-background-weak);
+  display:flex;flex-direction:column;justify-content:space-between}
+.mbd-cta .mc-t{padding:0 12px;color:var(--ods-foreground)}
+.mbd-cta .mc-assets{display:flex;align-items:center;justify-content:space-between;padding:0 8px;width:100%;box-sizing:border-box}
+.mbd-cta .mc-assets img{width:48px;height:48px;object-fit:contain;display:block;flex:0 0 48px}
+.mbd-cta .mc-find{position:absolute;right:12px;bottom:12px;width:60px;height:60px;overflow:hidden}
+.mbd-cta .mc-find img{width:60px;height:60px;object-fit:contain;display:block}
 
 /* ═══ BannerProductList (941:23785) ═══════════════════════════════
    ModuleTitle → Container(가로 레일). Product Container 하나 = 배너 280×168 + gap8 + 상품 3개(각 h68).
@@ -2312,13 +2316,15 @@ const ODS_ASSET = {
   photoBasin:   'AssetPhotoWashBasinLarge/image_240.png',  /* 욕실 — Figma 75:28628 */
   headset:      'AssetFaceSmilingCapHeadsetLarge/image_240.webp',  /* 상담원 — 종합 상담 카드(209:9522) */
   /* ATF Menu Bundle (917:22762) — 시각보정 로컬 에셋 (assets/menu/) */
-  menuFull:     'assets/menu/house-with-drill.png',   /* 전체시공 · 간편매칭 CTA */
+  menuFull:     'assets/menu/house-with-drill.png',   /* 전체시공 */
   menuPart:     'assets/menu/safety-helmet.png',      /* 부분시공 */
   menuMove:     'assets/menu/truck.png',              /* 이사·청소 · 원룸소형이사 */
   menuNet:      'assets/menu/wifi-router.png',        /* 인터넷·렌탈 */
   menuBox:      'assets/menu/box.png',                /* 가정·보관이사 */
   menuClean:    'assets/menu/cleaning.png',           /* 이사청소 */
   menuForm:     'assets/menu/form.png',               /* 간편 매칭 */
+  menuFind:     'assets/menu/finding.png',            /* 홈 업체찾기 카드 — Figma 983:25400 */
+  menuCalc:     'AssetCalculatorLargeGenuineBlueView2/image_240.png', /* 3D견적계산기 — Figma 174:3627 */
   menuFix:      'AssetHandDrillO2OLargeGenuineBlueView2/image_240.png',        /* 설치수리 — 시각보정 없음, CDN 유지 */
   photoWallIso: 'AssetPhotoWallpaperIsometric/image_240.webp',                 /* 도배 */
   photoDoor:    'AssetPhotoDoorLarge/image_240.png',                           /* 중문도어 */
@@ -5809,13 +5815,17 @@ const MD_LOUNGE = {
    2·3번째는 지도 핀(조이디자인·리라인테리어)과 맞춰 이름만 바꿨다. */
 const MD_PHOTOS = ['photo-1.png','photo-3.png','photo-2.png','photo-4.png'];
 const MD_BADGES = ['우리 아파트 1회 시공','책임보장','원가검수','이벤트'];
+const MD_PARTNER_BASE = {star:'4.9', reviews:28, contracts:8, dist:'0.5km', area:'구의동',
+  badges:MD_BADGES, price:'중저가 시공 위주 (평당 110~139만원)'};
 const MD_PARTNERS = [
-  {id:'m1', name:'토니인테리어',  star:'4.9', reviews:28, contracts:8, dist:'0.5km', area:'구의동',
-   badges:MD_BADGES, price:'중저가 시공 위주 (평당 110~139만원)'},
-  {id:'m2', name:'조이디자인',    star:'4.9', reviews:28, contracts:8, dist:'0.5km', area:'구의동',
-   badges:MD_BADGES, price:'중저가 시공 위주 (평당 110~139만원)'},
-  {id:'m3', name:'리라인테리어',  star:'4.9', reviews:28, contracts:8, dist:'0.5km', area:'구의동',
-   badges:MD_BADGES, price:'중저가 시공 위주 (평당 110~139만원)'}
+  {id:'m1', name:'토니인테리어',  ...MD_PARTNER_BASE},
+  {id:'m2', name:'조이디자인',    ...MD_PARTNER_BASE},
+  {id:'m3', name:'리라인테리어',  ...MD_PARTNER_BASE},
+  {id:'m4', name:'한올인테리어',  ...MD_PARTNER_BASE, dist:'0.8km'},
+  {id:'m5', name:'내일인테리어',  ...MD_PARTNER_BASE, dist:'1.1km', area:'운중동'},
+  {id:'m6', name:'어반시크디자인',...MD_PARTNER_BASE, dist:'1.4km', area:'백현동'},
+  {id:'m7', name:'디자인덕',      ...MD_PARTNER_BASE, dist:'1.7km'},
+  {id:'m8', name:'라인디자인',    ...MD_PARTNER_BASE, dist:'2.0km', area:'삼평동'},
 ];
 /* 시트 제목 — Figma 원본은 '운중동 산운판교포레라움 11단지'이나
    상단 bundle_location(CH_ADDR)과 어긋나므로 우리집 단지명으로 맞춘다. */
@@ -6169,21 +6179,22 @@ const mbRow = (items, wrap) => `<div class="mbd-row"${wrap?' data-wrap':''}>${it
    리스트에 없는 세부 메뉴는 상위 카테고리 URL 을 따른다(주방·도배… → 부분시공). */
 const O2O_URL = {
   full:     'https://o2o.ohou.se/remodeling/home/discovery',  /* 전체시공 */
+  disc:     'https://o2o.ohou.se/remodeling/home/discovery?category=total&isSubscribedInsurance=false&listType=1', /* 홈 비교견적·업체찾기 */
   part:     'https://o2o.ohou.se/remodeling/part',            /* 부분시공 */
   town:     'https://ohou.se/experts/town',                   /* 아파트 시공사례 */
   moving:   'https://lifecycle.ohou.se/moving',               /* 이사 */
   clean:    'https://ohou.se/competitions/917',               /* 이사청소 */
   repair:   'https://o2o.ohou.se/repair',                     /* 설치수리 */
   internet: 'https://lifecycle.ohou.se/rental/internet',      /* 인터넷 설치 */
-  /* 아래 5개는 전달받은 목록에는 있으나 현재 메뉴 번들에 대응 숏컷이 없다 */
+  calc:     'https://ohou.se/experts/calculator',             /* 3D견적계산기 — 홈 MenuAll */
+  /* 아래는 전달받은 목록에는 있으나 현재 메뉴 번들에 대응 숏컷이 없다 */
   ranks:    'https://o2o.ohou.se/remodeling/goods/ranks',     /* 시공자재 랭킹 */
   hometour: 'https://o2o.ohou.se/hometour/home/list',         /* 집보기 체크리스트 */
   interior: 'https://contents.ohou.se/community/interior',    /* 인테리어 상담소 */
-  calc:     'https://ohou.se/experts/calculator',             /* 견적계산기 */
   rental:   'https://store.ohou.se/brands/101601',            /* 가전 렌탈 */
 };
 
-/* 부분시공 4종 — 홈 2×2 그리드와 부분시공 탭 1행에 공통으로 쓰인다 */
+/* 부분시공 4종 — 부분시공 탭 1행 */
 const MB_PART4 = [
   {l:'주방', a:'photoKitchen', u:O2O_URL.part}, {l:'도배', a:'photoWallIso', u:O2O_URL.part},
   {l:'마루', a:'photoFloor',   u:O2O_URL.part}, {l:'장판', a:'photoVinylIso', u:O2O_URL.part},
@@ -6191,6 +6202,11 @@ const MB_PART4 = [
 const MB_HOME_SVC = [
   {l:'전체시공',   a:'menuFull', u:O2O_URL.full}, {l:'부분시공',    a:'menuPart', u:O2O_URL.part},
   {l:'이사·청소',  a:'menuMove', u:O2O_URL.moving}, {l:'인터넷·렌탈', a:'menuNet', u:O2O_URL.internet},
+];
+/* 홈 3행 (Figma 983:23343) — 주방·도배·마루·장판 + 3D견적계산기 */
+const MB_HOME_PART = [
+  {l:'주방', a:'photoKitchen', u:O2O_URL.part}, {l:'도배', a:'photoWallIso', u:O2O_URL.part},
+  {l:'마루·장판', a:'photoFloor', u:O2O_URL.part}, {l:'3D견적계산기', a:'menuCalc', u:O2O_URL.calc},
 ];
 /* 전체시공 탭 — Figma 원본에서 업체찾기·시공사례는 asset 이 비어 있어 placeholder 박스로 둔다 */
 const MB_ALL = [
@@ -6205,19 +6221,25 @@ const MB_MOVE = [
   {l:'원룸·소형이사', a:'menuMove',  u:O2O_URL.moving}, {l:'가정·보관이사', a:'menuBox', u:O2O_URL.moving},
   {l:'이사청소',      a:'menuClean', u:O2O_URL.clean},  {l:'설치수리',      a:'menuFix', u:O2O_URL.repair},
 ];
-/* MenuAll (917:22318) — 간편매칭 카드 + 부분시공 2×2 + 서비스 4종 */
+/* MenuAll (983:23229 varients2) — 간편 견적받기·업체찾기 카드 + 서비스 4종 + 주방·도배·마루·장판·3D견적계산기 */
 function mbHome(){
   return `<div class="mbd">
     <div class="mbd-all">
-      <button class="mbd-cta" type="button" data-menu="간편매칭" data-url="${O2O_URL.full}">
-        <span class="mc-t t-body15L24 w-semibold" style="line-height:21px">
-          <em>전체·부분시공</em><b>간편매칭</b>
+      <button class="mbd-cta" type="button" data-menu="간편 견적받기" data-url="${O2O_URL.disc}">
+        <span class="mc-t t-body16L20 w-semibold">인테리어<br>간편 견적받기</span>
+        <span class="mc-assets">
+          <img src="${assetSrc('photoKitchen')}" alt="" width="48" height="48">
+          <img src="${assetSrc('photoWallIso')}" alt="" width="48" height="48">
+          <img src="${assetSrc('photoFloor')}" alt="" width="48" height="48">
         </span>
-        <img src="${assetSrc('menuFull')}" alt="">
       </button>
-      <div class="mbd-grid">${MB_PART4.map(mbItem).join('')}</div>
+      <button class="mbd-cta" type="button" data-find data-menu="업체 찾기" data-url="${O2O_URL.disc}">
+        <span class="mc-t t-body16L20 w-semibold">업체 찾기</span>
+        <span class="mc-find"><img src="${assetSrc('menuFind')}" alt="" width="60" height="60"></span>
+      </button>
     </div>
     ${mbRow(MB_HOME_SVC)}
+    ${mbRow(MB_HOME_PART)}
   </div>`;
 }
 
@@ -7010,16 +7032,39 @@ function mapFallbackCenterHome(){
   const dy = (s.top + visH/2) - (p.top + p.height/2);
   plane.style.transform = `translate(${dx}px,${dy}px)`;
 }
-/* 핀이 아닌 지도 영역 탭 — 엔진 click 이 안 새도 DOM 버블로 받는다 */
+/* 핀·시트·컨트롤이 아닌 지도 빈 곳.
+   Leaflet 은 타일 click 의 DOM 버블을 끊으므로 capture 로 받는다. */
+function isMapBgTarget(el){
+  return !el.closest('[data-mdpin], .mk-pin, .mk-wrap, .leaflet-marker-icon, .leaflet-control, .ch-mapact, .map-research, .map-err, .md-sheet, .bundle-location, .search-nav');
+}
 function bindMapBgClick(slot){
   if(!slot) return;
-  const onBg = e=>{
-    if(e.target.closest('[data-mdpin], .ch-mapact, .map-research, .map-err, .md-sheet, .bundle-location')) return;
+  const wrap = slot.closest('.md-map, .ch-map') || slot;
+  let sx = 0, sy = 0, armed = false, last = 0;
+  const arm = e=>{
+    if(S.screen!=='cMapDisc' || !S.mdPin) return;
+    if(!isMapBgTarget(e.target)) return;
+    armed = true; sx = e.clientX; sy = e.clientY;
+  };
+  const fire = e=>{
+    if(S.screen!=='cMapDisc' || !S.mdPin) return;
+    if(!isMapBgTarget(e.target)) return;
+    if(e.type!=='click'){
+      if(!armed) return;
+      if(Math.hypot(e.clientX-sx, e.clientY-sy) > 12){ armed = false; return; }
+    }else if(armed && Math.hypot(e.clientX-sx, e.clientY-sy) > 12){
+      armed = false;
+      return;
+    }
+    armed = false;
+    const now = Date.now();
+    if(now-last < 400) return;
+    last = now;
     mdDeselect();
   };
-  slot.onclick = onBg;
-  const wrap = slot.closest('.md-map, .ch-map');
-  if(wrap) wrap.onclick = onBg;
+  wrap.addEventListener('pointerdown', arm, true);
+  wrap.addEventListener('pointerup', fire, true);
+  wrap.addEventListener('click', fire, true);
 }
 
 async function mapInit(){
@@ -7236,12 +7281,13 @@ function mdPin(p, marker){
 /* ══════════ 시트 핸들 드래그 ══════════════════════════════════════
    O2O 홈: Container 핸들을 아래로 끌면 지도가 커지며 드러나고, 임계치를 넘기면
    같은 지도 위에 Map Discovery 컴포넌트(주변 업체 시트·핀·popover)가 올라온다.
-   Map Discovery: 시트 핸들로 높이를 조절하고, peek 아래로 더 내리면 홈으로 돌아온다. */
-const DRAG_GO  = 72;    /* 화면 전환 임계치(px) */
+   Map Discovery: peek ↔ mid ↔ expand 스냅. expand 에서 Handle 이 접히고
+   제목(·필터)이 헤더 바로 아래 sticky tab 이 된다. peek 아래로 더 내리면 홈. */
+const DRAG_GO  = 72;    /* 화면 전환·스냅 임계치(px) */
 /* BottomSheet 높이는 고정 px 이 아니라 화면 비율(fractional)로 잡는다 —
    기기 높이가 달라져도 두 화면이 같은 비율을 유지한다. */
 const SHEET_FR_HOME = 0.66;   /* O2O 홈 Container — 화면 전체 높이 기준 (0.60 → 6% 더 위로) */
-const SHEET_FR_DISC = 0.40;   /* Map Discovery BottomSheet */
+const SHEET_FR_DISC = 0.40;   /* Map Discovery mid 스냅 */
 const SHEET_FR_PEEK = 0.16;   /* 시트를 접었을 때 (핸들 + 제목만) */
 const screenH = () => screen.clientHeight || 750;
 /* 홈 지도 높이 — Container 상단이 화면의 (1-SHEET_FR_HOME) 지점에 오도록 역산한다.
@@ -7249,8 +7295,9 @@ const screenH = () => screen.clientHeight || 750;
 const chTopH  = () => screen.querySelector('.ch-top')?.offsetHeight || 86;
 const chmBase = () => Math.max(120,
   Math.round(screenH() * (1 - SHEET_FR_HOME)) - chTopH() + 30);
-const msFull  = () => Math.round(screenH() * SHEET_FR_DISC);
-const msPeek  = () => Math.round(screenH() * SHEET_FR_PEEK);
+const msFull   = () => Math.round(screenH() * SHEET_FR_DISC);
+const msPeek   = () => Math.round(screenH() * SHEET_FR_PEEK);
+const msExpand = () => Math.max(msFull(), screenH() - CH_STICKY_TOP);
 /* --chm-h 는 루트에 한 번만 심는다. .ch 는 렌더마다 새로 만들어지므로
    여기에 값을 주면 CSS 기본값(240px)에서 트랜지션이 걸려 첫 페인트가 어긋난다. */
 function syncSheetVars(){
@@ -7308,32 +7355,86 @@ function bindHomeHandleDrag(){
     });
 }
 
-function setMsH(px){
-  const n = Math.max(24, Math.round(px)) + 'px';
-  screen.querySelector('.md-page')?.style.setProperty('--ms-h', n);
+function setMsH(px, live){
+  const n = Math.max(24, Math.round(px));
+  const page = screen.querySelector('.md-page');
+  const sheet = screen.querySelector('.md-sheet');
+  if(page) page.style.setProperty('--ms-h', n+'px');
+  if(!sheet) return;
+  if(live){ sheet.style.height = n+'px'; return; }
+  /* Chrome 은 height 트랜지션 used value 가 시작 높이에 붙는다.
+     스냅은 트랜지션을 끄고 높이를 확정한 뒤 Handle 접힘을 적용한다. */
+  const prev = sheet.dataset.drag;
+  sheet.dataset.drag = '1';
+  sheet.style.height = n+'px';
+  void sheet.offsetHeight;
+  sheet.classList.toggle('is-stuck', n >= msExpand() - 8);
+  sheet.dataset.drag = prev || '0';
+}
+function snapSheet(h, dy, base){
+  const peek = msPeek(), mid = msFull(), exp = msExpand();
+  if(h < peek - DRAG_GO) return null;          /* 홈으로 */
+  const snaps = [peek, mid, exp];
+  if(dy < -DRAG_GO) return snaps.find(s => s > base + 8) || exp;           /* 위로 한 칸 */
+  if(dy >  DRAG_GO) return [...snaps].reverse().find(s => s < base - 8) || peek; /* 아래로 한 칸 */
+  return snaps.reduce((a,b)=> Math.abs(b-h) < Math.abs(a-h) ? b : a);
 }
 function bindSheetDrag(){
   const sheet = screen.querySelector('.md-sheet');
-  const handle = sheet && sheet.querySelector('.ms-handle');
-  if(!handle) return;
+  if(!sheet) return;
+  const grabs = [sheet.querySelector('.ms-handle'), sheet.querySelector('.ms-top')].filter(Boolean);
+  if(!grabs.length) return;
   let base = S.msH || msFull();
-  dragHandle(handle,
-    dy=>{
-      sheet.dataset.drag = '1';
-      screen.querySelector('.md-page')?.setAttribute('data-drag','1');
-      setMsH(Math.max(24, Math.min(msFull(), base - dy)));
-      mapNudge();
-    },
-    dy=>{
-      sheet.dataset.drag = '0';
-      screen.querySelector('.md-page')?.setAttribute('data-drag','0');
-      /* peek 보다 더 내리면 O2O 홈으로 돌아간다 */
-      if(base - dy < msPeek() - DRAG_GO){ S.msH = msFull(); go('cHome'); return; }
-      S.msH = dy > DRAG_GO ? msPeek() : (dy < -DRAG_GO ? msFull() : base);
-      setMsH(S.msH);
-      setTimeout(mapNudge, 260);
-    },
-    ()=>{ base = S.msH || msFull(); });
+  const onMove = dy=>{
+    sheet.dataset.drag = '1';
+    screen.querySelector('.md-page')?.setAttribute('data-drag','1');
+    const raw = base - dy;
+    const exp = msExpand();
+    const h = raw > exp ? exp + (raw-exp)*0.2 : Math.max(24, raw);
+    setMsH(h, true);
+    mapNudge();
+  };
+  const onEnd = dy=>{
+    screen.querySelector('.md-page')?.setAttribute('data-drag','0');
+    const next = snapSheet(base - dy, dy, base);
+    if(next == null){ S.msH = msFull(); go('cHome'); return; }
+    S.msH = next;
+    setMsH(S.msH);                 /* data-drag=1 인 채로 높이를 확정 */
+    sheet.dataset.drag = '0';
+    setTimeout(mapNudge, 260);
+  };
+  grabs.forEach(el => dragHandle(el, onMove, onEnd, ()=>{ base = S.msH || msFull(); }));
+  /* 리스트가 맨 위일 때 위로 끌면 expand, 아래로 끌면 접힘 — 스크롤과 한 제스처로 이어진다. */
+  const sc = sheet.querySelector('.ms-scroll');
+  if(!sc) return;
+  let pid = null, y0 = 0, pulling = false;
+  sc.addEventListener('pointerdown', e=>{
+    if(sc.scrollTop > 1) return;
+    pid = e.pointerId; y0 = e.clientY; pulling = false; base = S.msH || msFull();
+  });
+  sc.addEventListener('pointermove', e=>{
+    if(e.pointerId !== pid) return;
+    const dy = e.clientY - y0;
+    if(!pulling){
+      if(sc.scrollTop > 1){ pid = null; return; }
+      if(Math.abs(dy) < 10) return;
+      pulling = true;
+      try{ sc.setPointerCapture(pid); }catch(_){}
+    }
+    e.preventDefault();
+    onMove(dy);
+  }, {passive:false});
+  const endList = e=>{
+    if(e.pointerId !== pid) return;
+    const dy = e.clientY - y0;
+    pid = null;
+    if(!pulling) return;
+    pulling = false;
+    try{ sc.releasePointerCapture(e.pointerId); }catch(_){}
+    onEnd(dy);
+  };
+  sc.addEventListener('pointerup', endList);
+  sc.addEventListener('pointercancel', endList);
 }
 
 /* 핀 탭 — 라운지는 popover, 콘텐츠·업체 핀은 active 토글(+ 카드 동기화) */
@@ -7427,10 +7528,8 @@ function mdSheetTitle(){
                                 n:String((MD_CONTENTS[S.mdPin]||{cases:[]}).cases.length)};
   return {t:MD_TITLE, n:String(MD_COUNT)};
 }
-function mdSheetBody(){
-  const kind = mdSheetKind();
-  if(kind==='lounge')   return mdLoungeBody();
-  if(kind==='contents') return mdContentsBody();
+function mdSheetFilter(){
+  if(mdSheetKind()!=='partners') return '';
   return `<div class="ms-filter">
       <button class="ms-sort t-body14L18 w-regular" type="button">추천순${ic('IconChevronDown',18)}</button>
       <button class="ms-std" type="button">
@@ -7438,8 +7537,13 @@ function mdSheetBody(){
         <img class="msd-logo" src="${MD_ASSET}logo-standard-blue.svg" alt="오늘의집 스탠다드" width="121" height="20">
         ${ic('IconInfoCircle',16)}
       </button>
-    </div>
-    <div class="ms-list">
+    </div>`;
+}
+function mdSheetBody(){
+  const kind = mdSheetKind();
+  if(kind==='lounge')   return mdLoungeBody();
+  if(kind==='contents') return mdContentsBody();
+  return `<div class="ms-list">
       <div class="ms-adhead">
         <div class="ms-adrow">
           <span class="t-detail12L16 w-bold">프리미엄</span>
@@ -7452,9 +7556,10 @@ function mdSheetBody(){
 }
 function mdSheet(){
   const {t, n, icon} = mdSheetTitle();
-  return `<div class="md-sheet" role="region" aria-label="${t}">
+  const stuck = (S.msH || msFull()) >= msExpand() - 8;
+  return `<div class="md-sheet${stuck?' is-stuck':''}" role="region" aria-label="${t}" style="height:${S.msH || msFull()}px">
     <div class="ms-handle" aria-hidden="true"><i></i></div>
-    <div class="ms-scroll">
+    <div class="ms-stick">
       <div class="ms-top">
         <div class="mt-txt">
           ${icon?chOdsSvg('AssetOhouseSymbol/ohouse-symbol.svg', 20):''}
@@ -7462,6 +7567,9 @@ function mdSheet(){
           ${n?`<span class="t-body16L20 w-semibold">${n}</span>`:''}
         </div>
       </div>
+      ${mdSheetFilter()}
+    </div>
+    <div class="ms-scroll">
       ${mdSheetBody()}
     </div>
   </div>`;

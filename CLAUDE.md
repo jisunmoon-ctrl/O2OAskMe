@@ -1,4 +1,4 @@
-# O2OAskMe 프로젝트 지침
+# O2ONavigation 프로젝트 지침
 
 ## ODS 프로토타입 구현
 

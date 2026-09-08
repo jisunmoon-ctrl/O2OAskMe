@@ -1861,11 +1861,30 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   border:0;padding:12px 0;cursor:pointer;font-family:inherit;text-align:left;
   border-radius:12px;background:var(--ods-background-weak);
   display:flex;flex-direction:column;justify-content:space-between}
-.mbd-cta .mc-t{padding:0 12px;color:var(--ods-foreground)}
+.mbd-cta .mc-t{padding:0 12px;color:var(--ods-foreground);
+  display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .mbd-cta .mc-assets{display:flex;align-items:center;justify-content:space-between;padding:0 8px;width:100%;box-sizing:border-box}
 .mbd-cta .mc-assets img{width:48px;height:48px;object-fit:contain;display:block;flex:0 0 48px}
 .mbd-cta .mc-find{position:absolute;right:12px;bottom:12px;width:60px;height:60px;overflow:hidden}
 .mbd-cta .mc-find img{width:60px;height:60px;object-fit:contain;display:block}
+/* more · 전체 (1062:25516) — 48 박스 p4 안에 backgroundWeak r16 + Line3Horizontal 20 */
+.mb-a[data-all]{padding:4px;background:none;border-radius:0}
+.mb-a[data-all] i{flex:1;min-width:0;height:100%;box-sizing:border-box;
+  display:grid;place-items:center;padding:8px;border-radius:16px;
+  background:var(--ods-background-weak);color:var(--ods-foreground)}
+/* MenuAll 시안 A (983:29113) — 견적 148×206 + 우측 2단 · gap5 px16 */
+.mbd-sian{display:flex;align-items:stretch;gap:5px;padding:0 16px}
+.mbd-sian .ms-quote{flex:0 0 148px;width:148px;height:206px;padding:12px 0;
+  align-items:stretch}
+.mbd-sian .ms-quote .mc-ic{display:flex;justify-content:flex-end;padding:0 12px;width:100%;box-sizing:border-box}
+.mbd-sian .ms-quote .mc-ic img{width:72px;height:72px;object-fit:contain;display:block}
+.mbd-sian .ms-side{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.mbd-sian .ms-side .mbd-cta{flex:1 1 0;width:auto;height:auto;min-height:0;
+  flex-direction:row;align-items:center;gap:4px;padding:12px 8px 12px 12px}
+.mbd-sian .ms-side .mc-t{padding:0;flex:1;min-width:0}
+.mbd-sian .ms-side .mc-ic{flex:0 0 48px;width:48px;height:48px;overflow:hidden}
+.mbd-sian .ms-side .mc-ic img{width:48px;height:48px;object-fit:contain;display:block}
+.mbd-cta img[data-knock]{mix-blend-mode:screen}
 
 /* MenuAll (941:22756) — 파트너 찾기 CTA 169 + 2×2 부분시공 + 서비스 4종 */
 .mbd{padding-bottom:24px}
@@ -2309,7 +2328,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
       <div class="flow-tabs" role="tablist" aria-label="플로우 그룹">
         <button class="flow-tab" id="flowTabA" type="button" role="tab" data-flow="A" aria-pressed="false" hidden>Flow A</button>
         <button class="flow-tab" id="flowTabB" type="button" role="tab" data-flow="B" aria-pressed="false" hidden>Flow B</button>
-        <button class="flow-tab" id="flowTabC" type="button" role="tab" data-flow="C" aria-pressed="true">Flow C</button>
+        <button class="flow-tab" id="flowTabC" type="button" role="tab" data-flow="C" aria-pressed="true">네비게이션 Demo</button>
       </div>
       <div class="flow-views hidden" id="flowViewsA" hidden>
         <button class="preview-toggle" id="previewToggle1" type="button" title="Flow A · 기본 진입(상단 종합 상담 인풋)">
@@ -2330,13 +2349,17 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
       <div class="flow-views" id="flowViewsC">
         <button class="preview-toggle" id="previewToggle4" type="button" title="Flow C · O2O 홈(지도+번들) → 업체 목록 / 견적 / 지도">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-          화면 보기 - 4
+          테스트뷰
         </button>
       </div>
     </div>
     <section>
-      <h3 id="flowSectionTitle">FLOW C</h3>
+      <h3 id="flowSectionTitle">네비게이션 Demo</h3>
       <ol id="rail"></ol>
+    </section>
+    <section id="sianSection" class="panel-section">
+      <h3>시안</h3>
+      <ul id="sianMenu" class="panel-menu"></ul>
     </section>
     <section>
       <h3>CASE</h3>
@@ -2485,6 +2508,7 @@ const ODS_ASSET = {
   menuBox:      'assets/menu/box.png',                /* 가정·보관이사 */
   menuClean:    'assets/menu/cleaning.png',           /* 이사청소 */
   menuForm:     'assets/menu/form.png',               /* 간편 매칭 */
+  menuMatch:    'assets/menu/matching.png',           /* 시안 A 시공 견적 받기 — Figma 1062:25602 */
   menuFind:     'assets/menu/finding.png',            /* 홈 업체찾기 카드 — Figma 983:25400 */
   menuCalc:     'AssetCalculatorLargeGenuineBlueView2/image_240.png', /* 3D견적계산기 — Figma 174:3627 */
   menuFix:      'AssetHandDrillO2OLargeGenuineBlueView2/image_240.png',        /* 설치수리 — 시각보정 없음, CDN 유지 */
@@ -2788,7 +2812,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -2879,13 +2903,13 @@ function go(next){
   }
   S.screen=next; render(); screen.scrollTop=0;
 }
-function render(){ syncAuto(); renderFlowPanel(); renderRail(); renderCases(); renderO2hBranches();
+function render(){ syncAuto(); renderFlowPanel(); renderRail(); renderSianMenu(); renderCases(); renderO2hBranches();
   screen.innerHTML=''; screen.classList.remove('has-sheet'); VIEW[S.screen](); renderFabEntry(); renderO2hBottomBar(); }
 
 function renderFlowPanel(){
   const g = getFlowGroup();
   const title = $('#flowSectionTitle');
-  if(title) title.textContent = g==='C' ? 'FLOW C' : g==='B' ? 'FLOW B' : 'FLOW A';
+  if(title) title.textContent = g==='C' ? '네비게이션 Demo' : g==='B' ? 'FLOW B' : 'FLOW A';
   const tabA = $('#flowTabA'), tabB = $('#flowTabB'), tabC = $('#flowTabC');
   if(tabA) tabA.setAttribute('aria-pressed', g==='A');
   if(tabB) tabB.setAttribute('aria-pressed', g==='B');
@@ -3132,6 +3156,28 @@ function renderO2hBottomBar(){
     <span class="t-body16L20 w-semibold">우리집 시공/이사 견적 한번에 받기</span>${icCalc}
   </button>`;
   const btn=$('#o2hNudge'); if(btn) btn.onclick=()=> o2hEnterFunnel();
+}
+const C_SIANS = [
+  {id:'A', n:'시안 A'},
+  {id:'B', n:'시안 B'}
+];
+function renderSianMenu(){
+  const sec = $('#sianSection'), menu = $('#sianMenu');
+  if(!sec || !menu) return;
+  if(!isViewC()){ sec.classList.add('hidden'); return; }
+  sec.classList.remove('hidden');
+  const cur = S.cSian || 'A';
+  menu.innerHTML = C_SIANS.map(c=>
+    `<li><button data-sian="${c.id}"${cur===c.id?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`
+  ).join('');
+  menu.querySelectorAll('[data-sian]').forEach(b=> b.onclick=()=>{
+    S.cSian = b.dataset.sian;
+    S.cMenu = null;
+    S.cTab = 'home';
+    if(S.screen!=='cHome') go('cHome');
+    else render();
+    setMenuOpen(false);
+  });
 }
 function renderCases(){
   const menu = $('#caseMenu');
@@ -6051,6 +6097,7 @@ function resetFlowC(){
   S.cRChip = 1;      /* 최신 리뷰 = 부분시공 (931:14355) */
   S.cPartRv = 0;     /* 부분 시공 리뷰 = 전체 */
   S.cScrap = new Set();
+  S.cSian = S.cSian || 'A';
   S.cMenu = null;    /* 메뉴 숏컷 empty 화면 */
   if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer=null; }
   S.cOfferBg = chPickOfferBg(5);   /* 배너 슬라이드 배경 랜덤 배치 */
@@ -6372,8 +6419,8 @@ const chPartnerCard = (p) => `<article class="ch-pcard">
 const mbAsset = (m) => m.a ? `<img src="${assetSrc(m.a)}" alt="">`
                      : m.ic ? ic(m.ic, 24) : '';
 const mbItem = (m) => `<button class="mb-item" type="button" data-menu="${m.l}" data-url="${m.u || ''}">
-  <span class="mb-a"${m.more?' data-more':m.box?' data-box':''}>${
-    m.more ? `<i>${ic('IconChevronDown',20)}</i>` : mbAsset(m)}</span>
+  <span class="mb-a"${m.all?' data-all':m.more?' data-more':m.box?' data-box':''}>${
+    m.all ? `<i>${ic('IconLine3Horizontal',20)}</i>` : m.more ? `<i>${ic('IconChevronDown',20)}</i>` : mbAsset(m)}</span>
   <span class="mb-l t-detail13L18 w-medium">${m.l}</span>
 </button>`;
 const mbRow = (items, wrap) => `<div class="mbd-row"${wrap?' data-wrap':''}>${items.map(mbItem).join('')}</div>`;
@@ -6391,6 +6438,7 @@ const O2O_URL = {
   repair:   'https://o2o.ohou.se/repair',                     /* 설치수리 */
   internet: 'https://lifecycle.ohou.se/rental/internet',      /* 인터넷 설치 */
   calc:     'https://ohou.se/experts/calculator',             /* 3D견적계산기 — 홈 MenuAll */
+  direct:   'https://o2o.ohou.se/remodeling/direct-part/intro?inflow=RMD_EASYAPPLY_GUIDE_PART&tab=kitchen',
   /* 아래는 전달받은 목록에는 있으나 현재 메뉴 번들에 대응 숏컷이 없다 */
   ranks:    'https://o2o.ohou.se/remodeling/goods/ranks',     /* 시공자재 랭킹 */
   hometour: 'https://o2o.ohou.se/hometour/home/list',         /* 집보기 체크리스트 */
@@ -6407,6 +6455,7 @@ const MB_HOME_SVC = [
   {l:'전체시공',   a:'menuFull', u:O2O_URL.full}, {l:'부분시공',    a:'menuPart', u:O2O_URL.part},
   {l:'이사·청소',  a:'menuMove', u:O2O_URL.moving}, {l:'인터넷·렌탈', a:'menuNet', u:O2O_URL.internet},
 ];
+const MB_HOME_ALL = [...MB_HOME_SVC, {l:'전체', all:true, u:O2O_URL.full}];
 /* 홈 3행 (Figma 983:23343) — 주방·도배·마루·장판 + 3D견적계산기 */
 const MB_HOME_PART = [
   {l:'주방', a:'photoKitchen', u:O2O_URL.part}, {l:'도배', a:'photoWallIso', u:O2O_URL.part},
@@ -6425,22 +6474,59 @@ const MB_MOVE = [
   {l:'원룸·소형이사', a:'menuMove',  u:O2O_URL.moving}, {l:'가정·보관이사', a:'menuBox', u:O2O_URL.moving},
   {l:'이사청소',      a:'menuClean', u:O2O_URL.clean},  {l:'설치수리',      a:'menuFix', u:O2O_URL.repair},
 ];
-/* MenuAll (941:22756) — 인테리어 시공 파트너 찾기 + 주방·도배·마루·장판 + 서비스 4종 */
-function mbHome(){
-  const mini = [
-    {l:'주방', a:'photoKitchen', u:O2O_URL.part}, {l:'도배', a:'photoWallIso', u:O2O_URL.part},
-    {l:'마루', a:'photoFloor', u:O2O_URL.part}, {l:'장판', a:'photoVinylIso', u:O2O_URL.part},
-  ];
+/* MenuAll 시안 A (983:29113) — 견적 148×206 + 업체찾기/직시공 2단 + 서비스 5종 */
+function mbHomeA(){
   return `<div class="mbd">
-    <div class="mbd-hero">
-      <button class="mbd-find" type="button" data-pf="home">
-        <span class="mc-t t-body16L20 w-semibold">인테리어 시공<br>파트너 찾기</span>
-        <span class="mc-find"><img src="${assetSrc('menuFind')}" alt="" width="68" height="68"></span>
+    <div class="mbd-sian">
+      <button class="mbd-cta ms-quote" type="button" data-sian-go="quote">
+        <span class="mc-t">
+          <b class="t-body16L20 w-semibold">시공 견적 받기</b>
+          <span class="mc-sub t-detail13L18 w-regular">여러 업체에게 견적 받기</span>
+        </span>
+        <span class="mc-ic"><img src="${assetSrc('menuMatch')}" alt="" width="72" height="72" data-knock></span>
       </button>
-      <div class="mbd-mini">${mini.map(mbItem).join('')}</div>
+      <div class="ms-side">
+        <button class="mbd-cta" type="button" data-sian-go="find">
+          <span class="mc-t">
+            <b class="t-body16L20 w-semibold">시공업체 찾기</b>
+            <span class="mc-sub t-detail13L18 w-regular">인기/추천 업체 찾기</span>
+          </span>
+          <span class="mc-ic"><img src="${assetSrc('menuFind')}" alt="" width="48" height="48"></span>
+        </button>
+        <button class="mbd-cta" type="button" data-sian-go="direct">
+          <span class="mc-t">
+            <b class="t-body16L20 w-semibold">오늘의집 직시공</b>
+            <span class="mc-sub t-detail13L18 w-regular">주방, 도배, 마루,장판</span>
+          </span>
+          <span class="mc-ic"><img src="${assetSrc('photoKitchen')}" alt="" width="48" height="48"></span>
+        </button>
+      </div>
     </div>
-    ${mbRow(MB_HOME_SVC)}
+    ${mbRow(MB_HOME_ALL)}
   </div>`;
+}
+/* MenuAll 시안 B (983:23229) — 견적/업체찾기 2열 h144 + 서비스 5종 */
+function mbHomeB(){
+  return `<div class="mbd">
+    <div class="mbd-all">
+      <button class="mbd-cta" type="button" data-sian-go="quote">
+        <span class="mc-t t-body16L20 w-semibold">시공 견적 받기</span>
+        <span class="mc-assets">
+          <img src="${assetSrc('photoKitchen')}" alt="" width="48" height="48">
+          <img src="${assetSrc('photoWallIso')}" alt="" width="48" height="48">
+          <img src="${assetSrc('photoFloor')}" alt="" width="48" height="48">
+        </span>
+      </button>
+      <button class="mbd-cta" type="button" data-sian-go="find">
+        <span class="mc-t t-body16L20 w-semibold">업체찾기</span>
+        <span class="mc-find"><img src="${assetSrc('menuFind')}" alt="" width="60" height="60"></span>
+      </button>
+    </div>
+    ${mbRow(MB_HOME_ALL)}
+  </div>`;
+}
+function mbHome(){
+  return (S.cSian==='B' ? mbHomeB() : mbHomeA());
 }
 
 /* ── 사례·리뷰 카드 (863:10948) ── */
@@ -6908,6 +6994,13 @@ function bindCHome(){
     render();
   });
   screen.querySelector('[data-pf="home"]')?.addEventListener('click', ()=>{ S.cMenu=null; go('cPfHome'); });
+  screen.querySelectorAll('[data-sian-go]').forEach(b=> b.onclick=()=>{
+    const goTo = b.dataset.sianGo;
+    S.cMenu = null;
+    if(goTo==='quote'){ pfReset('full'); go('cPfFull'); return; }
+    if(goTo==='find'){ go('cPfHome'); return; }
+    if(goTo==='direct'){ window.open(O2O_URL.direct, '_blank', 'noopener'); }
+  });
   screen.querySelector('[data-pf-compare]')?.addEventListener('click', ()=> go('cPfCompare'));
   /* 칩·필터·스크랩은 같은 화면 안의 상태 변경이므로 스크롤 위치를 유지한다. */
   const keepScroll = fn => (...a)=>{ const y = screen.scrollTop; fn(...a); render(); screen.scrollTop = y; };

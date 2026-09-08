@@ -1867,6 +1867,168 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-cta .mc-find{position:absolute;right:12px;bottom:12px;width:60px;height:60px;overflow:hidden}
 .mbd-cta .mc-find img{width:60px;height:60px;object-fit:contain;display:block}
 
+/* MenuAll (941:22756) — 파트너 찾기 CTA 169 + 2×2 부분시공 + 서비스 4종 */
+.mbd{padding-bottom:24px}
+.mbd-hero{display:flex;align-items:stretch;gap:12px;padding:0 16px}
+.mbd-find{flex:0 0 169px;width:169px;min-height:152px;position:relative;overflow:hidden;
+  border:0;padding:12px;cursor:pointer;font-family:inherit;text-align:left;
+  border-radius:12px;background:var(--ods-background-weak);
+  display:flex;flex-direction:column;align-items:flex-start}
+.mbd-find .mc-t{color:var(--ods-foreground)}
+.mbd-find .mc-find{position:absolute;right:4px;bottom:4px;width:68px;height:68px;overflow:hidden}
+.mbd-find .mc-find img{width:68px;height:68px;object-fit:contain;display:block}
+.mbd-mini{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mbd-mini .mb-item{flex:none;min-width:0;height:auto;justify-content:flex-start;gap:4px}
+
+/* 파트너 찾기홈 · 업체 비교 (1039:19639 / 892:15126)
+   ATF_Apply (1039:21626) — py20 · title↔bundle gap24 · 6×2 가로스크롤 · 메뉴 73×72 */
+.pf-page{height:100%;min-height:100%;overflow:hidden;display:flex;flex-direction:column;
+  background:var(--ods-background);position:relative}
+.pf-scroll{flex:1;min-height:0;overflow-y:auto}
+.pf-page > .ch-compare{position:relative;bottom:auto;flex:0 0 auto;margin:0 8px 8px;border-radius:4px;z-index:8}
+.pf-atf{display:flex;flex-direction:column;gap:24px;padding:20px 0}
+.pf-atf .pf-h{padding:0 16px;text-align:center;color:var(--ods-foreground)}
+.pf-menus{display:grid;grid-template-columns:repeat(6,73px);gap:6px;overflow-x:auto;
+  padding:0 16px 16px;scrollbar-width:none}
+.pf-menus::-webkit-scrollbar{display:none}
+.pf-menu{width:73px;position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;
+  border:0;background:none;padding:0;cursor:pointer;font-family:inherit;border-radius:8px}
+.pf-menu .pf-a{width:73px;height:72px;flex:0 0 auto;box-sizing:border-box;padding:8px;border-radius:8px;
+  background:var(--ods-background-weak);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pf-menu .pf-a img{width:100%;height:100%;object-fit:contain;display:block}
+.pf-menu .pf-l{width:100%;text-align:center;color:var(--ods-foreground);word-break:break-word}
+.pf-menu .pf-badge{position:absolute;top:0;right:0;z-index:1;pointer-events:none}
+.pf-menu .pf-badge .ods-sqbadge{height:14px;width:33px;padding:0 2px;box-sizing:border-box;
+  border-radius:0 8px 0 2px;font-weight:500}
+.pf-filter{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 16px;
+  height:48px;box-sizing:border-box}
+.pf-filter .pf-left{display:flex;align-items:center;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.pf-filter .pf-left::-webkit-scrollbar{display:none}
+.pf-filter .pf-std{display:inline-flex;align-items:center;gap:4px}
+.pf-filter .pf-std img{width:12px;height:12px;display:block;flex:0 0 12px}
+.pf-filter .pf-std .ods-chip-label{color:var(--ods-accent-blue)}
+.pf-filter .pf-sort{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:0;
+  border:0;background:none;padding:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
+/* 우리동네 플러스 (1039:21768) — p16 · 타이틀 pb16 · 카드 300 · 화살표 없음 */
+.ch-bundle.pf-plus{padding:16px 0}
+.pf-plus .ch-mtitle{padding:0 16px 16px}
+.pf-plus .mt-t{line-height:22px}
+.pf-hrail{padding-bottom:0}
+.pf-hrail .cfirm{flex:0 0 300px}
+/* Bundle/partner 유료 (1039:19747) — px16 pb24 · 카드 gap 36 */
+.ch-bundle.pf-paid{padding-bottom:24px}
+.pf-list{padding:0 16px 24px;display:flex;flex-direction:column}
+.pf-paid .pf-list{padding:0 16px;gap:36px}
+.pf-page .ods-gridthumb{grid-template-columns:226px minmax(0,1fr);height:140px}
+
+/* 상담 신청폼 (1039:26657 외) */
+.ap-page{min-height:100%;display:flex;flex-direction:column;background:var(--ods-background);position:relative}
+.ap-prog{height:6px;background:var(--ods-background-weak);flex:0 0 6px}
+.ap-prog i{display:block;height:100%;background:var(--ods-background-brand);width:var(--ap-p,12%)}
+.ap-body{flex:1;min-height:0;overflow-y:auto;padding:24px 16px 24px}
+.ap-q{color:var(--ods-foreground);margin-bottom:16px}
+.ap-sub{color:var(--ods-foreground-weak);margin:-8px 0 16px}
+.ap-step{display:inline-flex;align-items:center;height:24px;padding:0 8px;margin-bottom:6px;
+  border-radius:var(--ods-radius-full);background:var(--ods-background-weak);color:var(--ods-foreground-weak)}
+.ap-opt{display:flex;align-items:center;gap:8px;width:100%;min-height:24px;padding:8px 0;
+  border:0;background:none;cursor:pointer;font-family:inherit;text-align:left;color:var(--ods-foreground)}
+.ap-dot{flex:0 0 20px;width:20px;height:20px;border-radius:9999px;box-sizing:border-box;
+  border:1.5px solid var(--ods-border);background:var(--ods-background);position:relative}
+.ap-opt[aria-pressed="true"] .ap-dot{border-color:var(--ods-border-brand)}
+.ap-opt[aria-pressed="true"] .ap-dot::after{content:'';position:absolute;inset:4px;border-radius:9999px;
+  background:var(--ods-background-brand)}
+.ap-note{margin-top:8px;padding:20px;border-radius:4px;background:var(--ods-background-weak);color:var(--ods-foreground-weak)}
+.ap-work{display:flex;gap:12px;align-items:flex-start;padding:4px 0 16px;width:100%;
+  border:0;background:none;cursor:pointer;font-family:inherit;text-align:left;color:var(--ods-foreground)}
+.ap-work .ap-wt{flex:1;min-width:0;display:flex;flex-direction:column;gap:0}
+.ap-work img{flex:0 0 80px;width:80px;height:80px;border-radius:4px;object-fit:cover;display:block;background:var(--ods-background-weak)}
+.ap-wheel{display:flex;align-items:center;justify-content:center;gap:8px;padding:24px 0 8px}
+.ap-wheel .aw-col{width:64px;height:160px;overflow:hidden;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.ap-wheel .aw-col::before,.ap-wheel .aw-col::after{content:'';position:absolute;left:0;right:0;height:1px;
+  background:var(--ods-border);z-index:1}
+.ap-wheel .aw-col::before{top:60px}
+.ap-wheel .aw-col::after{top:100px}
+.ap-wheel .aw-n{color:var(--ods-foreground-weak);text-align:center;width:100%}
+.ap-wheel .aw-n[data-on]{color:var(--ods-foreground)}
+.ap-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px 0;padding:8px 0 16px}
+.ap-cal .aw-h,.ap-cal button{height:40px;display:grid;place-items:center;border:0;background:none;
+  font-family:inherit;color:var(--ods-foreground-weak);cursor:pointer}
+.ap-cal button{border-radius:9999px;color:var(--ods-foreground)}
+.ap-cal button[aria-pressed="true"]{background:var(--ods-background-brand);color:var(--ods-foreground-inverse)}
+.ap-addr{display:flex;gap:4px;align-items:stretch}
+.ap-addr .ods-input{flex:1;min-width:0}
+.ap-addr-box{margin-top:16px;padding:12px;border-radius:4px;background:var(--ods-background-weak);
+  display:flex;gap:8px;align-items:flex-start;color:var(--ods-foreground-weak)}
+.ap-addr-box b{color:var(--ods-foreground);display:block;margin-top:8px;font-weight:500}
+.ap-svc{margin-top:24px;padding:20px;border-radius:4px;background:var(--ods-background-weak);color:var(--ods-foreground-weak)}
+.ap-field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.ap-ta{width:100%;min-height:104px;padding:16px;border:1px solid var(--ods-border);border-radius:4px;
+  font-family:inherit;color:var(--ods-foreground);resize:none;outline:none;background:var(--ods-background)}
+.ap-ta:focus{border-color:var(--ods-border-strong)}
+.ap-guide{margin-top:24px;padding-top:24px;border-top:1px solid var(--ods-border)}
+.ap-guide .ag-i{display:flex;gap:12px;align-items:flex-start;padding:4px 0}
+.ap-guide .ag-n{flex:0 0 20px;width:20px;height:20px;border-radius:9999px;background:var(--ods-background-weak);
+  display:grid;place-items:center;color:var(--ods-foreground)}
+.ap-guide .ag-i{align-items:flex-start}
+.ap-guide .ag-i .ag-sub{display:block;margin-top:2px;padding-left:0;color:var(--ods-foreground-weak)}
+.ap-callout{display:flex;align-items:center;gap:4px;padding:12px 16px;margin:0 0 16px;
+  border-radius:6px;background:var(--ods-background-weak);color:var(--ods-foreground)}
+.ap-phone{display:flex;gap:8px;align-items:flex-start}
+.ap-phone .ap-pre{flex:0 0 90px;width:90px}
+.ap-phone .ods-input{flex:1;min-width:0}
+.ap-legal{display:flex;flex-direction:column;gap:12px;padding:24px 0 48px}
+.ap-legal .ap-li{display:flex;gap:4px;align-items:flex-start;color:var(--ods-foreground-weak)}
+.ap-sec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.ap-drop[data-ph]{color:var(--ods-foreground-disabled)}
+.ap-ov{position:absolute;inset:0;z-index:12;background:var(--ods-background-dim);
+  display:flex;flex-direction:column;justify-content:flex-end}
+.ap-sheet{background:var(--ods-background);border-radius:12px 12px 0 0;max-height:80%;
+  display:flex;flex-direction:column;min-height:50%}
+.ap-sheet .am-h{height:54px;display:flex;align-items:center;justify-content:center;position:relative;
+  border-bottom:1px solid var(--ods-border);color:var(--ods-foreground);flex:0 0 auto}
+.ap-sheet .am-h button{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border:0;background:none;color:var(--ods-foreground);cursor:pointer;display:grid;place-items:center}
+.ap-sheet .am-list{flex:1;overflow-y:auto}
+.ap-agree{display:flex;align-items:center;gap:6px;margin-top:16px;width:100%;border:0;background:none;
+  cursor:pointer;font-family:inherit;text-align:left;color:var(--ods-foreground)}
+.ap-dock{flex:0 0 auto;display:flex;gap:6px;padding:6px;background:var(--ods-background)}
+.ap-dock .ods-btn[data-back]{flex:0 0 107px;width:107px}
+.ap-dock .ods-btn[data-next]{flex:1}
+.ap-tip{position:absolute;right:16px;bottom:78px;z-index:4;display:flex;align-items:flex-end;gap:8px;
+  max-width:220px;pointer-events:auto}
+.ap-tip .at-b{background:var(--ods-background-inverse);color:var(--ods-foreground-inverse);
+  border-radius:8px;padding:8px 10px;position:relative}
+.ap-tip .at-x{position:absolute;top:6px;right:6px;width:14px;height:14px;border:0;padding:0;
+  background:none;color:var(--ods-foreground-inverse);cursor:pointer;display:grid;place-items:center}
+.ap-tip img{width:56px;height:56px;border-radius:9999px;object-fit:cover;display:block;background:var(--ods-background-weak)}
+.ap-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ap-sec{margin-bottom:24px}
+.ap-sec .as-t{color:var(--ods-foreground)}
+.ap-sec .as-s{color:var(--ods-foreground-weak);margin-top:6px}
+.ap-drop{margin-top:8px;height:44px;width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:0 12px;border:1px solid var(--ods-border);border-radius:4px;background:var(--ods-background);
+  font-family:inherit;color:var(--ods-foreground);cursor:pointer;text-align:left}
+.ap-done{flex:1;display:flex;flex-direction:column;min-height:0}
+.ap-done .ad-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:12px;padding:24px 16px}
+.ap-done .ad-ic{color:var(--ods-foreground-brand)}
+.ap-sum{margin:0 16px 24px;padding:16px 20px;border-radius:4px;background:var(--ods-background-weak);text-align:left}
+.ap-sum .as-cap{color:var(--ods-foreground-weak);margin-bottom:12px}
+.ap-sum .as-row{display:grid;grid-template-columns:72px 1fr;gap:8px 20px;padding:4px 0;color:var(--ods-foreground)}
+.ap-sum .as-row span:first-child{color:var(--ods-foreground-weak);position:relative;padding-left:8px}
+.ap-sum .as-row span:first-child::before{content:'';position:absolute;left:0;top:8px;width:2px;height:2px;
+  border-radius:9999px;background:var(--ods-foreground-weak)}
+.ap-modal{position:absolute;inset:0;z-index:12;background:var(--ods-background);display:flex;flex-direction:column}
+.ap-modal .am-h{height:54px;display:flex;align-items:center;justify-content:center;position:relative;
+  border-bottom:1px solid var(--ods-border);color:var(--ods-foreground)}
+.ap-modal .am-h button{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border:0;background:none;color:var(--ods-foreground);cursor:pointer;display:grid;place-items:center}
+.ap-modal .am-list{flex:1;overflow-y:auto}
+.ap-modal .am-i{width:100%;height:55px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;
+  border:0;border-bottom:1px solid var(--ods-border);background:none;font-family:inherit;
+  color:var(--ods-foreground);cursor:pointer;text-align:left}
+
 /* ═══ BannerProductList (941:23785) ═══════════════════════════════
    ModuleTitle → Container(가로 레일). Product Container 하나 = 배너 280×168 + gap8 + 상품 3개(각 h68).
    배너는 사진 위에 하단 Dim Gradient 를 깔고 타이틀·서브를 아래 정렬한다. */
@@ -2329,6 +2491,12 @@ const ODS_ASSET = {
   photoWallIso: 'AssetPhotoWallpaperIsometric/image_240.webp',                 /* 도배 */
   photoDoor:    'AssetPhotoDoorLarge/image_240.png',                           /* 중문도어 */
   photoLamp:    'AssetPhotoPendantLampIsometric/image_240.webp',               /* 조명 */
+  houseDrillO2O:'AssetHouseWithDrillO2OLargeGenuineBlueView3/image_240.png',   /* 집 전체·턴키 — Figma 1039:21621 */
+  photoFilm:    'assets/menu/glossy-film.png',                                 /* 시트필름 — Figma 1039:21698 */
+  photoBlind:   'AssetPhotoVenetianBlindIsometric/image_240.webp',             /* 커튼블라인드 */
+  photoWindow:  'AssetPhotoWindowChassisIsometric/image_240.webp',             /* 창호/샷시 */
+  photoTile:    'AssetPhotoBathroomTilesLarge/image_240.png',                  /* 타일 */
+  photoPaint:   'AssetPhotoPaintCanIsometric/image_240.webp',                  /* 페인트 */
   gridAll:      'AssetSquareGrid2x2SmallDarkGray/square-grid-2x2-small-dark-gray.svg'  /* 전체 */
 };
 const assetSrc = (key) => {
@@ -2389,9 +2557,9 @@ const cautionBox = ({title, desc, tone='default', style=''}) =>
     ${title&&desc?`<div class="cb-desc">${desc}</div>`:''}
   </div>`;
 /* prototype-ods · TopNavigation */
-const topNav = ({title, backId='', right=''}) =>
+const topNav = ({title, backId='', right='', close=false}) =>
   `<div class="ods-topnav" data-center="fluid">
-    <div class="tn-left">${backId?`<button class="ods-iconbtn" id="${backId}" aria-label="뒤로">${ic('IconChevronLeft',24)}</button>`:''}</div>
+    <div class="tn-left">${backId?`<button class="ods-iconbtn" id="${backId}" aria-label="${close?'닫기':'뒤로'}">${ic(close?'IconX':'IconChevronLeft',24)}</button>`:''}</div>
     <div class="tn-center"><span class="tn-title">${title}</span></div>
     <div class="tn-right">${right}</div>
   </div>`;
@@ -2605,19 +2773,22 @@ const isReserve = () => { const d=dday(); return d==null || d>45; };
 const LABELS = {entry:'진입',select:'서비스 선택',loading:'정보 항목 구성',form:'정보 입력',
   branch:'견적서 확인',list:'상담 내역'};
 const O2H_LABELS = {o2hHome:'O2O 홈', o2hSelect:'서비스 선택', o2hForm:'주소·일정', o2hOrder:'예상견적 확인', o2hApply:'비교견적 신청'};
-/* Flow C — 01 O2O Home → 02 Map Discovery → 03 시공 신청폼(메뉴만, 플로우 미연결) */
-const C_LABELS = {cHome:'O2O Home', cMapDisc:'Map Discovery', cApply:'시공 신청폼'};
+/* Flow C — 01 O2O Home → 02 Map Discovery → 파트너 찾기 → 집 전체/부분 신청 → 업체 비교 */
+const C_LABELS = {
+  cHome:'O2O Home', cMapDisc:'Map Discovery',
+  cPfHome:'파트너 찾기', cPfFull:'집 전체 신청', cPfPart:'부분시공 신청', cPfCompare:'업체 비교'
+};
 /* 02 서비스 선택 ~ 06 상담 내역. 견적서 확인 → 상담 신청 완료 → 상담 내역(매칭 리스트). */
 const PHASE1 = ['entry','select','loading','form','branch','list'];
 const PHASE3 = ['o2hHome','o2hSelect','o2hForm','o2hOrder','o2hApply'];
-const PHASE4 = ['cHome','cMapDisc','cApply'];
+const PHASE4 = ['cHome','cMapDisc','cPfHome','cPfFull','cPfPart','cPfCompare'];
 const isView3 = () => document.body.classList.contains('view3');
 const isViewC = () => document.body.classList.contains('view4');
 const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -2702,6 +2873,10 @@ const pickedList = () => [...S.picked];
 function go(next){
   S.sheet = null; S.o2hSheet = null;    /* 화면을 옮기면 열린 시트는 닫는다 */
   if(hasDraft()) setStage('draft');
+  /* 파트너 찾기 디폴트: 신청완료에서 시드된 스크랩이 홈에 새지 않게 진입 시 비운다 */
+  if(next==='cPfHome' && S.screen!=='cPfHome'){
+    [...S.cScrap].filter(id=>String(id).startsWith('pf')).forEach(id=>S.cScrap.delete(id));
+  }
   S.screen=next; render(); screen.scrollTop=0;
 }
 function render(){ syncAuto(); renderFlowPanel(); renderRail(); renderCases(); renderO2hBranches();
@@ -2732,6 +2907,8 @@ function renderRail(){
       if(step==='o2hForm' && S.picked.size){ o2hStartFunnel(); setMenuOpen(false); return; }
       if(step==='o2hOrder') S.o2hProgress = true;
     }
+    if(step==='cPfFull') pfReset('full');
+    if(step==='cPfPart') pfReset('part');
     go(step);
     setMenuOpen(false);
   });
@@ -5839,6 +6016,32 @@ const C_CASES = [
   {id:'L3', n:'콘텐츠 핀 선택',     pin:'ct1'},
   {id:'L4', n:'라운지 핀 선택',     pin:'lounge'}
 ];
+function pfReset(kind){
+  S.pf = {
+    kind: kind || 'full',
+    step: 0,
+    space: '',
+    pyeong: 24,
+    situation: '',
+    work: 'full',
+    date: 15,
+    addr: '경기도 용인시 수지구 신봉2로 26 (신봉동, 신봉마을엘지자이1차아파트)',
+    addrQ: '',
+    addrFilled: false,
+    addrModal: false,
+    items: kind==='part' ? ['도배'] : [],
+    houseType: '',
+    sizeChip: '',
+    live: '',
+    name: '홍길동',
+    phoneHead: '010',
+    phoneTail: '1234-5678',
+    callTime: '언제든 괜찮아요',
+    memo: '',
+    agree: false,
+    tip: true
+  };
+}
 function resetFlowC(){
   S.cTab = 'home';
   S.cPChip = 0;      /* 집 전체시공 (846:52869 selected) */
@@ -5856,6 +6059,7 @@ function resetFlowC(){
   S.msH = msFull();
   S.ans = {addr:['서울/경기'], size:['30평대']};
   S.picked = new Set(['full']);
+  pfReset('full');
 }
 
 /* ══════════════ Flow C — O2O 홈 (Figma 868:18466 default / 892:15126 sticky) ══════════════
@@ -6140,9 +6344,9 @@ const chScrap = (id) => {
 };
 
 /* ── ModuleTitle (868:14703) — ODS Section + Section Arrow Button ── */
-const chModuleTitle = (html) => `<div class="ch-mtitle">
+const chModuleTitle = (html, {arrow=true}={}) => `<div class="ch-mtitle">
   <b class="mt-t t-heading17 w-semibold">${html}</b>
-  <button class="mt-arrow" type="button" aria-label="더보기">${ic('IconArrowRight',16)}</button>
+  ${arrow?`<button class="mt-arrow" type="button" aria-label="더보기">${ic('IconArrowRight',16)}</button>`:''}
 </div>`;
 
 /* ── 파트너 카드 (846:52878) ── */
@@ -6221,25 +6425,21 @@ const MB_MOVE = [
   {l:'원룸·소형이사', a:'menuMove',  u:O2O_URL.moving}, {l:'가정·보관이사', a:'menuBox', u:O2O_URL.moving},
   {l:'이사청소',      a:'menuClean', u:O2O_URL.clean},  {l:'설치수리',      a:'menuFix', u:O2O_URL.repair},
 ];
-/* MenuAll (983:23229 varients2) — 간편 견적받기·업체찾기 카드 + 서비스 4종 + 주방·도배·마루·장판·3D견적계산기 */
+/* MenuAll (941:22756) — 인테리어 시공 파트너 찾기 + 주방·도배·마루·장판 + 서비스 4종 */
 function mbHome(){
+  const mini = [
+    {l:'주방', a:'photoKitchen', u:O2O_URL.part}, {l:'도배', a:'photoWallIso', u:O2O_URL.part},
+    {l:'마루', a:'photoFloor', u:O2O_URL.part}, {l:'장판', a:'photoVinylIso', u:O2O_URL.part},
+  ];
   return `<div class="mbd">
-    <div class="mbd-all">
-      <button class="mbd-cta" type="button" data-menu="간편 견적받기" data-url="${O2O_URL.disc}">
-        <span class="mc-t t-body16L20 w-semibold">인테리어<br>간편 견적받기</span>
-        <span class="mc-assets">
-          <img src="${assetSrc('photoKitchen')}" alt="" width="48" height="48">
-          <img src="${assetSrc('photoWallIso')}" alt="" width="48" height="48">
-          <img src="${assetSrc('photoFloor')}" alt="" width="48" height="48">
-        </span>
+    <div class="mbd-hero">
+      <button class="mbd-find" type="button" data-pf="home">
+        <span class="mc-t t-body16L20 w-semibold">인테리어 시공<br>파트너 찾기</span>
+        <span class="mc-find"><img src="${assetSrc('menuFind')}" alt="" width="68" height="68"></span>
       </button>
-      <button class="mbd-cta" type="button" data-find data-menu="업체 찾기" data-url="${O2O_URL.disc}">
-        <span class="mc-t t-body16L20 w-semibold">업체 찾기</span>
-        <span class="mc-find"><img src="${assetSrc('menuFind')}" alt="" width="60" height="60"></span>
-      </button>
+      <div class="mbd-mini">${mini.map(mbItem).join('')}</div>
     </div>
     ${mbRow(MB_HOME_SVC)}
-    ${mbRow(MB_HOME_PART)}
   </div>`;
 }
 
@@ -6687,7 +6887,7 @@ function chCompareBar(){
   return `<div class="ch-compare" role="status">
     <span class="cc-av">${picked.slice(0,2).map(p=>`<i style="background-image:url('${p.img}')"></i>`).join('')}</span>
     <span class="cc-t t-body14L18 w-medium">${picked.length}개 비교중 ${ic('IconChevronDown',16)}</span>
-    <button class="cc-btn t-detail13L18 w-semibold" type="button">비교하기</button>
+    <button class="cc-btn t-detail13L18 w-semibold" type="button" data-pf-compare>비교하기</button>
   </div>`;
 }
 
@@ -6707,6 +6907,8 @@ function bindCHome(){
     S.cMenu = {l:b.dataset.menu, u:b.dataset.url};
     render();
   });
+  screen.querySelector('[data-pf="home"]')?.addEventListener('click', ()=>{ S.cMenu=null; go('cPfHome'); });
+  screen.querySelector('[data-pf-compare]')?.addEventListener('click', ()=> go('cPfCompare'));
   /* 칩·필터·스크랩은 같은 화면 안의 상태 변경이므로 스크롤 위치를 유지한다. */
   const keepScroll = fn => (...a)=>{ const y = screen.scrollTop; fn(...a); render(); screen.scrollTop = y; };
   screen.querySelectorAll('[data-chpchip]').forEach(b=> b.onclick=keepScroll(()=>{ S.cPChip=+b.dataset.chpchip; }));
@@ -7614,19 +7816,447 @@ VIEW.cMapDisc = ()=>{
   });
 };
 
-/* ══════════ 03 시공 신청폼 ════════════════════════════════════════
-   메뉴만 신설한 단계 — 플로우(문항·제출)는 아직 연결하지 않는다. */
-VIEW.cApply = ()=>{
-  screen.innerHTML = `<div class="md-todo">
-    ${topNav({title:'시공 신청폼', backId:'mdBack2'})}
-    <div class="mt-body">
-      ${asset('houseDrill',96)}
-      <b class="t-heading18 w-semibold">시공 신청폼</b>
-      <p class="t-body14L18">메뉴만 먼저 신설한 단계예요.<br>입력 플로우는 아직 연결하지 않았습니다.</p>
+/* ══════════ 파트너 찾기 · 신청 · 비교 (Figma 1039:19639 외) ══════════ */
+function pfNeed(){ if(!S.pf) pfReset('full'); return S.pf; }
+const PF_CARD = {
+  badges: [['책임보장','green-subtle'],['스탠다드','blue-subtle']],
+  star: '5.0',
+  reviews: '계약자리뷰 9,999개',
+  note: '최근계약 15건',
+};
+function pfFirms(seed, n, prefix, names){
+  return mkFirms(seed, n).map((f,i)=>({
+    ...f, ...PF_CARD, id:prefix+i, name: names?.[i] || f.name, img:f.imgs[0],
+  }));
+}
+function pfFirmPool(){ return [...pfFirms('pf.hot',2,'pfh'), ...pfFirms('pf.list',6,'pfl')]; }
+function pfCompareBar(){
+  const picked = pfFirmPool().filter(p=>S.cScrap.has(p.id));
+  if(!picked.length) return '';
+  return `<div class="ch-compare" role="status">
+    <span class="cc-av">${picked.slice(0,2).map(p=>`<i style="background-image:url('${p.img}')"></i>`).join('')}</span>
+    <span class="cc-t t-body14L18 w-medium">${picked.length}개 비교중 ${ic('IconChevronDown',16)}</span>
+    <button class="cc-btn t-detail13L18 w-semibold" type="button" data-pf-compare>비교하기</button>
+  </div>`;
+}
+function pfFilterRow(opts={}){
+  const sort = opts.sort || '추천순';
+  const second = opts.process
+    ? `<button class="ods-chip" data-size="sm" data-variant="normal" type="button">
+        <span class="ods-chip-slot" data-side="center"><span class="ods-chip-label">공정 전체</span></span>
+        <span class="ods-chip-slot" data-side="right">${ic('IconChevronDown',12)}</span>
+      </button>`
+    : chip({label:'종합보험', size:'sm', variant:'normal'});
+  return `<div class="pf-filter">
+    <div class="pf-left">
+      <button class="ods-chip pf-std" data-size="sm" data-variant="outlined" type="button">
+        <span class="ods-chip-slot" data-side="center">
+          <img src="${MD_ASSET}badge-standard.svg" alt="" width="12" height="12">
+          <span class="ods-chip-label">스탠다드</span>
+        </span>
+      </button>
+      ${second}
+    </div>
+    <button class="pf-sort t-body14L18 w-regular" type="button">${sort}${ic('IconChevronDown',18)}</button>
+  </div>`;
+}
+const PF_MENUS = [
+  {l:'집 전체·턴키', a:'houseDrillO2O', go:'full'},
+  {l:'주방', a:'photoKitchen', go:'part', item:'주방', badge:true},
+  {l:'도배', a:'photoWall', go:'part', item:'도배', badge:true},
+  {l:'장판·마루', a:'photoFloor', go:'part', item:'장판,마루', badge:true},
+  {l:'화장실', a:'photoBasin', go:'part', item:'화장실'},
+  {l:'중문도어', a:'photoDoor', go:'part', item:'중문도어'},
+  {l:'조명', a:'photoLamp', go:'part', item:'조명'},
+  {l:'시트필름', a:'photoFilm', go:'part', item:'시트필름'},
+  {l:'커튼블라인드', a:'photoBlind', go:'part', item:'커튼블라인드'},
+  {l:'창호/샷시', a:'photoWindow', go:'part', item:'창호/샷시'},
+  {l:'타일', a:'photoTile', go:'part', item:'타일'},
+  {l:'페인트', a:'photoPaint', go:'part', item:'페인트'},
+];
+function pfBindScrap(keep){
+  screen.querySelectorAll('[data-scrap]').forEach(b=> b.onclick=e=>{
+    e.stopPropagation();
+    const sc = screen.querySelector('.pf-scroll') || screen;
+    const y = sc.scrollTop;
+    const id=b.dataset.scrap;
+    S.cScrap.has(id) ? S.cScrap.delete(id) : S.cScrap.add(id);
+    render();
+    if(keep){
+      const restore = ()=>{
+        const sc2 = screen.querySelector('.pf-scroll') || screen;
+        sc2.scrollTop = y;
+      };
+      restore();
+      requestAnimationFrame(restore);
+    }
+  });
+  screen.querySelector('[data-pf-compare]')?.addEventListener('click', ()=> go('cPfCompare'));
+}
+VIEW.cPfHome = ()=>{
+  pfNeed();
+  const hot = pfFirms('pf.hot',2,'pfh',['내일인테리어','내일인테리어']);
+  const list = pfFirms('pf.list',6,'pfl',
+    ['내일인테리어','토니인테리어','토니인테리어','토니인테리어','토니인테리어','토니인테리어']);
+  screen.innerHTML = `<div class="pf-page">
+    ${topNav({title:'', backId:'pfHomeBack'})}
+    <div class="pf-scroll">
+      <div class="pf-atf">
+        <p class="pf-h t-heading20 w-semibold">원하는 인테리어 전문가들로부터<br>한 번에 견적을 받아보세요!</p>
+        <div class="pf-menus">${PF_MENUS.map(m=>`<button class="pf-menu" type="button" data-pf-go="${m.go}" data-item="${m.item||''}">
+          ${m.badge?`<span class="pf-badge">${sqBadge('직시공','neutral500','16')}</span>`:''}
+          <span class="pf-a">${mbAsset(m)}</span>
+          <span class="pf-l t-detail13L18 w-medium">${m.l}</span>
+        </button>`).join('')}</div>
+      </div>
+      ${pfFilterRow({process:true, sort:'추천순'})}
+      <section class="ch-bundle pf-plus">
+        ${chModuleTitle('우리동네 플러스', {arrow:false})}
+        <div class="crail pf-hrail">${hot.map(chFirmCard).join('')}</div>
+      </section>
+      <section class="ch-bundle pf-paid">
+        <div class="pf-list">${list.map(chFirmCard).join('')}</div>
+      </section>
+    </div>
+    ${pfCompareBar()}
+    ${bottomGnb()}
+  </div>`;
+  $('#pfHomeBack').onclick = ()=> go('cHome');
+  screen.querySelectorAll('[data-pf-go]').forEach(b=> b.onclick=()=>{
+    const goKind = b.dataset.pfGo;
+    pfReset(goKind);
+    if(goKind==='part' && b.dataset.item) S.pf.items = b.dataset.item.split(',').filter(Boolean);
+    go(goKind==='full' ? 'cPfFull' : 'cPfPart');
+  });
+  pfBindScrap(true);
+};
+
+const PF_IMG_FULL = 'https://prs.ohou.se/apne2/any/v1-252923745550400.png';
+const PF_IMG_PART = 'https://prs.ohou.se/apne2/any/v1-252923557429376.jpg';
+const apRadio = (name, val, label) =>
+  `<button class="ap-opt t-body15L24 w-regular" type="button" data-ap="${name}" data-v="${val}" aria-pressed="${pfNeed()[name]===val}">
+    <i class="ap-dot" aria-hidden="true"></i><span>${label}</span>
+  </button>`;
+const apProg = (i, n) => `<div class="ap-prog" style="--ap-p:${Math.round(((i+1)/n)*100)}%"><i></i></div>`;
+const apDock = ({back=true, next='다음', nextId='apNext', backId='apBack', disabled=false}={}) =>
+  `<div class="ap-dock">
+    ${back?boxButton({label:'뒤로', size:'large', variant:'outlined', id:backId, attrs:'data-back'}):''}
+    ${boxButton({label:next, size:'large', variant:'brand-solid', id:nextId, attrs:'data-next'+(back?'':' data-fullwidth'), full:!back, disabled})}
+  </div>`;
+const apTip = () => !pfNeed().tip ? '' : `<div class="ap-tip">
+  <div class="at-b t-detail13L18 w-medium">작성시 어려움이 있다면<br>전화상담으로 변경할 수 있어요
+    <button class="at-x" type="button" id="apTipX" aria-label="닫기">${ic('IconX',12)}</button>
+  </div>
+  ${asset('helmetFace',56)}
+</div>`;
+function pfPhone(){ const p=pfNeed(); return `${p.phoneHead}-${p.phoneTail}`; }
+function pfSeedCompare(){
+  const has = [...S.cScrap].some(id=>String(id).startsWith('pf'));
+  if(has) return;
+  pfFirmPool().slice(0,2).forEach(f=> S.cScrap.add(f.id));
+}
+function apProc(){
+  return `<div class="ap-guide">
+    <p class="t-body16L20 w-bold">상담신청 완료 후 아래 순서로 진행돼요</p>
+    <div class="ag-i"><span class="ag-n t-detail11 w-bold">1</span>
+      <span class="t-body14L18">통화 가능 시간에 업체와 짧은 <b>유선 상담 진행</b></span></div>
+    <div class="ag-i"><span class="ag-n t-detail11 w-bold">2</span>
+      <span><span class="t-body14L18">정확한 견적을 위해 <b>대면 상담 진행</b></span>
+        <span class="ag-sub t-body14L18">대면 상담을 진행하지 않고 가견적을 받을 시 견적에 차이가 날 수 있어요. 대면 상담 진행 시, 원하는 조건에 따른 정확한 견적을 받아보실 수 있어요.</span></span></div>
+  </div>`;
+}
+function apTerms(){
+  const p = pfNeed();
+  return `<div class="ap-legal">
+    <p class="t-body16L20 w-bold">안내 및 이용동의</p>
+    <p class="t-body14L20">오늘의집은 고객님의 계약서와 최종 견적서(변경 포함)를 바탕으로 시공 중 발생할 수 있는 분쟁을 중재하고 지원해요.</p>
+    <p class="ap-li t-body14L18"><span>・</span><span>책임보장업체가 아닌 경우에는 오늘의집 중재 및 책임보장 서비스를 이용하실 수 없어요.</span></p>
+    <p class="ap-li t-body14L18"><span>・</span><span>책임보장을 이용하시려면 오늘의집 전자계약서로 계약을 체결하고 최종 견적서(변경 포함)를 제출해 주세요.</span></p>
+    <p class="t-body14L20">시공 문제로 고객님께 재산상 피해가 발생한 경우, 오늘의집이 최대 3,000만 원까지 보상해 드려요.</p>
+    <p class="ap-li t-body14L18"><span>・</span><span>‘오늘의집인테리어’(직시공) 서비스의 경우에는 계약금액 전액을 기준으로 보상해 드려요.</span></p>
+    <button class="ap-agree t-detail13L18 w-semibold" type="button" data-agree aria-pressed="${p.agree}">
+      ${cbxIndicator(p.agree,'medium')}<span>위 내용을 충분히 확인했으며, 책임보장 조건을 이해했어요.</span>
+    </button>
+    <p class="t-detail12L20 c-fg-weak">(주)버킷플레이스는 고객과 시공사 간 원활한 거래를 위하여 지원하는 중개사로서 거래의 당사자가 아니므로 거래에 따른 책임을 부담하지 않으며, 시공사의 고객 동의 없는 개인정보 수집 및 제3자 제공 등에도 법적 책임을 부담하지 않습니다.</p>
+  </div>`;
+}
+function apBindRadios(){
+  screen.querySelectorAll('[data-ap]').forEach(b=> b.onclick=()=>{
+    pfNeed()[b.dataset.ap] = b.dataset.v;
+    render();
+  });
+}
+function apCalGrid(){
+  const sel = pfNeed().date;
+  const heads = ['일','월','화','수','목','금','토'].map(d=>`<span class="aw-h t-detail12L16">${d}</span>`).join('');
+  const first = 1; /* 9월 시작 요일 오프셋 — 프로토타입 고정 그리드 */
+  const cells = Array.from({length:first}, ()=>'<span></span>').concat(
+    Array.from({length:30}, (_,i)=>{
+      const d=i+1;
+      return `<button type="button" data-day="${d}" aria-pressed="${sel===d}" class="t-body14L20">${d}</button>`;
+    })
+  );
+  return `<div class="ap-cal">${heads}${cells.join('')}</div>`;
+}
+function apFullBody(){
+  const p = pfNeed(), s = p.step;
+  if(s===0) return `<p class="ap-q t-heading20 w-bold">시공할 공간의 종류를 선택해주세요.</p>
+    ${['아파트','오피스텔','빌라','단독주택'].map(v=>apRadio('space', v, v)).join('')}`;
+  if(s===1){
+    const n=p.pyeong, nums=[n-2,n-1,n,n+1,n+2];
+    return `<p class="ap-q t-heading20 w-bold">시공공간은 몇 평이세요?<br>(공급면적 기준)</p>
+      <p class="ap-sub t-body16L24 w-regular">상담하며 정보를 수정할 수 있어요.<br>정확한 평수를 몰라도 대략적으로 알려주세요.</p>
+      <div class="ap-wheel">
+        <div class="aw-col">${nums.map((v,i)=>`<button class="aw-n ${i===2?'t-heading24 w-medium':'t-body16L20 w-regular'}" type="button" data-py="${v}" ${i===2?'data-on':''}>${v}</button>`).join('')}</div>
+        <span class="t-body16L24">평</span>
+      </div>`;
+  }
+  if(s===2) return `<p class="ap-q t-heading20 w-bold">공간 상황을 선택해주세요.</p>
+    ${[['현재 공실','현재 공실'],['시공 시 공실 예정','시공 시 공실 예정'],['사용/거주중','사용/거주중(보관이사 예정)']].map(([v,l])=>apRadio('situation', v, l)).join('')}
+    <div class="ap-note t-body14L20">・ 부동산 미계약 상태인 경우, 상담이 불가할 수 있습니다.</div>`;
+  if(s===3) return `<p class="ap-q t-heading20 w-bold">원하시는 시공을 선택해주세요</p>
+    <button class="ap-work" type="button" data-work="full" aria-pressed="${p.work==='full'}">
+      <i class="ap-dot"></i>
+      <span class="ap-wt"><b class="t-body15L24 w-bold">집 전체 시공</b>
+        <span class="t-body15L24 w-regular">시공 분야가 구체적이지 않더라도 업체와 상담하며 조율할 수 있어요.</span></span>
+      <img src="${PF_IMG_FULL}" alt="" width="80" height="80">
+    </button>
+    <button class="ap-work" type="button" data-work="part" aria-pressed="${p.work==='part'}">
+      <i class="ap-dot"></i>
+      <span class="ap-wt"><b class="t-body15L24 w-bold">부분 시공</b>
+        <span class="t-body15L24 w-regular">도배, 바닥재, 도어, 창호 등 시공 분야를 직접 선택해 업체와 상담해요.</span></span>
+      <img src="${PF_IMG_PART}" alt="" width="80" height="80">
+    </button>`;
+  if(s===4) return `<p class="ap-q t-heading20 w-bold">시공 희망일을 알려주세요</p>
+    <p class="ap-sub t-body16L24 w-regular">집전체 공사의 경우 평균적으로 3주가 소요돼요.</p>
+    ${apCalGrid()}
+    <div class="ap-note t-body14L20">・ 집전체 공사의 경우 평균적으로 3주가 소요되며, 현장 상황에 따라 일정이 달라질 수 있어요.</div>`;
+  if(s===5) return `<p class="ap-q t-heading20 w-bold">시공할 곳의 주소를 알려주세요</p>
+    <p class="ap-sub t-body16L24 w-regular">등록하신 아래 주소로 자동 입력되었어요.</p>
+    <div class="ap-addr">
+      <label class="ods-input"><input type="text" value="${p.addrQ||''}" data-pf-addrq placeholder="도로명, 건물명, 지번 검색"></label>
+      ${boxButton({label:'검색', size:'medium', variant:'solid', id:'pfAddrGo'})}
+    </div>
+    <div class="ap-addr-box t-detail13L18">
+      ${ic('IconLocationPinDot',16)}
+      <div>등록하신 아래 주소로 자동 입력되었습니다. 시공할 곳의 주소와 다르다면 변경해주세요.
+        <b class="t-body14L20 w-medium">${p.addr}</b>
+      </div>
+    </div>
+    <div class="ap-svc t-detail13L18">서비스 지역<br>서울/경기/인천/대구/충청/대전/광주/전라/울산/부산/창원/김해/양산/강원</div>`;
+  return `<p class="ap-q t-heading20 w-bold">원활한 상담을 위해<br>이름과 연락처가 필요해요</p>
+    <div class="ap-callout t-detail13L18 w-bold">${ic('IconInfoCircle',18)}<span>연락처는 시공 업체에게 안심번호로 전달해요.</span></div>
+    <div class="ap-field"><span class="t-body16L20 c-fg-weak">통화가능시간</span>
+      <button class="ap-drop t-body16L20" type="button" id="pfCallTime">${p.callTime}${ic('IconChevronDown',24)}</button></div>
+    <div class="ap-field"><span class="t-body16L20 c-fg-weak">요청사항 (선택)</span>
+      <textarea class="ap-ta t-body16L24" data-pf-memo placeholder="특이사항, 세부 시공 내역, 원하는 스타일 등">${p.memo}</textarea>
+      <span class="t-detail12L16 c-fg-weak" style="text-align:right;display:block">${(p.memo||'').length} / 200</span></div>
+    ${apProc()}
+    ${apTerms()}`;
+}
+VIEW.cPfFull = ()=>{
+  const p = pfNeed();
+  if(p.kind!=='full') pfReset('full');
+  const last = p.step>=6;
+  screen.innerHTML = `<div class="ap-page">
+    ${topNav({title:'', backId:'apClose'})}
+    ${apProg(p.step, 7)}
+    <div class="ap-body">${apFullBody()}</div>
+    ${apDock({next: last?'신청완료':'다음'})}
+    ${apTip()}
+  </div>`;
+  const close = ()=> go('cPfHome');
+  $('#apClose').onclick = close;
+  $('#apBack').onclick = ()=>{ if(p.step===0) close(); else { p.step--; render(); } };
+  $('#apNext').onclick = ()=>{
+    if(p.step===3 && p.work==='part'){ pfReset('part'); go('cPfPart'); return; }
+    if(last){ pfSeedCompare(); go('cPfCompare'); return; }
+    p.step++; render();
+  };
+  $('#apTipX')?.addEventListener('click', ()=>{ p.tip=false; render(); });
+  apBindRadios();
+  screen.querySelectorAll('[data-py]').forEach(b=> b.onclick=()=>{ p.pyeong=+b.dataset.py; render(); });
+  screen.querySelectorAll('[data-work]').forEach(b=> b.onclick=()=>{ p.work=b.dataset.work; render(); });
+  screen.querySelectorAll('[data-day]').forEach(b=> b.onclick=()=>{ p.date=+b.dataset.day; render(); });
+  const aq=screen.querySelector('[data-pf-addrq]'); if(aq) aq.oninput=()=>{ p.addrQ=aq.value; };
+  const nm=screen.querySelector('[data-pf-name]'); if(nm) nm.oninput=()=>{ p.name=nm.value; };
+  const ph=screen.querySelector('[data-pf-phone]'); if(ph) ph.oninput=()=>{ p.phoneTail=ph.value; };
+  const mm=screen.querySelector('[data-pf-memo]'); if(mm) mm.oninput=()=>{ p.memo=mm.value.slice(0,200); };
+  screen.querySelector('[data-agree]')?.addEventListener('click', ()=>{ p.agree=!p.agree; render(); });
+  $('#pfCallTime')?.addEventListener('click', ()=>{
+    const opts=['언제든 괜찮아요','오전','오후','저녁'];
+    const i=opts.indexOf(p.callTime);
+    p.callTime=opts[(i+1)%opts.length]; render();
+  });
+};
+
+const PF_PART_ITEMS = ['도배','장판','마루','주방'];
+const PF_HOUSE = ['아파트','빌라','오피스텔','단독주택'];
+const PF_LIVE = ['네, 공실이에요','아니요, 일부 짐이 있어요'];
+const PF_PYEONG = Array.from({length:12}, (_,i)=>`${i+15}평`);
+const PF_ADDR_PART = '서울특별시 송파구 도곡로62길 15-11 (잠실동, 리센츠빌)';
+const apSolidChip = (on, label, attrs) =>
+  `<button class="ods-chip" data-size="sm" data-variant="${on?'solid':'normal'}" type="button" ${attrs} aria-pressed="${on}">
+    <span class="ods-chip-slot" data-side="center"><span class="ods-chip-label">${label}</span></span>
+  </button>`;
+function apPartSpace(){
+  const p = pfNeed();
+  return `
+    <div class="ap-sec">
+      <p class="as-t t-body16L20 w-medium">공간유형</p>
+      <p class="as-s t-body14L18">상업공간은 시공하지 않아요.</p>
+      <div class="ap-chips">${PF_HOUSE.map(v=>apSolidChip(p.houseType===v, v, `data-ap="houseType" data-v="${v}"`)).join('')}</div>
+    </div>
+    <div class="ap-sec">
+      <p class="as-t t-body16L20 w-medium">평수(공급면적)</p>
+      <button class="ap-drop t-body16L20" type="button" id="pfSizeDrop" ${p.sizeChip?'':'data-ph'}>${p.sizeChip||'평수를 선택해주세요'}${ic('IconChevronDown',24)}</button>
+    </div>
+    <div class="ap-sec">
+      <p class="as-t t-body16L20 w-medium">시공할 때 공간이 비어 있을 예정인가요?</p>
+      <div class="ap-chips">${PF_LIVE.map(v=>apSolidChip(p.live===v, v, `data-ap="live" data-v="${v}"`)).join('')}</div>
+    </div>
+    <div class="ap-sec">
+      <div class="ap-sec-h">
+        <p class="as-t t-body16L20 w-medium">시공지 주소</p>
+        ${p.addrFilled?textButton({label:'주소변경', size:16, variant:'primary', id:'pfAddrEdit'}):''}
+      </div>
+      <p class="as-s t-body14L18">현재는 수도권만 시공 가능해요.</p>
+      ${p.addrFilled
+        ? `<p class="t-body14L20" style="margin-top:12px">${p.addr}</p>`
+        : `<div style="margin-top:12px">${boxButton({label:'주소 찾기', size:'medium', variant:'outlined', id:'pfAddrFind', full:true})}</div>`}
+    </div>`;
+}
+function apPartBody(){
+  const p = pfNeed(), s = p.step;
+  if(s===0) return `<span class="ap-step t-detail12L16 w-medium">1 / 3</span>
+    <p class="ap-q t-heading20 w-bold">원하는 시공 항목을 모두 골라주세요</p>
+    <div class="ap-chips">${PF_PART_ITEMS.map(v=>{
+      const on=p.items.includes(v);
+      return `<button class="ods-chip" data-size="sm" data-variant="${on?'outlined':'subtle'}" type="button" data-item="${v}" aria-pressed="${on}">
+        <span class="ods-chip-slot" data-side="center"><span class="ods-chip-label">${v}</span></span>
+      </button>`;
+    }).join('')}</div>`;
+  if(s===1) return `<span class="ap-step t-detail12L16 w-medium">2 / 3</span>
+    <p class="ap-q t-heading20 w-bold">시공할 공간 정보를 알려주세요</p>${apPartSpace()}`;
+  if(s===2) return `<span class="ap-step t-detail12L16 w-medium">3 / 3</span>
+    <p class="ap-q t-heading20 w-bold">원활한 상담을 위해<br>이름과 연락처가 필요해요</p>
+    <div class="ap-callout t-detail13L18 w-bold">${ic('IconInfoCircle',18)}<span>연락처는 책임 매니저에게 안심번호로 전달해요.</span></div>
+    <div class="ap-field">
+      <label class="ods-input"><input type="text" value="${p.name}" data-pf-name></label></div>
+    <div class="ap-phone" style="margin-bottom:16px">
+      <button class="ap-drop ap-pre t-body16L20" type="button" id="pfPhoneHead">${p.phoneHead}${ic('IconChevronDown',24)}</button>
+      <label class="ods-input"><input type="tel" value="${p.phoneTail}" data-pf-phone></label>
+    </div>
+    <div class="ap-field"><span class="t-body16L20 w-medium">요청사항 (선택)</span>
+      <textarea class="ap-ta t-body16L24" data-pf-memo placeholder="특이사항, 세부 시공 내역, 원하는 스타일 등">${p.memo}</textarea>
+      <span class="t-detail12L16 c-fg-weak" style="text-align:right;display:block">${(p.memo||'').length} / 200</span></div>
+    ${apProc()}
+    ${apTerms()}`;
+  return `<div class="ap-done">
+    <div class="ad-hero">
+      <span class="ad-ic">${ic('IconCheckCircleFilled',48)}</span>
+      <b class="t-heading24 w-bold">신청이 완료되었어요</b>
+      <p class="t-body16L24 c-fg-weak">담당 매니저가 곧 연락드릴 예정이에요.</p>
+    </div>
+    <div class="ap-sum">
+      <p class="as-cap t-body16L20">상담신청 정보</p>
+      <div class="as-row t-body16L20"><span>이름</span><span>${p.name}</span></div>
+      <div class="as-row t-body16L20"><span>전화번호</span><span>${pfPhone()}</span></div>
+      <div class="as-row t-body16L20"><span>주소</span><span>${p.addr}</span></div>
     </div>
   </div>`;
-  $('#mdBack2').onclick = ()=> go('cMapDisc');
+}
+VIEW.cPfPart = ()=>{
+  const p = pfNeed();
+  if(p.kind!=='part') pfReset('part');
+  const done = p.step>=3;
+  const spaceReady = !!(p.houseType && p.sizeChip && p.live && p.addrFilled);
+  const nextOff = (p.step===0 && !p.items.length) || (p.step===1 && !spaceReady);
+  const navTitle = done ? '신청완료' : '인테리어 상담신청';
+  const sizeSheet = p.addrModal==='size' ? `<div class="ap-ov" id="pfSizeOv">
+    <div class="ap-sheet">
+      <div class="am-h"><span class="t-heading18 w-bold">평형대 선택</span>
+        <button type="button" id="pfModalX" aria-label="닫기">${ic('IconX',24)}</button></div>
+      <div class="am-list">${PF_PYEONG.map(v=>`<button class="am-i t-body16L20" type="button" data-pyeong="${v}">${v}</button>`).join('')}</div>
+    </div>
+  </div>` : '';
+  screen.innerHTML = `<div class="ap-page">
+    ${topNav({title:navTitle, backId:'apClose', close:true})}
+    <div class="ap-body"${done?' style="padding:0;display:flex;flex-direction:column"':''}>${apPartBody()}</div>
+    ${apDock({back:p.step===2 && !done, next: done?'확인':(p.step===2?'신청완료':'다음'), disabled:nextOff})}
+    ${done?'':apTip()}
+    ${sizeSheet}
+  </div>`;
+  const close = ()=> go('cPfHome');
+  $('#apClose').onclick = close;
+  const bk=$('#apBack'); if(bk) bk.onclick=()=>{ p.step--; render(); };
+  $('#apNext').onclick = ()=>{
+    if(nextOff) return;
+    if(done){ pfSeedCompare(); go('cPfCompare'); return; }
+    p.step++; render();
+  };
+  $('#apTipX')?.addEventListener('click', ()=>{ p.tip=false; render(); });
+  screen.querySelectorAll('[data-item]').forEach(b=> b.onclick=()=>{
+    const v=b.dataset.item;
+    const i=p.items.indexOf(v);
+    if(i>=0) p.items.splice(i,1); else p.items.push(v);
+    render();
+  });
+  screen.querySelectorAll('[data-ap]').forEach(b=> b.onclick=()=>{
+    p[b.dataset.ap]=b.dataset.v; render();
+  });
+  $('#pfAddrFind')?.addEventListener('click', ()=>{
+    p.addr = PF_ADDR_PART; p.addrFilled = true; render();
+  });
+  $('#pfAddrEdit')?.addEventListener('click', ()=>{
+    p.addrFilled = false; render();
+  });
+  $('#pfSizeDrop')?.addEventListener('click', ()=>{ p.addrModal='size'; render(); });
+  $('#pfModalX')?.addEventListener('click', ()=>{ p.addrModal=false; render(); });
+  $('#pfSizeOv')?.addEventListener('click', e=>{ if(e.target.id==='pfSizeOv'){ p.addrModal=false; render(); } });
+  screen.querySelectorAll('[data-pyeong]').forEach(b=> b.onclick=()=>{
+    p.sizeChip = b.dataset.pyeong; p.addrModal=false; render();
+  });
+  $('#pfPhoneHead')?.addEventListener('click', ()=>{
+    const opts=['010','011','016','017','018','019'];
+    const i=opts.indexOf(p.phoneHead);
+    p.phoneHead=opts[(i+1)%opts.length]; render();
+  });
+  const nm=screen.querySelector('[data-pf-name]'); if(nm) nm.oninput=()=>{ p.name=nm.value; };
+  const ph=screen.querySelector('[data-pf-phone]'); if(ph) ph.oninput=()=>{ p.phoneTail=ph.value; };
+  const mm=screen.querySelector('[data-pf-memo]'); if(mm) mm.oninput=()=>{
+    p.memo=mm.value.slice(0,200);
+    const c=mm.parentNode.querySelector('.t-detail12L16');
+    if(c) c.textContent=`${p.memo.length} / 200`;
+  };
+  screen.querySelector('[data-agree]')?.addEventListener('click', ()=>{ p.agree=!p.agree; render(); });
 };
+
+VIEW.cPfCompare = ()=>{
+  const list = pfFirmPool();
+  screen.innerHTML = `<div class="pf-page">
+    <div class="search-nav" role="navigation">
+      <button class="sn-icon" type="button" id="pfCmpBack" aria-label="메뉴">${ic('IconLine3Horizontal',24)}</button>
+      <div class="sn-search">
+        <span class="sn-ic">${ic('IconMagnifyingGlass',18)}</span>
+        <span class="sn-ph t-body14L20 w-regular">오늘의집 통합검색</span>
+      </div>
+      <button class="sn-icon" type="button" aria-label="알림">${ic('IconBell',24)}</button>
+      <button class="sn-icon" type="button" aria-label="북마크">${ic('IconBookmark',24)}</button>
+      <button class="sn-icon" type="button" aria-label="장바구니">${ic('IconCart',24)}</button>
+    </div>
+    ${pfFilterRow({process:true, sort:'추천순'})}
+    <div class="pf-scroll">
+      <div class="pf-list" style="padding-top:8px">${list.map(chFirmCard).join('')}</div>
+    </div>
+    ${pfCompareBar()}
+    ${bottomGnb()}
+  </div>`;
+  $('#pfCmpBack').onclick = ()=> go('cPfHome');
+  pfBindScrap(true);
+};
+
+VIEW.cApply = ()=> VIEW.cPfFull();
 
 function bootFlowC(){
   document.body.classList.add('view4');

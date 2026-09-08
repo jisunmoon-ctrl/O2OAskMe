@@ -1884,7 +1884,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-sian .ms-side .mc-t{padding:0;flex:1;min-width:0}
 .mbd-sian .ms-side .mc-ic{flex:0 0 48px;width:48px;height:48px;overflow:hidden}
 .mbd-sian .ms-side .mc-ic img{width:48px;height:48px;object-fit:contain;display:block}
-.mbd-cta img[data-knock]{mix-blend-mode:screen}
 
 /* MenuAll (941:22756) — 파트너 찾기 CTA 169 + 2×2 부분시공 + 서비스 4종 */
 .mbd{padding-bottom:24px}
@@ -1923,9 +1922,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   height:48px;box-sizing:border-box}
 .pf-filter .pf-left{display:flex;align-items:center;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
 .pf-filter .pf-left::-webkit-scrollbar{display:none}
-.pf-filter .pf-std{display:inline-flex;align-items:center;gap:4px}
-.pf-filter .pf-std img{width:12px;height:12px;display:block;flex:0 0 12px}
-.pf-filter .pf-std .ods-chip-label{color:var(--ods-accent-blue)}
 .pf-filter .pf-sort{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:0;
   border:0;background:none;padding:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
 /* 우리동네 플러스 (1039:21768) — p16 · 타이틀 pb16 · 카드 300 · 화살표 없음 */
@@ -2546,11 +2542,12 @@ function boxButton({label, size='medium', variant='brand-solid', id='', attrs=''
 /* TextButton — size(14|16) · variant(primary|neutral-500|neutral-600) */
 const textButton = ({label, size=14, variant='neutral-600', id='', attrs=''}) =>
   `<button class="ods-textbtn" data-size="${size}" data-variant="${variant}" ${id?`id="${id}"`:''} ${attrs}>${label}</button>`;
-/* Chip — size(sm|md) · variant(normal|outlined|solid|subtle) */
-const chip = ({label, size='md', variant='normal', attrs='', pressed, disabled}) =>
+/* Chip — size(sm|md) · variant(normal|outlined|solid|subtle) · optional right slot */
+const chip = ({label, size='md', variant='normal', attrs='', pressed, disabled, right=''}) =>
   `<button class="ods-chip" data-size="${size}" data-variant="${variant}"
     ${pressed!==undefined?`aria-pressed="${pressed}"`:''} ${disabled?'data-disabled disabled':''} ${attrs}>
     <span class="ods-chip-slot" data-side="center"><span class="ods-chip-label">${label}</span></span>
+    ${right?`<span class="ods-chip-slot" data-side="right">${right}</span>`:''}
   </button>`;
 /* 선택 상태 chip — ODS 선택 표현은 outlined(borderStrong + semibold) */
 const selChip = (label, sel, attrs='', size='md') =>
@@ -2812,7 +2809,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', pfHideAtf:false, cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -2933,6 +2930,7 @@ function renderRail(){
     }
     if(step==='cPfFull') pfReset('full');
     if(step==='cPfPart') pfReset('part');
+    if(step==='cPfHome') S.pfHideAtf = false;
     go(step);
     setMenuOpen(false);
   });
@@ -6098,6 +6096,7 @@ function resetFlowC(){
   S.cPartRv = 0;     /* 부분 시공 리뷰 = 전체 */
   S.cScrap = new Set();
   S.cSian = S.cSian || 'A';
+  S.pfHideAtf = false;
   S.cMenu = null;    /* 메뉴 숏컷 empty 화면 */
   if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer=null; }
   S.cOfferBg = chPickOfferBg(5);   /* 배너 슬라이드 배경 랜덤 배치 */
@@ -6483,7 +6482,7 @@ function mbHomeA(){
           <b class="t-body16L20 w-semibold">시공 견적 받기</b>
           <span class="mc-sub t-detail13L18 w-regular">여러 업체에게 견적 받기</span>
         </span>
-        <span class="mc-ic"><img src="${assetSrc('menuMatch')}" alt="" width="72" height="72" data-knock></span>
+        <span class="mc-ic"><img src="${assetSrc('menuMatch')}" alt="" width="72" height="72"></span>
       </button>
       <div class="ms-side">
         <button class="mbd-cta" type="button" data-sian-go="find">
@@ -6993,12 +6992,12 @@ function bindCHome(){
     S.cMenu = {l:b.dataset.menu, u:b.dataset.url};
     render();
   });
-  screen.querySelector('[data-pf="home"]')?.addEventListener('click', ()=>{ S.cMenu=null; go('cPfHome'); });
+  screen.querySelector('[data-pf="home"]')?.addEventListener('click', ()=>{ S.cMenu=null; S.pfHideAtf=false; go('cPfHome'); });
   screen.querySelectorAll('[data-sian-go]').forEach(b=> b.onclick=()=>{
     const goTo = b.dataset.sianGo;
     S.cMenu = null;
     if(goTo==='quote'){ pfReset('full'); go('cPfFull'); return; }
-    if(goTo==='find'){ go('cPfHome'); return; }
+    if(goTo==='find'){ S.pfHideAtf = (S.cSian==='B'); go('cPfHome'); return; }
     if(goTo==='direct'){ window.open(O2O_URL.direct, '_blank', 'noopener'); }
   });
   screen.querySelector('[data-pf-compare]')?.addEventListener('click', ()=> go('cPfCompare'));
@@ -7935,19 +7934,11 @@ function pfCompareBar(){
 function pfFilterRow(opts={}){
   const sort = opts.sort || '추천순';
   const second = opts.process
-    ? `<button class="ods-chip" data-size="sm" data-variant="normal" type="button">
-        <span class="ods-chip-slot" data-side="center"><span class="ods-chip-label">공정 전체</span></span>
-        <span class="ods-chip-slot" data-side="right">${ic('IconChevronDown',12)}</span>
-      </button>`
+    ? chip({label:'서비스 전체', size:'sm', variant:'normal', right:ic('IconChevronDown',12)})
     : chip({label:'종합보험', size:'sm', variant:'normal'});
   return `<div class="pf-filter">
     <div class="pf-left">
-      <button class="ods-chip pf-std" data-size="sm" data-variant="outlined" type="button">
-        <span class="ods-chip-slot" data-side="center">
-          <img src="${MD_ASSET}badge-standard.svg" alt="" width="12" height="12">
-          <span class="ods-chip-label">스탠다드</span>
-        </span>
-      </button>
+      ${selChip('스탠다드', true, '', 'sm')}
       ${second}
     </div>
     <button class="pf-sort t-body14L18 w-regular" type="button">${sort}${ic('IconChevronDown',18)}</button>
@@ -7991,17 +7982,18 @@ VIEW.cPfHome = ()=>{
   const hot = pfFirms('pf.hot',2,'pfh',['내일인테리어','내일인테리어']);
   const list = pfFirms('pf.list',6,'pfl',
     ['내일인테리어','토니인테리어','토니인테리어','토니인테리어','토니인테리어','토니인테리어']);
-  screen.innerHTML = `<div class="pf-page">
-    ${topNav({title:'', backId:'pfHomeBack'})}
-    <div class="pf-scroll">
-      <div class="pf-atf">
+  const atf = S.pfHideAtf ? '' : `<div class="pf-atf">
         <p class="pf-h t-heading20 w-semibold">원하는 인테리어 전문가들로부터<br>한 번에 견적을 받아보세요!</p>
         <div class="pf-menus">${PF_MENUS.map(m=>`<button class="pf-menu" type="button" data-pf-go="${m.go}" data-item="${m.item||''}">
           ${m.badge?`<span class="pf-badge">${sqBadge('직시공','neutral500','16')}</span>`:''}
           <span class="pf-a">${mbAsset(m)}</span>
           <span class="pf-l t-detail13L18 w-medium">${m.l}</span>
         </button>`).join('')}</div>
-      </div>
+      </div>`;
+  screen.innerHTML = `<div class="pf-page">
+    ${topNav({title:'', backId:'pfHomeBack'})}
+    <div class="pf-scroll">
+      ${atf}
       ${pfFilterRow({process:true, sort:'추천순'})}
       <section class="ch-bundle pf-plus">
         ${chModuleTitle('우리동네 플러스', {arrow:false})}

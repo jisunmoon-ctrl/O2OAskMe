@@ -1908,7 +1908,7 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-mini .mb-item{flex:none;min-width:0;height:auto;justify-content:flex-start;gap:4px}
 
 /* 파트너 찾기홈 · 업체 비교 (1039:19639 / 892:15126)
-   ATF_Apply (1039:21626) — py20 · title↔bundle gap24 · 6×2 가로스크롤 · 메뉴 73×72 */
+   ATF — 카피 + 단일 CTA 「간편 견적 신청하기」 */
 .pf-page{height:100%;min-height:100%;overflow:hidden;display:flex;flex-direction:column;
   background:var(--ods-background);position:relative}
 .pf-scroll{flex:1;min-height:0;overflow-y:auto}
@@ -1927,17 +1927,9 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   .pf-mapfab-wrap{transition:none}
 }
 .pf-page > .ch-compare{position:relative;bottom:auto;flex:0 0 auto;margin:0 8px 8px;border-radius:4px;z-index:8}
-.pf-atf{display:flex;flex-direction:column;gap:24px;padding:20px 0}
-.pf-atf .pf-h{padding:0 16px;text-align:center;color:var(--ods-foreground)}
-.pf-menus{display:grid;grid-template-columns:repeat(6,73px);gap:6px;overflow-x:auto;
-  padding:0 16px 16px;scrollbar-width:none}
-.pf-menus::-webkit-scrollbar{display:none}
-.pf-menu{width:73px;position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;
-  border:0;background:none;padding:0;cursor:pointer;font-family:inherit;border-radius:8px}
-.pf-menu .pf-a{width:73px;height:72px;flex:0 0 auto;box-sizing:border-box;padding:8px;border-radius:8px;
-  background:var(--ods-background-weak);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pf-menu .pf-a img{width:100%;height:100%;object-fit:contain;display:block}
-.pf-menu .pf-l{width:100%;text-align:center;color:var(--ods-foreground);word-break:break-word}
+.pf-atf{display:flex;flex-direction:column;gap:16px;padding:20px 16px}
+.pf-atf .pf-h{padding:0;text-align:center;color:var(--ods-foreground)}
+.pf-atf .pf-cta{width:100%}
 .pf-nav{flex:0 0 auto;background:var(--ods-background)}
 .pf-nav .ods-tablist{position:relative}
 .pf-nav .ods-tablist::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
@@ -7029,8 +7021,13 @@ function bindCHome(){
   screen.querySelector('[data-pf="home"]')?.addEventListener('click', ()=>{ S.cMenu=null; S.pfHideAtf=false; go('cPfHome'); });
   screen.querySelectorAll('[data-sian-go]').forEach(b=> b.onclick=()=>{
     const goTo = b.dataset.sianGo;
+    if(goTo==='quote'){
+      S.cMenuScroll = screen.scrollTop;
+      S.cMenu = {l:'통합 신청 form 으로 이동'};
+      render();
+      return;
+    }
     S.cMenu = null;
-    if(goTo==='quote'){ pfReset('full'); go('cPfFull'); return; }
     if(goTo==='find'){ S.pfHideAtf = (S.cSian==='B'); go('cPfHome'); return; }
     if(goTo==='direct'){ S.cMenu={l:'오늘의집 직시공', u:O2O_URL.direct}; render(); return; }
   });
@@ -8026,20 +8023,6 @@ function pfBindNav(){
     refresh();
   });
 }
-const PF_MENUS = [
-  {l:'집 전체·턴키', a:'houseDrillO2O', go:'full'},
-  {l:'주방', a:'photoKitchen', go:'part', item:'주방'},
-  {l:'도배', a:'photoWall', go:'part', item:'도배'},
-  {l:'장판·마루', a:'photoFloor', go:'part', item:'장판,마루'},
-  {l:'화장실', a:'photoBasin', go:'part', item:'화장실'},
-  {l:'중문도어', a:'photoDoor', go:'part', item:'중문도어'},
-  {l:'조명', a:'photoLamp', go:'part', item:'조명'},
-  {l:'시트필름', a:'photoFilm', go:'part', item:'시트필름'},
-  {l:'커튼블라인드', a:'photoBlind', go:'part', item:'커튼블라인드'},
-  {l:'창호/샷시', a:'photoWindow', go:'part', item:'창호/샷시'},
-  {l:'타일', a:'photoTile', go:'part', item:'타일'},
-  {l:'페인트', a:'photoPaint', go:'part', item:'페인트'},
-];
 function pfBindScrap(keep){
   screen.querySelectorAll('[data-scrap]').forEach(b=> b.onclick=e=>{
     e.stopPropagation();
@@ -8064,11 +8047,8 @@ VIEW.cPfHome = ()=>{
   const hot = pfFirms(pfListSeed('hot'),2,'pfh');
   const list = pfFirms(pfListSeed('list'),6,'pfl');
   const atf = S.pfHideAtf ? '' : `<div class="pf-atf">
-        <p class="pf-h t-heading20 w-semibold">원하는 인테리어 전문가들로부터<br>한 번에 견적을 받아보세요!</p>
-        <div class="pf-menus">${PF_MENUS.map(m=>`<button class="pf-menu" type="button" data-pf-go="${m.go}" data-item="${m.item||''}">
-          <span class="pf-a">${mbAsset(m)}</span>
-          <span class="pf-l t-detail13L18 w-medium">${m.l}</span>
-        </button>`).join('')}</div>
+        <p class="pf-h t-heading20 w-semibold">원하는 전문가들로부터<br>한 번에 견적을 받아보세요!</p>
+        <div class="pf-cta">${boxButton({label:'간편 견적 신청하기', size:'extra-large', variant:'brand-solid', id:'pfEasyCta', full:true})}</div>
       </div>`;
   screen.innerHTML = `<div class="pf-page">
     ${topNav({title:'', backId:'pfHomeBack'})}
@@ -8093,12 +8073,7 @@ VIEW.cPfHome = ()=>{
     ${bottomGnb()}
   </div>`;
   $('#pfHomeBack').onclick = ()=> go('cHome');
-  screen.querySelectorAll('[data-pf-go]').forEach(b=> b.onclick=()=>{
-    const goKind = b.dataset.pfGo;
-    pfReset(goKind);
-    if(goKind==='part' && b.dataset.item) S.pf.items = b.dataset.item.split(',').filter(Boolean);
-    go(goKind==='full' ? 'cPfFull' : 'cPfPart');
-  });
+  const easy=$('#pfEasyCta'); if(easy) easy.onclick=()=>{ pfReset('full'); go('cPfFull'); };
   pfBindNav();
   pfBindScrap(true);
   pfBindMapFab();

@@ -1893,14 +1893,6 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-sian .ms-side .mc-t{padding:0;flex:1;min-width:0}
 .mbd-sian .ms-side .mc-ic{flex:0 0 48px;width:48px;height:48px;overflow:hidden}
 .mbd-sian .ms-side .mc-ic img{width:48px;height:48px;object-fit:contain;display:block}
-/* 추천 서비스 (983:22764) — ModuleTitle + 가로 카드 레일 gap4 px16 */
-.mbd-rec-rail{display:flex;gap:4px;padding:0 16px;overflow-x:auto;scrollbar-width:none}
-.mbd-rec-rail::-webkit-scrollbar{display:none}
-.mbd-rec-card{flex:0 0 auto;display:flex;align-items:center;gap:2px;padding:8px 16px 8px 0;
-  border:1px solid var(--ods-border);border-radius:12px;background:var(--ods-background);
-  cursor:pointer;font-family:inherit;text-align:left;color:var(--ods-foreground)}
-.mbd-rec-card img{width:56px;height:56px;object-fit:contain;display:block;flex:0 0 56px}
-.mbd-rec-t{width:118px;display:flex;flex-direction:column;gap:4px;min-width:0}
 
 /* MenuAll (941:22756) — 파트너 찾기 CTA 169 + 2×2 부분시공 + 서비스 4종 */
 .mbd{padding-bottom:24px}
@@ -2540,8 +2532,6 @@ const ODS_ASSET = {
   photoWindowLarge:'AssetPhotoWindowLarge/image_240.png',                      /* 창문 Large — Figma 1065:23638 */
   houseDrillO2O:'AssetHouseWithDrillO2OLargeGenuineBlueView3/image_240.png',   /* 집 전체·턴키 — Figma 1039:21621 */
   helmetO2O:    'AssetSafetyHelmetO2OLargeGenuineBlueView3/image_240.png',     /* 직시공 — Figma 917:22154 */
-  calcPurple:   'AssetCalculatorLargePurpleView1/image_240.png',              /* 추천 서비스 견적계산기 — Figma 983:22750 */
-  movingPass:   'AssetMovingPassSymbolLargeGenuineBlueView1/image_240.png',   /* 추천 서비스 무빙패스 — Figma 983:22905 */
   photoFilm:    'assets/menu/glossy-film.png',                                 /* 시트필름 — Figma 1039:21698 */
   photoBlind:   'AssetPhotoVenetianBlindIsometric/image_240.webp',             /* 커튼블라인드 */
   photoWindow:  'AssetPhotoWindowChassisIsometric/image_240.webp',             /* 창호/샷시 */
@@ -6470,7 +6460,6 @@ const O2O_URL = {
   repair:   'https://o2o.ohou.se/repair',                     /* 설치수리 */
   internet: 'https://lifecycle.ohou.se/rental/internet',      /* 인터넷 설치 */
   calc:     'https://ohou.se/experts/calculator',             /* 3D견적계산기 — 홈 MenuAll */
-  movingPass:'https://lifecycle.ohou.se/moving',              /* 무빙패스 — 추천 서비스 */
   direct:   'https://o2o.ohou.se/remodeling/direct-part/intro?inflow=RMD_EASYAPPLY_GUIDE_PART&tab=kitchen',
   /* 아래는 전달받은 목록에는 있으나 현재 메뉴 번들에 대응 숏컷이 없다 */
   ranks:    'https://o2o.ohou.se/remodeling/goods/ranks',     /* 시공자재 랭킹 */
@@ -6513,32 +6502,13 @@ function mbQuoteRoll(){
   const imgs = MB_QUOTE_ROLL.map(k=>`<img src="${assetSrc(k)}" alt="" width="40" height="40">`).join('');
   return `<span class="mc-roll" aria-hidden="true"><span class="mc-roll-track">${imgs}${imgs}</span></span>`;
 }
-/* 추천 서비스 (983:22764) — 메뉴 그리드 하단 가로 레일 */
-function mbRecCard({a, kicker, title, u, menu}){
-  return `<button class="mbd-rec-card" type="button" data-menu="${menu}" data-url="${u}">
-    <img src="${assetSrc(a)}" alt="" width="56" height="56">
-    <span class="mbd-rec-t">
-      <span class="t-detail13L18 w-medium">${kicker}</span>
-      <span class="t-body16L20 w-medium">${title}</span>
-    </span>
-  </button>`;
-}
-function mbRecSvc(){
-  return `<div class="mbd-rec">
-    ${chModuleTitle('추천 서비스', {arrow:false})}
-    <div class="mbd-rec-rail">
-      ${mbRecCard({a:'calcPurple', kicker:'견적 계산기', title:'주방 견적 알아보기', u:O2O_URL.calc, menu:'견적 계산기'})}
-      ${mbRecCard({a:'movingPass', kicker:'무빙패스', title:`시공이사 <b class="w-semibold c-fg-brand">5%</b> 할인`, u:O2O_URL.movingPass, menu:'무빙패스'})}
-    </div>
-  </div>`;
-}
 /* MenuAll 시안 A (983:29113) — 견적 148×206 + 업체찾기/직시공 2단 + 서비스 5종 */
 function mbHomeA(){
   return `<div class="mbd">
     <div class="mbd-sian">
       <button class="mbd-cta ms-quote" type="button" data-sian-go="quote">
         <span class="mc-t">
-          <b class="t-body16L20 w-semibold">시공 견적 받기</b>
+          <b class="t-body16L20 w-semibold">견적 받기</b>
           <span class="mc-sub t-detail13L18 w-regular">여러 업체에게 견적 받기</span>
         </span>
         ${mbQuoteRoll()}
@@ -6546,7 +6516,7 @@ function mbHomeA(){
       <div class="ms-side">
         <button class="mbd-cta" type="button" data-sian-go="find">
           <span class="mc-t">
-            <b class="t-body16L20 w-semibold">시공업체 찾기</b>
+            <b class="t-body16L20 w-semibold">업체 찾기</b>
             <span class="mc-sub t-detail13L18 w-regular">인기/추천 업체 찾기</span>
           </span>
           <span class="mc-ic"><img src="${assetSrc('menuFind')}" alt="" width="48" height="48"></span>
@@ -6561,7 +6531,6 @@ function mbHomeA(){
       </div>
     </div>
     ${mbRow(MB_HOME_ALL)}
-    ${mbRecSvc()}
   </div>`;
 }
 /* MenuAll 시안 B (983:23229) — 견적/업체찾기 2열 h144 + 서비스 5종 */
@@ -6582,7 +6551,6 @@ function mbHomeB(){
       </button>
     </div>
     ${mbRow(MB_HOME_ALL)}
-    ${mbRecSvc()}
   </div>`;
 }
 function mbHome(){

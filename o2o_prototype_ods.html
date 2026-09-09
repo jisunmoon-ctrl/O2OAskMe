@@ -648,7 +648,9 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .ods-chip[data-variant="solid"]:hover::before{border-color:var(--ods-transparent)}
 /* Chip.Slot / Chip.Label */
 .ods-chip-slot{position:relative;display:inline-flex;align-items:center;gap:4px}
+.ods-chip-slot[data-side="left"]{padding-left:4px}
 .ods-chip-slot[data-side="center"]{padding:0 6px}
+.ods-chip-slot[data-side="right"]{padding-right:4px}
 .ods-chip-label{font-size:14px;line-height:18px;letter-spacing:-.3px;font-weight:400}
 .ods-chip[data-variant="outlined"] .ods-chip-label{font-weight:600}
 
@@ -1876,14 +1878,29 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mbd-sian{display:flex;align-items:stretch;gap:5px;padding:0 16px}
 .mbd-sian .ms-quote{flex:0 0 148px;width:148px;height:206px;padding:12px 0;
   align-items:stretch}
-.mbd-sian .ms-quote .mc-ic{display:flex;justify-content:flex-end;padding:0 12px;width:100%;box-sizing:border-box}
-.mbd-sian .ms-quote .mc-ic img{width:72px;height:72px;object-fit:contain;display:block}
+.mbd-sian .ms-quote .mc-roll{display:block;overflow:hidden;width:100%;padding-bottom:12px}
+.mbd-sian .ms-quote .mc-roll-track{display:flex;align-items:center;width:max-content;
+  animation:mc-roll-left 14s linear infinite}
+.mbd-sian .ms-quote .mc-roll-track img{width:40px;height:40px;flex:0 0 40px;margin-right:7px;
+  object-fit:contain;display:block}
+@keyframes mc-roll-left{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){
+  .mbd-sian .ms-quote .mc-roll-track{animation:none}
+}
 .mbd-sian .ms-side{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
 .mbd-sian .ms-side .mbd-cta{flex:1 1 0;width:auto;height:auto;min-height:0;
   flex-direction:row;align-items:center;gap:4px;padding:12px 8px 12px 12px}
 .mbd-sian .ms-side .mc-t{padding:0;flex:1;min-width:0}
 .mbd-sian .ms-side .mc-ic{flex:0 0 48px;width:48px;height:48px;overflow:hidden}
 .mbd-sian .ms-side .mc-ic img{width:48px;height:48px;object-fit:contain;display:block}
+/* 추천 서비스 (983:22764) — ModuleTitle + 가로 카드 레일 gap4 px16 */
+.mbd-rec-rail{display:flex;gap:4px;padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.mbd-rec-rail::-webkit-scrollbar{display:none}
+.mbd-rec-card{flex:0 0 auto;display:flex;align-items:center;gap:2px;padding:8px 16px 8px 0;
+  border:1px solid var(--ods-border);border-radius:12px;background:var(--ods-background);
+  cursor:pointer;font-family:inherit;text-align:left;color:var(--ods-foreground)}
+.mbd-rec-card img{width:56px;height:56px;object-fit:contain;display:block;flex:0 0 56px}
+.mbd-rec-t{width:118px;display:flex;flex-direction:column;gap:4px;min-width:0}
 
 /* MenuAll (941:22756) — 파트너 찾기 CTA 169 + 2×2 부분시공 + 서비스 4종 */
 .mbd{padding-bottom:24px}
@@ -1903,6 +1920,20 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .pf-page{height:100%;min-height:100%;overflow:hidden;display:flex;flex-direction:column;
   background:var(--ods-background);position:relative}
 .pf-scroll{flex:1;min-height:0;overflow-y:auto}
+/* 우리동네 업체 지도 FAB (1039:19819) — GNB 위 8 · 스크롤 300 이상 show */
+.pf-mapfab-wrap{position:absolute;left:0;right:0;bottom:88px;z-index:9;
+  display:flex;justify-content:center;padding-bottom:8px;pointer-events:none;
+  transform:translateY(16px);opacity:0;
+  transition:transform .28s cubic-bezier(.2,0,.2,1.05),opacity .2s ease}
+.pf-mapfab-wrap.is-on{transform:none;opacity:1}
+.pf-mapfab-wrap.is-on .pf-mapfab{pointer-events:auto}
+.pf-mapfab{border-radius:var(--ods-radius-full);color:var(--ods-foreground-inverse)}
+.pf-mapfab .ods-btn-slot[data-side="left"]{padding-left:13px}
+.pf-mapfab[data-size="medium"] .ods-btn-slot[data-side="center"]{padding:0 13px 0 6px}
+.pf-mapfab .ods-btn-label{font-weight:700}
+@media (prefers-reduced-motion:reduce){
+  .pf-mapfab-wrap{transition:none}
+}
 .pf-page > .ch-compare{position:relative;bottom:auto;flex:0 0 auto;margin:0 8px 8px;border-radius:4px;z-index:8}
 .pf-atf{display:flex;flex-direction:column;gap:24px;padding:20px 0}
 .pf-atf .pf-h{padding:0 16px;text-align:center;color:var(--ods-foreground)}
@@ -1915,15 +1946,16 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
   background:var(--ods-background-weak);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .pf-menu .pf-a img{width:100%;height:100%;object-fit:contain;display:block}
 .pf-menu .pf-l{width:100%;text-align:center;color:var(--ods-foreground);word-break:break-word}
-.pf-menu .pf-badge{position:absolute;top:0;right:0;z-index:1;pointer-events:none}
-.pf-menu .pf-badge .ods-sqbadge{height:14px;width:33px;padding:0 2px;box-sizing:border-box;
-  border-radius:0 8px 0 2px;font-weight:500}
-.pf-filter{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 16px;
-  height:48px;box-sizing:border-box}
+.pf-nav{flex:0 0 auto;background:var(--ods-background)}
+.pf-nav .ods-tablist{position:relative}
+.pf-nav .ods-tablist::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--ods-border)}
+.pf-filter{display:flex;align-items:center;gap:4px;padding:8px 16px;box-sizing:border-box}
 .pf-filter .pf-left{display:flex;align-items:center;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
 .pf-filter .pf-left::-webkit-scrollbar{display:none}
-.pf-filter .pf-sort{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:0;
-  border:0;background:none;padding:0;cursor:pointer;font-family:inherit;color:var(--ods-foreground)}
+.ods-chip[data-pf-std][aria-pressed="true"]{color:var(--ods-accent-blue)}
+.ods-chip[data-pf-std][aria-pressed="true"]::before{border-color:var(--ods-accent-blue)}
+.ods-chip[data-pf-std] .ods-chip-slot[data-side="left"] svg{display:block}
 /* 우리동네 플러스 (1039:21768) — p16 · 타이틀 pb16 · 카드 300 · 화살표 없음 */
 .ch-bundle.pf-plus{padding:16px 0}
 .pf-plus .ch-mtitle{padding:0 16px 16px}
@@ -2442,6 +2474,7 @@ const ODS_ICON = {
  "IconClock": "<path d=\"M239 128c8.837 0 16 7.163 16 16v82.38c0 4.568 2.229 8.85 5.972 11.47l57.204 40.043c7.239 5.067 8.999 15.044 3.931 22.283-5.067 7.239-15.044 8.999-22.283 3.931l-57.203-40.042A46 46 0 0 1 223 226.38V144c0-8.837 7.163-16 16-16\"></path><path fill-rule=\"evenodd\" d=\"M240 40c110.457 0 200 89.543 200 200s-89.543 200-200 200S40 350.457 40 240 129.543 40 240 40m0 32c-92.784 0-168 75.216-168 168s75.216 168 168 168 168-75.216 168-168S332.784 72 240 72\" clip-rule=\"evenodd\"></path>",
  "IconCalendar": "<path fill-rule=\"evenodd\" d=\"M303.5 43c8.837 0 16 7.163 16 16v15h13.521c25.095 0 46.839 5.864 62.071 21.361C410.267 110.801 416 132.783 416 158.256v173.488l-.004 1.192c-.177 24.966-5.967 46.504-20.904 61.703C379.86 410.136 358.116 416 333.021 416H151.979c-25.095 0-46.839-5.864-62.07-21.361-14.938-15.199-20.728-36.737-20.905-61.703L69 331.744V158.256c0-25.473 5.734-47.455 20.908-62.895C105.14 79.863 126.884 74 151.98 74H165.5V59c0-8.837 7.163-16 16-16s16 7.163 16 16v15h90V59c0-8.837 7.163-16 16-16M101 331.744l.015 1.973c.292 20.112 5.062 31.722 11.715 38.491 6.805 6.923 18.538 11.783 39.199 11.791h181.219c20.613-.02 32.325-4.876 39.122-11.791 6.867-6.987 11.73-19.133 11.73-40.464V196H101zm50.979-225.743-.05-.001c-20.661.008-32.394 4.869-39.199 11.792-6.867 6.987-11.73 19.133-11.73 40.464V164h283v-5.744c0-21.331-4.863-33.477-11.73-40.464-6.797-6.915-18.509-11.771-39.122-11.791L319.5 106v15l-.005.413C319.276 130.059 312.198 137 303.5 137s-15.776-6.941-15.995-15.587L287.5 121v-15h-90v15l-.005.413C197.276 130.059 190.198 137 181.5 137s-15.776-6.941-15.995-15.587L165.5 121v-15h-13.438z\" clip-rule=\"evenodd\"></path>",
  "IconLocationPinDot": "<path fill-rule=\"evenodd\" d=\"M240 139c39.212 0 71 31.788 71 71s-31.788 71-71 71-71-31.788-71-71 31.788-71 71-71m0 32c-21.539 0-39 17.461-39 39s17.461 39 39 39 39-17.461 39-39-17.461-39-39-39\" clip-rule=\"evenodd\"></path><path fill-rule=\"evenodd\" d=\"M242.235 34.014h.101C340.576 35.26 421 110.183 421 210c0 10.06-.094 30.678-12.363 60.577-12.138 29.579-35.836 67.424-81.649 113.236l-.089.089-68.804 66.683c-10.084 9.773-26.106 9.773-36.19 0l-68.804-66.683-.089-.089c-45.813-45.812-69.51-83.657-81.649-113.236C59.093 240.678 59 220.06 59 210c0-100.601 81.688-176 181-176h.103zM239.946 66C157.029 66.027 91 128.365 91 210c0 7.94-.094 23.91 9.968 48.429 10.187 24.826 31.135 59.207 74.598 102.685L240 423.558l64.433-62.444c43.463-43.478 64.412-77.859 74.599-102.685C389.094 233.91 389 217.94 389 210c0-81.002-65.008-142.935-147.043-143.987z\" clip-rule=\"evenodd\"></path>",
+ "IconLocationPinDotFilled": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M242.235 34.014h.101C340.576 35.26 421 110.183 421 210c0 10.06-.094 30.678-12.363 60.577-12.138 29.579-35.836 67.424-81.649 113.236l-.089.089-68.804 66.683c-10.084 9.773-26.106 9.773-36.19 0l-68.804-66.683-.089-.089c-45.813-45.812-69.51-83.657-81.649-113.236C59.093 240.678 59 220.06 59 210c0-100.601 81.688-176 181-176h.103zM240 155c-30.376 0-55 24.624-55 55s24.624 55 55 55 55-24.624 55-55-24.624-55-55-55\"></path>",
  "IconSofa": "<path fill=\"currentColor\" d=\"M50 326h380v-93h-28v55H78v-55H50zm412 11c0 11.598-9.402 21-21 21H39c-11.598 0-21-9.402-21-21V222c0-11.598 9.402-21 21-21h71v55h260v-55h71c11.598 0 21 9.402 21 21z\"></path><path fill=\"currentColor\" d=\"M370 132c0-7.732-6.268-14-14-14H124c-7.732 0-14 6.268-14 14v85H78v-85c0-25.405 20.595-46 46-46h232c25.405 0 46 20.595 46 46v85h-32zM78 390v-48c0-8.837 7.163-16 16-16s16 7.163 16 16v48c0 8.837-7.163 16-16 16s-16-7.163-16-16m292 0v-48c0-8.837 7.163-16 16-16s16 7.163 16 16v48c0 8.837-7.163 16-16 16s-16-7.163-16-16\"></path><path fill=\"currentColor\" d=\"M256 103v169h-32V103z\"></path>",
  "IconHouse": "<path fill=\"currentColor\" d=\"M207.253 58.53a61.02 61.02 0 0 1 65.494 0l120 76.33.819.53A60.98 60.98 0 0 1 421 186.307v93.818l-.021 5v.064c-.423 51.967-7.292 90.791-32.866 115.31-22.77 21.83-57.013 29.033-102.113 30.287V431h-76c-53.884 0-93.972-6.344-119.31-31.67-24.945-24.933-31.487-64.156-31.685-116.753L59 280.062v-93.755a60.98 60.98 0 0 1 28.253-51.447zm48.319 27.002a29.02 29.02 0 0 0-31.144 0l-120 76.329A28.98 28.98 0 0 0 91 186.307v93.755l.005 2.516c.22 52.427 7.384 79.204 22.307 94.119C128.474 391.851 155.885 399 210 399h44v-.003h16c53.246 0 80.657-6.919 95.968-21.598 15.12-14.497 22.585-40.626 23.011-92.405l.021-4.935v-93.752a28.98 28.98 0 0 0-13.428-24.447z\"></path>",
  "IconSparkles": "<path fill-rule=\"evenodd\" d=\"M269.634 107c16.281.001 29.478 11.48 33.174 26.286l.169.708c7.179 31.574 18.68 54.126 35.049 70.512 16.369 16.385 38.903 27.903 70.458 35.101 15.16 3.459 27.014 16.831 27.016 33.387v.002c0 16.297-11.486 29.514-26.308 33.223l-.708.17c-31.555 7.198-54.089 18.717-70.458 35.103s-27.87 38.939-35.049 70.513c-3.446 15.147-16.804 26.994-33.343 26.995-16.542 0-29.899-11.848-33.345-26.994-7.19-31.622-18.716-54.197-35.127-70.592s-39.011-27.912-70.671-35.096c-15.144-3.436-26.991-16.787-26.991-33.322v-.002c.002-16.53 11.846-29.884 26.991-33.32 31.66-7.183 54.261-18.698 70.672-35.092s27.936-38.966 35.126-70.587v-.002C239.735 118.848 253.092 107 269.634 107m-.002 32c-.36 0-.75.114-1.162.456a3 3 0 0 0-.978 1.637c-8.101 35.627-21.847 64.284-43.714 86.128-21.866 21.842-50.55 35.57-86.207 43.66a2.95 2.95 0 0 0-1.62.967c-.339.409-.451.795-.451 1.15s.112.739.45 1.147a2.96 2.96 0 0 0 1.621.966c35.658 8.091 64.342 21.82 86.208 43.664 21.867 21.846 35.612 50.505 43.713 86.133l.07.26c.187.589.525 1.059.907 1.376.412.341.803.455 1.163.455.361 0 .752-.113 1.165-.455.437-.362.815-.925.976-1.636 8.089-35.573 21.805-64.199 43.615-86.032s50.418-35.574 85.979-43.687a3.04 3.04 0 0 0 1.665-.996c.349-.421.468-.824.468-1.195l-.006-.141c-.027-.331-.156-.685-.462-1.054a3.03 3.03 0 0 0-1.665-.996c-35.561-8.112-64.169-21.852-85.979-43.685-21.81-21.832-35.526-50.457-43.615-86.03a2.98 2.98 0 0 0-.976-1.636c-.413-.342-.805-.456-1.165-.456\" clip-rule=\"evenodd\"></path><path d=\"M114.558 48c3.715 0 6.864 2.68 7.688 6.302 6.616 29.097 21.854 44.354 50.939 50.988 3.63.828 6.314 3.984 6.315 7.708 0 3.724-2.685 6.883-6.315 7.711-29.085 6.635-44.323 21.892-50.939 50.989-.824 3.623-3.973 6.302-7.688 6.302-3.716 0-6.865-2.679-7.689-6.302-6.626-29.142-21.901-44.403-51.072-51.021-3.62-.821-6.297-3.967-6.297-7.679 0-3.711 2.678-6.857 6.297-7.678 29.17-6.618 44.446-21.877 51.072-51.018.824-3.623 3.973-6.302 7.689-6.302\"></path>",
@@ -2504,7 +2537,11 @@ const ODS_ASSET = {
   photoWallIso: 'AssetPhotoWallpaperIsometric/image_240.webp',                 /* 도배 */
   photoDoor:    'AssetPhotoDoorLarge/image_240.png',                           /* 중문도어 */
   photoLamp:    'AssetPhotoPendantLampIsometric/image_240.webp',               /* 조명 */
+  photoWindowLarge:'AssetPhotoWindowLarge/image_240.png',                      /* 창문 Large — Figma 1065:23638 */
   houseDrillO2O:'AssetHouseWithDrillO2OLargeGenuineBlueView3/image_240.png',   /* 집 전체·턴키 — Figma 1039:21621 */
+  helmetO2O:    'AssetSafetyHelmetO2OLargeGenuineBlueView3/image_240.png',     /* 직시공 — Figma 917:22154 */
+  calcPurple:   'AssetCalculatorLargePurpleView1/image_240.png',              /* 추천 서비스 견적계산기 — Figma 983:22750 */
+  movingPass:   'AssetMovingPassSymbolLargeGenuineBlueView1/image_240.png',   /* 추천 서비스 무빙패스 — Figma 983:22905 */
   photoFilm:    'assets/menu/glossy-film.png',                                 /* 시트필름 — Figma 1039:21698 */
   photoBlind:   'AssetPhotoVenetianBlindIsometric/image_240.webp',             /* 커튼블라인드 */
   photoWindow:  'AssetPhotoWindowChassisIsometric/image_240.webp',             /* 창호/샷시 */
@@ -2535,10 +2572,11 @@ function boxButton({label, size='medium', variant='brand-solid', id='', attrs=''
 /* TextButton — size(14|16) · variant(primary|neutral-500|neutral-600) */
 const textButton = ({label, size=14, variant='neutral-600', id='', attrs=''}) =>
   `<button class="ods-textbtn" data-size="${size}" data-variant="${variant}" ${id?`id="${id}"`:''} ${attrs}>${label}</button>`;
-/* Chip — size(sm|md) · variant(normal|outlined|solid|subtle) · optional right slot */
-const chip = ({label, size='md', variant='normal', attrs='', pressed, disabled, right=''}) =>
+/* Chip — size(sm|md) · variant(normal|outlined|solid|subtle) · optional left/right slot */
+const chip = ({label, size='md', variant='normal', attrs='', pressed, disabled, left='', right=''}) =>
   `<button class="ods-chip" data-size="${size}" data-variant="${variant}"
     ${pressed!==undefined?`aria-pressed="${pressed}"`:''} ${disabled?'data-disabled disabled':''} ${attrs}>
+    ${left?`<span class="ods-chip-slot" data-side="left">${left}</span>`:''}
     <span class="ods-chip-slot" data-side="center"><span class="ods-chip-label">${label}</span></span>
     ${right?`<span class="ods-chip-slot" data-side="right">${right}</span>`:''}
   </button>`;
@@ -2802,7 +2840,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', pfHideAtf:false, cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', pfHideAtf:false, pfCat:'full', pfStd:true, pfSort:'추천순', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -6089,6 +6127,9 @@ function resetFlowC(){
   S.cScrap = new Set();
   S.cSian = S.cSian || 'A';
   S.pfHideAtf = false;
+  S.pfCat = 'full';
+  S.pfStd = true;
+  S.pfSort = '추천순';
   S.cMenu = null;    /* 메뉴 숏컷 empty 화면 */
   if(S.cOfferTimer){ clearInterval(S.cOfferTimer); S.cOfferTimer=null; }
   S.cOfferBg = chPickOfferBg(5);   /* 배너 슬라이드 배경 랜덤 배치 */
@@ -6429,6 +6470,7 @@ const O2O_URL = {
   repair:   'https://o2o.ohou.se/repair',                     /* 설치수리 */
   internet: 'https://lifecycle.ohou.se/rental/internet',      /* 인터넷 설치 */
   calc:     'https://ohou.se/experts/calculator',             /* 3D견적계산기 — 홈 MenuAll */
+  movingPass:'https://lifecycle.ohou.se/moving',              /* 무빙패스 — 추천 서비스 */
   direct:   'https://o2o.ohou.se/remodeling/direct-part/intro?inflow=RMD_EASYAPPLY_GUIDE_PART&tab=kitchen',
   /* 아래는 전달받은 목록에는 있으나 현재 메뉴 번들에 대응 숏컷이 없다 */
   ranks:    'https://o2o.ohou.se/remodeling/goods/ranks',     /* 시공자재 랭킹 */
@@ -6465,6 +6507,31 @@ const MB_MOVE = [
   {l:'원룸·소형이사', a:'menuMove',  u:O2O_URL.moving}, {l:'가정·보관이사', a:'menuBox', u:O2O_URL.moving},
   {l:'이사청소',      a:'menuClean', u:O2O_URL.clean},  {l:'설치수리',      a:'menuFix', u:O2O_URL.repair},
 ];
+/* 시안 A 견적 CTA 하단 롤링 — Figma 1065:23633 · 40 gap7 · 좌측 무한 스크롤 */
+const MB_QUOTE_ROLL = ['photoKitchen','photoWallIso','photoFloor','photoWindowLarge','photoBasin','photoDoor','photoLamp'];
+function mbQuoteRoll(){
+  const imgs = MB_QUOTE_ROLL.map(k=>`<img src="${assetSrc(k)}" alt="" width="40" height="40">`).join('');
+  return `<span class="mc-roll" aria-hidden="true"><span class="mc-roll-track">${imgs}${imgs}</span></span>`;
+}
+/* 추천 서비스 (983:22764) — 메뉴 그리드 하단 가로 레일 */
+function mbRecCard({a, kicker, title, u, menu}){
+  return `<button class="mbd-rec-card" type="button" data-menu="${menu}" data-url="${u}">
+    <img src="${assetSrc(a)}" alt="" width="56" height="56">
+    <span class="mbd-rec-t">
+      <span class="t-detail13L18 w-medium">${kicker}</span>
+      <span class="t-body16L20 w-medium">${title}</span>
+    </span>
+  </button>`;
+}
+function mbRecSvc(){
+  return `<div class="mbd-rec">
+    ${chModuleTitle('추천 서비스', {arrow:false})}
+    <div class="mbd-rec-rail">
+      ${mbRecCard({a:'calcPurple', kicker:'견적 계산기', title:'주방 견적 알아보기', u:O2O_URL.calc, menu:'견적 계산기'})}
+      ${mbRecCard({a:'movingPass', kicker:'무빙패스', title:`시공이사 <b class="w-semibold c-fg-brand">5%</b> 할인`, u:O2O_URL.movingPass, menu:'무빙패스'})}
+    </div>
+  </div>`;
+}
 /* MenuAll 시안 A (983:29113) — 견적 148×206 + 업체찾기/직시공 2단 + 서비스 5종 */
 function mbHomeA(){
   return `<div class="mbd">
@@ -6474,7 +6541,7 @@ function mbHomeA(){
           <b class="t-body16L20 w-semibold">시공 견적 받기</b>
           <span class="mc-sub t-detail13L18 w-regular">여러 업체에게 견적 받기</span>
         </span>
-        <span class="mc-ic"><img src="${assetSrc('menuMatch')}" alt="" width="72" height="72"></span>
+        ${mbQuoteRoll()}
       </button>
       <div class="ms-side">
         <button class="mbd-cta" type="button" data-sian-go="find">
@@ -6489,11 +6556,12 @@ function mbHomeA(){
             <b class="t-body16L20 w-semibold">오늘의집 직시공</b>
             <span class="mc-sub t-detail13L18 w-regular">주방, 도배, 마루,장판</span>
           </span>
-          <span class="mc-ic"><img src="${assetSrc('photoKitchen')}" alt="" width="48" height="48"></span>
+          <span class="mc-ic"><img src="${assetSrc('helmetO2O')}" alt="" width="48" height="48"></span>
         </button>
       </div>
     </div>
     ${mbRow(MB_HOME_ALL)}
+    ${mbRecSvc()}
   </div>`;
 }
 /* MenuAll 시안 B (983:23229) — 견적/업체찾기 2열 h144 + 서비스 5종 */
@@ -6514,6 +6582,7 @@ function mbHomeB(){
       </button>
     </div>
     ${mbRow(MB_HOME_ALL)}
+    ${mbRecSvc()}
   </div>`;
 }
 function mbHome(){
@@ -7918,7 +7987,7 @@ function pfFirms(seed, n, prefix, names){
     ...f, ...PF_CARD, id:prefix+i, name: names?.[i] || f.name, img:f.imgs[0],
   }));
 }
-function pfFirmPool(){ return [...pfFirms('pf.hot',2,'pfh'), ...pfFirms('pf.list',6,'pfl')]; }
+function pfFirmPool(){ return [...pfFirms(pfListSeed('hot'),2,'pfh'), ...pfFirms(pfListSeed('list'),6,'pfl')]; }
 function pfCompareBar(){
   const picked = pfFirmPool().filter(p=>S.cScrap.has(p.id));
   if(!picked.length) return '';
@@ -7928,24 +7997,72 @@ function pfCompareBar(){
     <button class="cc-btn t-detail13L18 w-semibold" type="button" data-pf-compare>비교하기</button>
   </div>`;
 }
-function pfFilterRow(opts={}){
-  const sort = opts.sort || '추천순';
-  const second = opts.process
-    ? chip({label:'서비스 전체', size:'sm', variant:'normal', right:ic('IconChevronDown',12)})
-    : chip({label:'종합보험', size:'sm', variant:'normal'});
-  return `<div class="pf-filter">
-    <div class="pf-left">
-      ${selChip('스탠다드', true, '', 'sm')}
-      ${second}
+const PF_CATS = [
+  {k:'full', l:'전체시공'},
+  {k:'part', l:'부분시공'},
+  {k:'move', l:'이사'},
+];
+const PF_SORTS = ['추천순','리뷰순','계약순','가까운순'];
+/* AssetOhouseStandardSymbol — assets/mapdisc/logo-standard-blue.svg 심볼 path. currentColor 로 Chip 색을 따른다. */
+const pfStdMark = () => `<svg width="16" height="16" viewBox="2 2.5 14 16" fill="none" aria-hidden="true">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor"
+    d="M6.57473 3.2354C6.68307 3.27541 6.78068 3.34069 6.9759 3.47126L7.99929 4.15574C8.48428 4.48012 8.72677 4.6423 9 4.6423C9.27324 4.6423 9.51573 4.48012 10.0007 4.15574L11.0241 3.47126C11.2193 3.34069 11.3169 3.27541 11.4253 3.2354C11.4612 3.22213 11.4979 3.21098 11.5352 3.20203C11.6475 3.17505 11.7649 3.17505 11.9998 3.17505H14.4C14.9625 3.17505 15.2437 3.17505 15.4408 3.31829C15.5045 3.36455 15.5605 3.42054 15.6068 3.48421C15.75 3.68136 15.75 3.96259 15.75 4.52505V12.5786C15.75 13.0483 15.75 13.2831 15.6644 13.4897C15.6363 13.5578 15.6015 13.6229 15.5606 13.6842C15.4364 13.8702 15.2412 14.0007 14.8508 14.2618L10.1258 17.4221C9.64244 17.7454 9.40076 17.907 9.13233 17.9388C9.04442 17.9492 8.95558 17.9492 8.86767 17.9388C8.59924 17.907 8.35756 17.7454 7.87421 17.4221L3.1492 14.2618C2.75883 14.0007 2.56364 13.8702 2.43943 13.6842C2.39852 13.6229 2.36373 13.5578 2.33556 13.4897C2.25 13.2831 2.25 13.0482 2.25 12.5786V4.52505C2.25 3.96259 2.25 3.68136 2.39324 3.48421C2.4395 3.42054 2.49549 3.36455 2.55916 3.31829C2.75631 3.17505 3.03754 3.17505 3.6 3.17505H6.00021C6.23508 3.17505 6.35251 3.17505 6.4648 3.20203C6.50207 3.21098 6.53878 3.22213 6.57473 3.2354ZM7.71898 12.1577L5.70658 10.2143C5.50428 10.019 5.40313 9.92131 5.38197 9.80131C5.37514 9.76256 5.37445 9.72297 5.37992 9.684C5.39688 9.56334 5.49456 9.4622 5.68991 9.2599C5.88527 9.0576 5.98296 8.95645 6.10295 8.93529C6.1417 8.92845 6.18129 8.92776 6.22026 8.93324C6.34092 8.9502 6.44207 9.04788 6.64437 9.24323L7.94799 10.5021C8.02638 10.5778 8.06558 10.6157 8.1126 10.623C8.12781 10.6253 8.14329 10.6253 8.1585 10.623C8.20552 10.6157 8.24471 10.5778 8.32311 10.5021L11.3088 7.61892C11.5111 7.42357 11.6122 7.32589 11.7329 7.30893C11.7718 7.30345 11.8114 7.30414 11.8502 7.31098C11.9702 7.33213 12.0678 7.43328 12.2632 7.63558L12.3105 7.68458C12.5057 7.88671 12.6033 7.98778 12.6203 8.10836C12.6258 8.1473 12.6251 8.18687 12.6183 8.2256C12.5972 8.34553 12.4963 8.44322 12.2943 8.6386L8.65721 12.1573C8.46124 12.3469 8.36326 12.4417 8.24564 12.4599C8.2076 12.4658 8.16887 12.4659 8.13083 12.46C8.01319 12.4418 7.91512 12.3471 7.71898 12.1577Z"/>
+</svg>`;
+function pfListSeed(kind){
+  return `pf.${kind}.${S.pfCat||'full'}.${S.pfStd!==false?'std':'all'}.${S.pfSort||'추천순'}`;
+}
+function pfFilterNav(){
+  const cat = S.pfCat || 'full';
+  const std = S.pfStd !== false;
+  const sort = S.pfSort || '추천순';
+  return `<div class="pf-nav">
+    <div class="ods-tablist" role="tablist" aria-label="서비스 카테고리">
+      ${PF_CATS.map(t=>`<button class="ods-tab" type="button" role="tab" data-pf-cat="${t.k}"
+        data-state="${cat===t.k?'active':''}" aria-selected="${cat===t.k}">
+        <span class="ods-tab-text">${t.l}</span>
+      </button>`).join('')}
     </div>
-    <button class="pf-sort t-body14L18 w-regular" type="button">${sort}${ic('IconChevronDown',18)}</button>
+    <div class="pf-filter">
+      <div class="pf-left">
+        ${chip({label:'스탠다드', size:'sm', variant:std?'outlined':'normal', pressed:std,
+          left: std ? pfStdMark() : '', attrs:'data-pf-std'})}
+        ${PF_SORTS.map(s=>selChip(s, sort===s, `data-pf-sort="${s}"`, 'sm')).join('')}
+      </div>
+    </div>
   </div>`;
+}
+function pfBindNav(){
+  const refresh = ()=>{
+    const sc = screen.querySelector('.pf-scroll') || screen;
+    const y = sc.scrollTop;
+    render();
+    const restore = ()=>{
+      const sc2 = screen.querySelector('.pf-scroll') || screen;
+      sc2.scrollTop = y;
+    };
+    restore();
+    requestAnimationFrame(restore);
+  };
+  screen.querySelectorAll('[data-pf-cat]').forEach(b=> b.onclick=()=>{
+    if(S.pfCat===b.dataset.pfCat) return;
+    S.pfCat = b.dataset.pfCat;
+    refresh();
+  });
+  screen.querySelector('[data-pf-std]')?.addEventListener('click', ()=>{
+    S.pfStd = !S.pfStd;
+    refresh();
+  });
+  screen.querySelectorAll('[data-pf-sort]').forEach(b=> b.onclick=()=>{
+    if(S.pfSort===b.dataset.pfSort) return;
+    S.pfSort = b.dataset.pfSort;
+    refresh();
+  });
 }
 const PF_MENUS = [
   {l:'집 전체·턴키', a:'houseDrillO2O', go:'full'},
-  {l:'주방', a:'photoKitchen', go:'part', item:'주방', badge:true},
-  {l:'도배', a:'photoWall', go:'part', item:'도배', badge:true},
-  {l:'장판·마루', a:'photoFloor', go:'part', item:'장판,마루', badge:true},
+  {l:'주방', a:'photoKitchen', go:'part', item:'주방'},
+  {l:'도배', a:'photoWall', go:'part', item:'도배'},
+  {l:'장판·마루', a:'photoFloor', go:'part', item:'장판,마루'},
   {l:'화장실', a:'photoBasin', go:'part', item:'화장실'},
   {l:'중문도어', a:'photoDoor', go:'part', item:'중문도어'},
   {l:'조명', a:'photoLamp', go:'part', item:'조명'},
@@ -7976,13 +8093,11 @@ function pfBindScrap(keep){
 }
 VIEW.cPfHome = ()=>{
   pfNeed();
-  const hot = pfFirms('pf.hot',2,'pfh',['내일인테리어','내일인테리어']);
-  const list = pfFirms('pf.list',6,'pfl',
-    ['내일인테리어','토니인테리어','토니인테리어','토니인테리어','토니인테리어','토니인테리어']);
+  const hot = pfFirms(pfListSeed('hot'),2,'pfh');
+  const list = pfFirms(pfListSeed('list'),6,'pfl');
   const atf = S.pfHideAtf ? '' : `<div class="pf-atf">
         <p class="pf-h t-heading20 w-semibold">원하는 인테리어 전문가들로부터<br>한 번에 견적을 받아보세요!</p>
         <div class="pf-menus">${PF_MENUS.map(m=>`<button class="pf-menu" type="button" data-pf-go="${m.go}" data-item="${m.item||''}">
-          ${m.badge?`<span class="pf-badge">${sqBadge('직시공','neutral500','16')}</span>`:''}
           <span class="pf-a">${mbAsset(m)}</span>
           <span class="pf-l t-detail13L18 w-medium">${m.l}</span>
         </button>`).join('')}</div>
@@ -7991,7 +8106,7 @@ VIEW.cPfHome = ()=>{
     ${topNav({title:'', backId:'pfHomeBack'})}
     <div class="pf-scroll">
       ${atf}
-      ${pfFilterRow({process:true, sort:'추천순'})}
+      ${pfFilterNav()}
       <section class="ch-bundle pf-plus">
         ${chModuleTitle('우리동네 플러스', {arrow:false})}
         <div class="crail pf-hrail">${hot.map(chFirmCard).join('')}</div>
@@ -8001,6 +8116,12 @@ VIEW.cPfHome = ()=>{
       </section>
     </div>
     ${pfCompareBar()}
+    <div class="pf-mapfab-wrap" id="pfMapFab">
+      <button class="ods-btn pf-mapfab" data-size="medium" data-variant="solid" type="button">
+        <span class="ods-btn-slot" data-side="left">${ic('IconLocationPinDotFilled',16)}</span>
+        <span class="ods-btn-slot" data-side="center"><span class="ods-btn-label">우리동네 업체 지도</span></span>
+      </button>
+    </div>
     ${bottomGnb()}
   </div>`;
   $('#pfHomeBack').onclick = ()=> go('cHome');
@@ -8010,8 +8131,19 @@ VIEW.cPfHome = ()=>{
     if(goKind==='part' && b.dataset.item) S.pf.items = b.dataset.item.split(',').filter(Boolean);
     go(goKind==='full' ? 'cPfFull' : 'cPfPart');
   });
+  pfBindNav();
   pfBindScrap(true);
+  pfBindMapFab();
 };
+function pfBindMapFab(){
+  const sc = screen.querySelector('.pf-scroll');
+  const wrap = screen.querySelector('#pfMapFab');
+  if(!sc || !wrap) return;
+  const sync = ()=> wrap.classList.toggle('is-on', sc.scrollTop >= 300);
+  sync();
+  sc.addEventListener('scroll', sync, {passive:true});
+  wrap.querySelector('.pf-mapfab')?.addEventListener('click', ()=> go('cMapDisc'));
+}
 
 const PF_IMG_FULL = 'https://prs.ohou.se/apne2/any/v1-252923745550400.png';
 const PF_IMG_PART = 'https://prs.ohou.se/apne2/any/v1-252923557429376.jpg';
@@ -8317,7 +8449,7 @@ VIEW.cPfCompare = ()=>{
       <button class="sn-icon" type="button" aria-label="북마크">${ic('IconBookmark',24)}</button>
       <button class="sn-icon" type="button" aria-label="장바구니">${ic('IconCart',24)}</button>
     </div>
-    ${pfFilterRow({process:true, sort:'추천순'})}
+    ${pfFilterNav()}
     <div class="pf-scroll">
       <div class="pf-list" style="padding-top:8px">${list.map(chFirmCard).join('')}</div>
     </div>
@@ -8325,6 +8457,7 @@ VIEW.cPfCompare = ()=>{
     ${bottomGnb()}
   </div>`;
   $('#pfCmpBack').onclick = ()=> go('cPfHome');
+  pfBindNav();
   pfBindScrap(true);
 };
 

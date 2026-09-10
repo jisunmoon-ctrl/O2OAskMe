@@ -1874,18 +1874,18 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
 .mb-a[data-all] i{flex:1;min-width:0;height:100%;box-sizing:border-box;
   display:grid;place-items:center;padding:8px;border-radius:16px;
   background:var(--ods-background-weak);color:var(--ods-foreground)}
-/* MenuAll 시안 A (983:29113 / UT#1 1094:59075) — 좌측 tall 148×206 + 우측 2단 · gap5 px16 */
+/* MenuAll 시안 A (983:29113) — 견적 148×206 + 우측 2단 · gap5 px16 */
 .mbd-sian{display:flex;align-items:stretch;gap:5px;padding:0 16px}
-.mbd-sian .ms-tall{flex:0 0 148px;width:148px;height:206px;padding:12px 0;
+.mbd-sian .ms-quote{flex:0 0 148px;width:148px;height:206px;padding:12px 0;
   align-items:stretch}
-.mbd-sian .ms-tall .mc-roll{display:block;overflow:hidden;width:100%;padding-bottom:12px}
-.mbd-sian .ms-tall .mc-roll-track{display:flex;align-items:center;width:max-content;
+.mbd-sian .ms-quote .mc-roll{display:block;overflow:hidden;width:100%;padding-bottom:12px}
+.mbd-sian .ms-quote .mc-roll-track{display:flex;align-items:center;width:max-content;
   animation:mc-roll-left 14s linear infinite}
-.mbd-sian .ms-tall .mc-roll-track img{width:40px;height:40px;flex:0 0 40px;margin-right:7px;
+.mbd-sian .ms-quote .mc-roll-track img{width:40px;height:40px;flex:0 0 40px;margin-right:7px;
   object-fit:contain;display:block}
 @keyframes mc-roll-left{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){
-  .mbd-sian .ms-tall .mc-roll-track{animation:none}
+  .mbd-sian .ms-quote .mc-roll-track{animation:none}
 }
 .mbd-sian .ms-side{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
 .mbd-sian .ms-side .mbd-cta{flex:1 1 0;width:auto;height:auto;min-height:0;
@@ -6488,30 +6488,28 @@ const MB_MOVE = [
   {l:'원룸·소형이사', a:'menuMove',  u:O2O_URL.moving}, {l:'가정·보관이사', a:'menuBox', u:O2O_URL.moving},
   {l:'이사청소',      a:'menuClean', u:O2O_URL.clean},  {l:'설치수리',      a:'menuFix', u:O2O_URL.repair},
 ];
-/* 시안 A 좌측 tall CTA 하단 롤링 — Figma 1065:23633 · 40 gap7 · 좌측 무한 스크롤 */
+/* 시안 A 견적 CTA 하단 롤링 — Figma 1065:23633 · 40 gap7 · 좌측 무한 스크롤 */
 const MB_QUOTE_ROLL = ['photoKitchen','photoWallIso','photoFloor','photoWindowLarge','photoBasin','photoDoor','photoLamp'];
 function mbQuoteRoll(){
   const imgs = MB_QUOTE_ROLL.map(k=>`<img src="${assetSrc(k)}" alt="" width="40" height="40">`).join('');
   return `<span class="mc-roll" aria-hidden="true"><span class="mc-roll-track">${imgs}${imgs}</span></span>`;
 }
-/* MenuAll 시안 A — UT#1 (Figma 1094:59075 · Bundle) 로 교체.
-   좌측 tall 148×206 「업체 찾기」 + 롤링 / 우측 2단 「간편 매칭」·「오늘의집 직시공」 + 서비스 5종.
-   교체 전(983:29113)은 좌측이 「견적 받기」, 우측 상단이 「업체 찾기」였다. */
+/* MenuAll 시안 A (983:29113) — 견적 148×206 + 업체찾기/직시공 2단 + 서비스 5종 */
 function mbHomeA(){
   return `<div class="mbd">
     <div class="mbd-sian">
-      <button class="mbd-cta ms-tall" type="button" data-sian-go="find">
+      <button class="mbd-cta ms-quote" type="button" data-sian-go="quote">
         <span class="mc-t">
-          <b class="t-body16L20 w-semibold">업체 찾기</b>
-          <span class="mc-sub t-detail13L18 w-regular">전체/부분시공/이사<br>업체 찾기</span>
+          <b class="t-body16L20 w-semibold">견적 받기</b>
+          <span class="mc-sub t-detail13L18 w-regular">여러 업체에게 견적 받기</span>
         </span>
         ${mbQuoteRoll()}
       </button>
       <div class="ms-side">
-        <button class="mbd-cta" type="button" data-sian-go="quote">
+        <button class="mbd-cta" type="button" data-sian-go="find">
           <span class="mc-t">
-            <b class="t-body16L20 w-semibold">간편 매칭</b>
-            <span class="mc-sub t-detail13L18 w-regular">서비스 견적 받기</span>
+            <b class="t-body16L20 w-semibold">업체 찾기</b>
+            <span class="mc-sub t-detail13L18 w-regular">인기/추천 업체 찾기</span>
           </span>
           <span class="mc-ic"><img src="${assetSrc('menuFind')}" alt="" width="48" height="48"></span>
         </button>
@@ -6520,7 +6518,7 @@ function mbHomeA(){
             <b class="t-body16L20 w-semibold">오늘의집 직시공</b>
             <span class="mc-sub t-detail13L18 w-regular">주방, 도배, 마루,장판</span>
           </span>
-          <span class="mc-ic"><img src="${assetSrc('photoKitchen')}" alt="" width="48" height="48"></span>
+          <span class="mc-ic"><img src="${assetSrc('helmetO2O')}" alt="" width="48" height="48"></span>
         </button>
       </div>
     </div>

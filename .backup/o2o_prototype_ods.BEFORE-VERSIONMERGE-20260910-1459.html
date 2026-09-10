@@ -2846,7 +2846,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', cVer:'bp0910', cTreeOpen:null, pfHideAtf:false, pfCat:'full', pfStd:true, pfSort:'추천순', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', cVer:'ep0910', cTreeOpen:null, pfHideAtf:false, pfCat:'full', pfStd:true, pfSort:'추천순', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -3196,17 +3196,20 @@ function renderO2hBottomBar(){
   </button>`;
   const btn=$('#o2hNudge'); if(btn) btn.onclick=()=> o2hEnterFunnel();
 }
+const C_SIANS = [
+  {id:'A', n:'시안 A'},
+  {id:'B', n:'시안 B'}
+];
+
 /* ══════════ 네비게이션 Demo 메뉴 트리 ══════════════════════════════════
    위계: 네비게이션 Demo(root) → 1depth 버전 드롭다운 → 2depth 주요 플로우 6종.
-   CASE 도 같은 드롭다운으로 둔다.
+   시안·CASE 도 같은 드롭다운으로 둔다.
    버전별 화면 분기는 아래 sian 값 하나로 정한다 — 매핑이 확정되면 여기만 고친다.
-   시안을 직접 고르는 메뉴는 두지 않는다(버전이 곧 시안이다).
-   (2026-09-10 확정분: 버전은 blueprint 0910 · Navigation UT 0910 둘뿐이고
-    둘 다 시안 A(UT#1 번들)를 쓴다. 시안 B(mbHomeB)는 지금 어느 버전도 가리키지
-    않아 화면에서 닿지 않는다 — 전용 버전이 생기면 여기에 매핑한다) */
+   (2026-09-10 현재 확정분: End-pic 0908 = 시안 A · Navigation UT 0910 = 시안 B) */
 const C_VERSIONS = [
-  {id:'bp0910', n:'o2o home blueprint 0910', sian:'A'},
-  {id:'ut0910', n:'Navigation UT 0910',      sian:'A'}
+  {id:'ep0910', n:'O2O Home End-pic 0910', sian:'A'},
+  {id:'ep0908', n:'End-pic 0908',          sian:'A'},
+  {id:'ut0910', n:'Navigation UT 0910',    sian:'B'}
 ];
 /* 열림 상태는 Set 으로 들고, 첫 렌더에서 현재 버전만 펼친다 */
 function cTreeOpen(){
@@ -3246,12 +3249,17 @@ function renderCTree(){
     return group(v.id, v.n, S.cVer===v.id, items);
   }).join('');
 
+  const curSian = S.cSian || 'A';
+  const sians = C_SIANS.map(c=>
+    `<li><button data-sian="${c.id}"${curSian===c.id?' aria-current="true"':''}>`
+    + `<span class="n">${c.id}</span>${c.n}</button></li>`).join('');
+
   const curCase = C_CASES.find(c=>(c.pin||null)===(S.mdPin||null)) || C_CASES[0];
   const cases = C_CASES.map(c=>
     `<li><button data-case="${c.id}"${curCase&&curCase.id===c.id?' aria-current="true"':''}>`
     + `<span class="n">${c.id}</span>${c.n}</button></li>`).join('');
 
-  tree.innerHTML = vers + group('case','CASE', false, cases);
+  tree.innerHTML = vers + group('sian','시안', false, sians) + group('case','CASE', false, cases);
 
   tree.querySelectorAll('[data-tg]').forEach(b=> b.onclick=()=>{
     const id = b.dataset.tg;
@@ -3259,10 +3267,21 @@ function renderCTree(){
     renderCTree();
   });
   tree.querySelectorAll('[data-step]').forEach(b=> b.onclick=()=> cGoVersion(b.dataset.ver, b.dataset.step));
+  tree.querySelectorAll('[data-sian]').forEach(b=> b.onclick=()=> cPickSian(b.dataset.sian));
   tree.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=> cPickCase(b.dataset.case));
 }
-/* CASE·주요 플로우 선택 — #cTree 드롭다운이 공통으로 쓴다.
-   시안 선택 메뉴는 버전(C_VERSIONS.sian)이 대신하므로 트리에서 뺐다. */
+/* 시안·CASE·주요 플로우 선택 — #cTree 드롭다운이 공통으로 쓴다 */
+function cPickSian(id){
+  S.cSian = id;
+  /* 버전 표시와 어긋나지 않게 같은 시안을 쓰는 버전으로 맞춘다 */
+  const v = C_VERSIONS.find(x=>x.sian===id);
+  if(v){ S.cVer = v.id; cTreeOpen().add(v.id); }
+  S.cMenu = null;
+  S.cTab = 'home';
+  if(S.screen!=='cHome') go('cHome');
+  else render();
+  setMenuOpen(false);
+}
 function cPickCase(id){
   const c = C_CASES.find(x=>x.id===id);
   if(!c) return;

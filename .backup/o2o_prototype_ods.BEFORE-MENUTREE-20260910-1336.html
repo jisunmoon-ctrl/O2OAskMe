@@ -146,30 +146,6 @@ body{
   color:var(--hz-chalk-dim);padding:2px 9px 7px}
 .branch-group ul{list-style:none;padding-left:2px}
 .panel-section.hidden{display:none}
-/* 프로토타입 메뉴 트리 — 1depth(버전) 드롭다운 + 2depth(주요 플로우/시안/CASE).
-   harness 컨트롤이라 ODS 컴포넌트 규칙 대상이 아니며, chevron 만 ODS 아이콘을 쓴다. */
-.panel-tree{list-style:none;display:flex;flex-direction:column;gap:1px}
-.panel-tree .tree-g{list-style:none}
-.tree-t{width:100%;display:flex;align-items:center;gap:7px;text-align:left;
-  background:none;border:0;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;
-  letter-spacing:-.02em;color:var(--hz-chalk-dim);padding:7px 8px;border-radius:6px;transition:.14s}
-.tree-t:hover{background:var(--hz-hover);color:var(--hz-chalk)}
-.tree-t .tree-chev{flex:0 0 12px;display:inline-flex;align-items:center;color:var(--hz-chalk-dim);
-  transition:transform .14s}
-.tree-t[aria-expanded="true"]{color:var(--hz-chalk)}
-.tree-t[aria-expanded="true"] .tree-chev{transform:rotate(90deg)}
-.tree-g.on>.tree-t{color:var(--hz-chalk)}
-.tree-g.on>.tree-t .tree-chev{color:var(--hz-mint)}
-.tree-c{list-style:none;padding:2px 0 8px 0;margin:0 0 0 13px;border-left:1px solid var(--hz-line)}
-.tree-c[hidden]{display:none}
-.tree-c li{margin-bottom:1px;padding-left:8px}
-.tree-c button{width:100%;text-align:left;background:none;border:0;cursor:pointer;font-family:inherit;
-  font-size:12px;letter-spacing:-.02em;color:var(--hz-chalk-dim);padding:6px 8px;border-radius:6px;
-  display:flex;gap:8px;align-items:baseline;transition:.14s}
-.tree-c button .n{font-family:var(--hz-mono);font-size:9.5px;opacity:.6;flex:0 0 20px}
-.tree-c button:hover{background:var(--hz-hover);color:var(--hz-chalk)}
-.tree-c button[aria-current="true"]{background:var(--hz-accent-weak);color:var(--hz-chalk);font-weight:700}
-.tree-c button[aria-current="true"] .n{color:var(--hz-mint);opacity:1}
 /* Flow A/B 토글 + 화면 보기 서브 옵션 */
 .flow-panel{display:flex;flex-direction:column;gap:10px;align-self:stretch}
 .flow-tabs{display:flex;gap:4px;padding:3px;border:1px solid var(--hz-line);border-radius:10px;background:var(--hz-hover)}
@@ -2382,15 +2358,15 @@ body.preview-only .phone:has(.home-gnb) .fab-entry{bottom:calc(70px + env(safe-a
         </button>
       </div>
     </div>
-    <section id="cTreeSection" class="panel-section">
-      <h3>네비게이션 Demo</h3>
-      <ul id="cTree" class="panel-tree"></ul>
-    </section>
-    <section id="railSection" class="panel-section">
+    <section>
       <h3 id="flowSectionTitle">네비게이션 Demo</h3>
       <ol id="rail"></ol>
     </section>
-    <section id="caseSection" class="panel-section">
+    <section id="sianSection" class="panel-section">
+      <h3>시안</h3>
+      <ul id="sianMenu" class="panel-menu"></ul>
+    </section>
+    <section>
       <h3>CASE</h3>
       <ul id="caseMenu" class="panel-menu"></ul>
     </section>
@@ -2846,7 +2822,7 @@ const getFlowGroup = () => isViewC() ? 'C' : isView3() ? 'B' : 'A';
 const flowKeys = () => isViewC() ? [...PHASE4] : isView3() ? [...PHASE3] : [...PHASE1];
 const flowLabel = k => (isViewC() ? C_LABELS : isView3() ? O2H_LABELS : LABELS)[k] || k;
 const afterForm = () => 'branch';
-const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', cVer:'ep0910', cTreeOpen:null, pfHideAtf:false, pfCat:'full', pfStd:true, pfSort:'추천순', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
+const S = {mode:'chat', screen:'o2hHome', picked:new Set(['full','move']), ans:{}, log:[], qi:0, step:0, route:null, chosen:null, stage:'none', openPart:false, gen:false, rtab:null, pick:null, prod:{}, sheet:null, sheetPick:0, o2hSub:'pick', o2hMethod:'chat', o2hApplied:false, o2hProgress:false, o2hOrderTab:'draft', o2hChecked:null, o2hEditField:null, o2hName:'홍길동', o2hPhone:'9999-9999', o2hMemo:'', o2hFieldBranch:{}, o2hCardBranch:{}, o2hExtra:{}, o2hSheet:null, o2hFunnelI:0, o2hAddrKey:null, o2hSrchOpen:false, o2hSrchQ:'', o2hDetail:'', o2hRoad:'', o2hRange:null, o2hCalMonth:null, cTab:'home', cSian:'A', pfHideAtf:false, pfCat:'full', pfStd:true, pfSort:'추천순', cMenu:null, cMenuScroll:0, cPChip:0, cCChip:1, cCFilter:0, cTabChip:{full:1, part:0}, cRChip:1, cPartRv:0, cScrap:new Set(), cOfferTimer:null, cOfferBg:[], mdPin:null, mdCard:null, mapAddr:null, msH:null, pf:null};
 const $ = s=>document.querySelector(s);
 const screen = $('#screen');
 
@@ -2937,7 +2913,7 @@ function go(next){
   }
   S.screen=next; render(); screen.scrollTop=0;
 }
-function render(){ syncAuto(); renderFlowPanel(); renderCTree(); renderRail(); renderCases(); renderO2hBranches();
+function render(){ syncAuto(); renderFlowPanel(); renderRail(); renderSianMenu(); renderCases(); renderO2hBranches();
   screen.innerHTML=''; screen.classList.remove('has-sheet'); VIEW[S.screen](); renderFabEntry(); renderO2hBottomBar(); }
 
 function renderFlowPanel(){
@@ -2954,10 +2930,6 @@ function renderFlowPanel(){
 }
 
 function renderRail(){
-  /* Flow C 는 #cTree 드롭다운이 rail 을 대신한다 */
-  const sec = $('#railSection');
-  if(isViewC()){ sec?.classList.add('hidden'); return; }
-  sec?.classList.remove('hidden');
   const keys = flowKeys(), i = keys.indexOf(S.screen);
   $('#rail').innerHTML = keys.map((k,n)=>{
     const cls = n<i?'done':(n===i?'now':'');
@@ -3200,104 +3172,44 @@ const C_SIANS = [
   {id:'A', n:'시안 A'},
   {id:'B', n:'시안 B'}
 ];
-
-/* ══════════ 네비게이션 Demo 메뉴 트리 ══════════════════════════════════
-   위계: 네비게이션 Demo(root) → 1depth 버전 드롭다운 → 2depth 주요 플로우 6종.
-   시안·CASE 도 같은 드롭다운으로 둔다.
-   버전별 화면 분기는 아래 sian 값 하나로 정한다 — 매핑이 확정되면 여기만 고친다.
-   (2026-09-10 현재 확정분: End-pic 0908 = 시안 A · Navigation UT 0910 = 시안 B) */
-const C_VERSIONS = [
-  {id:'ep0910', n:'O2O Home End-pic 0910', sian:'A'},
-  {id:'ep0908', n:'End-pic 0908',          sian:'A'},
-  {id:'ut0910', n:'Navigation UT 0910',    sian:'B'}
-];
-/* 열림 상태는 Set 으로 들고, 첫 렌더에서 현재 버전만 펼친다 */
-function cTreeOpen(){
-  if(!(S.cTreeOpen instanceof Set)) S.cTreeOpen = new Set([S.cVer || C_VERSIONS[0].id]);
-  return S.cTreeOpen;
-}
-function cGoVersion(verId, step){
-  const v = C_VERSIONS.find(x=>x.id===verId) || C_VERSIONS[0];
-  if(S.cVer !== v.id || (S.cSian||'A') !== v.sian){
-    S.cVer = v.id; S.cSian = v.sian; S.cMenu = null; S.cTab = 'home';
-  }
-  cTreeOpen().add(v.id);
-  if(step==='cPfFull') pfReset('full');
-  if(step==='cPfPart') pfReset('part');
-  if(step==='cPfHome') S.pfHideAtf = false;
-  go(step);
-  setMenuOpen(false);
-}
-function renderCTree(){
-  const sec = $('#cTreeSection'), tree = $('#cTree');
-  if(!sec || !tree) return;
+function renderSianMenu(){
+  const sec = $('#sianSection'), menu = $('#sianMenu');
+  if(!sec || !menu) return;
   if(!isViewC()){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden');
-  const open = cTreeOpen(), chev = ic('IconChevronRight', 12);
-  const group = (id, label, on, inner) =>
-    `<li class="tree-g${on?' on':''}">`
-    + `<button class="tree-t" type="button" data-tg="${id}" aria-expanded="${open.has(id)}">`
-    + `<span class="tree-chev">${chev}</span><span class="tree-l">${label}</span></button>`
-    + `<ul class="tree-c"${open.has(id)?'':' hidden'}>${inner}</ul></li>`;
-
-  const vers = C_VERSIONS.map(v=>{
-    const items = PHASE4.map((k,n)=>{
-      const on = S.cVer===v.id && S.screen===k;
-      return `<li><button data-ver="${v.id}" data-step="${k}"${on?' aria-current="true"':''}>`
-        + `<span class="n">${String(n+1).padStart(2,'0')}</span>${C_LABELS[k]||k}</button></li>`;
-    }).join('');
-    return group(v.id, v.n, S.cVer===v.id, items);
-  }).join('');
-
-  const curSian = S.cSian || 'A';
-  const sians = C_SIANS.map(c=>
-    `<li><button data-sian="${c.id}"${curSian===c.id?' aria-current="true"':''}>`
-    + `<span class="n">${c.id}</span>${c.n}</button></li>`).join('');
-
-  const curCase = C_CASES.find(c=>(c.pin||null)===(S.mdPin||null)) || C_CASES[0];
-  const cases = C_CASES.map(c=>
-    `<li><button data-case="${c.id}"${curCase&&curCase.id===c.id?' aria-current="true"':''}>`
-    + `<span class="n">${c.id}</span>${c.n}</button></li>`).join('');
-
-  tree.innerHTML = vers + group('sian','시안', false, sians) + group('case','CASE', false, cases);
-
-  tree.querySelectorAll('[data-tg]').forEach(b=> b.onclick=()=>{
-    const id = b.dataset.tg;
-    open.has(id) ? open.delete(id) : open.add(id);
-    renderCTree();
+  const cur = S.cSian || 'A';
+  menu.innerHTML = C_SIANS.map(c=>
+    `<li><button data-sian="${c.id}"${cur===c.id?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`
+  ).join('');
+  menu.querySelectorAll('[data-sian]').forEach(b=> b.onclick=()=>{
+    S.cSian = b.dataset.sian;
+    S.cMenu = null;
+    S.cTab = 'home';
+    if(S.screen!=='cHome') go('cHome');
+    else render();
+    setMenuOpen(false);
   });
-  tree.querySelectorAll('[data-step]').forEach(b=> b.onclick=()=> cGoVersion(b.dataset.ver, b.dataset.step));
-  tree.querySelectorAll('[data-sian]').forEach(b=> b.onclick=()=> cPickSian(b.dataset.sian));
-  tree.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=> cPickCase(b.dataset.case));
-}
-/* 시안·CASE·주요 플로우 선택 — #cTree 드롭다운이 공통으로 쓴다 */
-function cPickSian(id){
-  S.cSian = id;
-  /* 버전 표시와 어긋나지 않게 같은 시안을 쓰는 버전으로 맞춘다 */
-  const v = C_VERSIONS.find(x=>x.sian===id);
-  if(v){ S.cVer = v.id; cTreeOpen().add(v.id); }
-  S.cMenu = null;
-  S.cTab = 'home';
-  if(S.screen!=='cHome') go('cHome');
-  else render();
-  setMenuOpen(false);
-}
-function cPickCase(id){
-  const c = C_CASES.find(x=>x.id===id);
-  if(!c) return;
-  const p = c.pin ? MD_PINS.find(x=>x.id===c.pin) : null;
-  S.mdPin  = c.pin;
-  S.mdCard = p ? (p.card || null) : null;
-  S.msH = msFull();
-  if(S.screen!=='cMapDisc') go('cMapDisc');
-  else render();
-  setMenuOpen(false);
 }
 function renderCases(){
-  const menu = $('#caseMenu'), sec = $('#caseSection');
-  /* Flow C 의 CASE 는 #cTree 드롭다운으로 옮겼다 */
-  if(isViewC()){ sec?.classList.add('hidden'); return; }
-  sec?.classList.remove('hidden');
+  const menu = $('#caseMenu');
+  if(isViewC()){
+    const cur = C_CASES.find(c=>(c.pin||null)===(S.mdPin||null)) || C_CASES[0];
+    menu.innerHTML = C_CASES.map(c=>{
+      const on = cur && cur.id===c.id;
+      return `<li><button data-case="${c.id}"${on?' aria-current="true"':''}><i>${c.id}</i>${c.n}</button></li>`;
+    }).join('');
+    menu.querySelectorAll('[data-case]').forEach(b=> b.onclick=()=>{
+      const c = C_CASES.find(x=>x.id===b.dataset.case);
+      const p = c.pin ? MD_PINS.find(x=>x.id===c.pin) : null;
+      S.mdPin  = c.pin;
+      S.mdCard = p ? (p.card || null) : null;
+      S.msH = msFull();
+      if(S.screen!=='cMapDisc') go('cMapDisc');
+      else render();
+      setMenuOpen(false);
+    });
+    return;
+  }
   if(isView3()){
     const pool = O2H_CASES;
     const cur = pool.find(c=>c.s.length===S.picked.size && c.s.every(k=>S.picked.has(k)));
